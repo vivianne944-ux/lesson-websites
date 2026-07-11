@@ -1,0 +1,2910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive prescription writing reviewer based only on the uploaded Prescription Writing (Solids) and Prescription Writing (Liquids) transes." />
+  <title>Prescription Writing — Go-To Reviewer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#fbf9ff;
+      --panel:#ffffff;
+      --panel-2:#f5f0ff;
+      --ink:#241d33;
+      --muted:#6d647d;
+      --line:#e6def1;
+      --accent:#7a4bd8;
+      --accent-2:#c154b8;
+      --accent-3:#e56d8d;
+      --success:#1e8a67;
+      --warn:#a86300;
+      --danger:#b63f50;
+      --shadow:0 14px 35px rgba(58,31,96,.10);
+      --radius:18px;
+      --radius-sm:12px;
+      --header-h:76px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at top right, rgba(193,84,184,.09), transparent 28%),
+        radial-gradient(circle at 8% 24%, rgba(122,75,216,.09), transparent 25%),
+        var(--bg);
+      color:var(--ink);
+      font-family:"DM Sans",sans-serif;
+      line-height:1.62;
+    }
+
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit}
+    strong{font-weight:800}
+    code,.mono{font-family:"Space Mono",monospace}
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      backdrop-filter:blur(14px);
+      background:rgba(251,249,255,.92);
+      border-bottom:1px solid rgba(122,75,216,.12);
+    }
+
+    .topbar-inner{
+      max-width:1440px;
+      margin:auto;
+      min-height:var(--header-h);
+      display:grid;
+      grid-template-columns:minmax(250px,1fr) minmax(300px,560px);
+      gap:18px;
+      align-items:center;
+      padding:10px 24px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:44px;
+      height:44px;
+      flex:0 0 44px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      color:white;
+      font-family:"Syne",sans-serif;
+      font-weight:800;
+      letter-spacing:-1px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      box-shadow:0 9px 22px rgba(122,75,216,.24);
+    }
+
+    .brand h1{
+      font-family:"Syne",sans-serif;
+      margin:0;
+      font-size:clamp(1.02rem,2vw,1.32rem);
+      line-height:1.1;
+      letter-spacing:-.025em;
+    }
+
+    .brand small{
+      display:block;
+      color:var(--muted);
+      margin-top:2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .search-wrap{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:white;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:8px 10px;
+      box-shadow:0 6px 20px rgba(64,35,92,.06);
+    }
+
+    .search-wrap input{
+      width:100%;
+      min-width:0;
+      border:0;
+      outline:0;
+      background:transparent;
+      color:var(--ink);
+    }
+
+    .kbd{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:28px;
+      height:25px;
+      padding:0 7px;
+      border-radius:7px;
+      border:1px solid #d8cce7;
+      background:#faf7ff;
+      color:var(--muted);
+      font:700 .72rem "Space Mono",monospace;
+      box-shadow:inset 0 -2px 0 rgba(62,34,95,.06);
+    }
+
+    .shell{
+      max-width:1440px;
+      margin:auto;
+      padding:22px 24px 70px;
+      display:grid;
+      grid-template-columns:252px minmax(0,1fr);
+      gap:24px;
+    }
+
+    .sidebar{
+      position:sticky;
+      top:calc(var(--header-h) + 18px);
+      align-self:start;
+      max-height:calc(100vh - var(--header-h) - 36px);
+      overflow:auto;
+      padding:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.88);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .side-title{
+      margin:2px 8px 10px;
+      color:var(--muted);
+      font:700 .72rem "Space Mono",monospace;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .tab-btn{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border:0;
+      background:transparent;
+      padding:11px 12px;
+      border-radius:12px;
+      color:var(--ink);
+      text-align:left;
+      font-weight:700;
+      margin:3px 0;
+    }
+
+    .tab-btn:hover{background:var(--panel-2)}
+    .tab-btn.active{
+      color:white;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      box-shadow:0 8px 18px rgba(122,75,216,.22);
+    }
+
+    .tab-btn .num{
+      font:700 .72rem "Space Mono",monospace;
+      opacity:.72;
+    }
+
+    .side-note{
+      margin-top:14px;
+      padding:12px;
+      background:#fff8e9;
+      border:1px solid #f0ddae;
+      border-radius:12px;
+      color:#78510e;
+      font-size:.87rem;
+    }
+
+    main{min-width:0}
+
+    .tab-panel{
+      display:none;
+      animation:fade .22s ease;
+    }
+    .tab-panel.active{display:block}
+    @keyframes fade{
+      from{opacity:.35;transform:translateY(4px)}
+      to{opacity:1;transform:none}
+    }
+
+    .hero{
+      padding:28px;
+      border:1px solid rgba(122,75,216,.18);
+      border-radius:24px;
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.96),rgba(247,240,255,.96));
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero:after{
+      content:"Rx";
+      position:absolute;
+      right:26px;
+      bottom:-40px;
+      font:800 9rem "Syne",sans-serif;
+      color:rgba(122,75,216,.055);
+      transform:rotate(-8deg);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#efe7ff;
+      color:#6840bd;
+      font:700 .72rem "Space Mono",monospace;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    h2,h3,h4{
+      font-family:"Syne",sans-serif;
+      line-height:1.18;
+      letter-spacing:-.025em;
+    }
+
+    .hero h2{
+      margin:14px 0 8px;
+      font-size:clamp(1.8rem,4vw,3.25rem);
+      max-width:900px;
+    }
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      max-width:870px;
+      font-size:1.02rem;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:10px;
+      margin-top:20px;
+    }
+
+    .step-chip{
+      padding:12px;
+      background:white;
+      border:1px solid var(--line);
+      border-radius:14px;
+      min-height:98px;
+    }
+
+    .step-chip b{
+      display:block;
+      font-family:"Syne",sans-serif;
+      margin-bottom:3px;
+    }
+
+    .step-chip span{
+      color:var(--muted);
+      font-size:.87rem;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:end;
+      margin:28px 0 12px;
+    }
+
+    .section-head h3{
+      margin:0;
+      font-size:1.52rem;
+    }
+
+    .section-head p{
+      margin:4px 0 0;
+      color:var(--muted);
+    }
+
+    .page-badge{
+      flex:0 0 auto;
+      border:1px solid #ddcff3;
+      background:#f7f2ff;
+      color:#6a44b5;
+      padding:5px 9px;
+      border-radius:999px;
+      font:700 .68rem "Space Mono",monospace;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:16px;
+    }
+
+    .card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.92);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:0 8px 24px rgba(64,35,92,.06);
+    }
+
+    .card h4{
+      margin:0 0 7px;
+      font-size:1.05rem;
+    }
+
+    .card p:last-child{margin-bottom:0}
+    .muted{color:var(--muted)}
+    .tiny{font-size:.84rem}
+
+    .callout{
+      padding:14px 15px;
+      border-radius:14px;
+      border:1px solid;
+      margin:12px 0;
+    }
+    .callout strong:first-child{font-family:"Syne",sans-serif}
+    .callout.tip{background:#eefaf6;border-color:#bfe4d6;color:#176b50}
+    .callout.warn{background:#fff8e9;border-color:#f0ddae;color:#80550d}
+    .callout.danger{background:#fff0f2;border-color:#f2c5cc;color:#8c2e3d}
+    .callout.info{background:#f4efff;border-color:#d9caf5;color:#5c399e}
+
+    .formula{
+      display:block;
+      padding:13px 14px;
+      margin:10px 0;
+      background:#21192f;
+      color:#fff;
+      border-radius:12px;
+      overflow:auto;
+      font:700 .82rem "Space Mono",monospace;
+      white-space:normal;
+    }
+
+    .formula .soft{color:#d8c8f7;font-weight:400}
+
+    .mini-flow{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:8px;
+      margin:14px 0 6px;
+    }
+
+    .mini-flow div{
+      min-height:72px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      border:1px solid var(--line);
+      background:white;
+      border-radius:12px;
+      padding:10px;
+      font-weight:700;
+      position:relative;
+    }
+
+    .mini-flow div:not(:last-child):after{
+      content:"→";
+      position:absolute;
+      right:-10px;
+      color:var(--accent);
+      z-index:2;
+      font-size:1.15rem;
+    }
+
+    .rx-anatomy{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:16px;
+      align-items:start;
+    }
+
+    .rx-paper{
+      background:#fff;
+      border:1px solid #cfc3dc;
+      border-radius:10px;
+      padding:22px;
+      box-shadow:0 16px 34px rgba(46,23,73,.10);
+      min-height:540px;
+      position:relative;
+    }
+
+    .rx-line{
+      border-bottom:1px solid #cfc7d8;
+      margin:13px 0;
+    }
+
+    .rx-block{
+      border:1px dashed transparent;
+      border-radius:10px;
+      padding:8px;
+      margin:4px -8px;
+      transition:.18s ease;
+    }
+
+    .rx-block:hover,.rx-block.active{
+      background:#f5efff;
+      border-color:#bfa5eb;
+    }
+
+    .rx-symbol{
+      font-family:"Syne",sans-serif;
+      font-size:2rem;
+      font-weight:800;
+      margin:10px 0 4px;
+    }
+
+    .legend button{
+      width:100%;
+      text-align:left;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:white;
+      padding:12px;
+      margin-bottom:8px;
+    }
+
+    .legend button:hover,.legend button.active{
+      background:#f4efff;
+      border-color:#bfa5eb;
+    }
+
+    .legend button b{
+      display:block;
+      font-family:"Syne",sans-serif;
+    }
+
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:white;
+    }
+
+    th,td{
+      text-align:left;
+      vertical-align:top;
+      padding:11px 12px;
+      border-bottom:1px solid var(--line);
+    }
+    th{
+      background:#f3edff;
+      font:700 .78rem "Space Mono",monospace;
+      color:#6240a0;
+    }
+    tr:last-child td{border-bottom:0}
+
+    details.category{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.94);
+      border-radius:18px;
+      margin:12px 0;
+      box-shadow:0 8px 24px rgba(64,35,92,.055);
+      overflow:hidden;
+    }
+
+    details.category[open]{
+      border-color:#d8c7f2;
+      box-shadow:0 12px 30px rgba(75,41,118,.09);
+    }
+
+    details.category summary{
+      list-style:none;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      padding:16px 18px;
+      cursor:pointer;
+      background:white;
+    }
+    details.category summary::-webkit-details-marker{display:none}
+
+    .summary-main{
+      min-width:0;
+    }
+
+    .summary-main h4{
+      margin:0;
+      font-size:1.08rem;
+    }
+    .summary-main p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    .summary-icon{
+      flex:0 0 34px;
+      width:34px;
+      height:34px;
+      display:grid;
+      place-items:center;
+      border-radius:10px;
+      background:#f0e9ff;
+      color:#7246c5;
+      font-size:1.2rem;
+      transition:.2s ease;
+    }
+    details[open] .summary-icon{transform:rotate(45deg)}
+
+    .category-body{
+      padding:0 18px 18px;
+      border-top:1px solid var(--line);
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:12px 0;
+    }
+
+    .pill{
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#f6f1ff;
+      border:1px solid #e1d5f6;
+      color:#6744aa;
+      font:700 .72rem "Space Mono",monospace;
+    }
+
+    .worked{
+      margin-top:14px;
+      border-left:4px solid var(--accent-2);
+      background:#fcf8ff;
+      padding:14px 15px;
+      border-radius:0 14px 14px 0;
+    }
+
+    .worked h5{
+      margin:0 0 8px;
+      font:800 .92rem "Syne",sans-serif;
+    }
+
+    .calc-layout{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+
+    .calc-card{
+      border:1px solid var(--line);
+      background:white;
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 8px 24px rgba(64,35,92,.06);
+    }
+
+    .calc-card h4{
+      margin:0 0 4px;
+    }
+
+    .fields{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:12px;
+    }
+
+    label{
+      display:block;
+      color:var(--muted);
+      font-size:.82rem;
+      font-weight:700;
+    }
+
+    input,select,textarea{
+      width:100%;
+      border:1px solid #dcd2e8;
+      background:#fff;
+      color:var(--ink);
+      border-radius:10px;
+      padding:10px 11px;
+      outline:none;
+      margin-top:5px;
+    }
+
+    input:focus,select:focus,textarea:focus{
+      border-color:#9c76df;
+      box-shadow:0 0 0 3px rgba(122,75,216,.12);
+    }
+
+    textarea{min-height:92px;resize:vertical}
+
+    .btn{
+      border:0;
+      border-radius:11px;
+      padding:10px 13px;
+      font-weight:800;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:white;
+      box-shadow:0 8px 18px rgba(122,75,216,.18);
+    }
+
+    .btn.secondary{
+      background:white;
+      color:#6842ae;
+      border:1px solid #d6c7ee;
+      box-shadow:none;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .result{
+      margin-top:12px;
+      background:#f7f3ff;
+      border:1px solid #dbcdf4;
+      border-radius:12px;
+      padding:12px;
+      min-height:52px;
+    }
+
+    .result:empty:before{
+      content:"Enter values, then calculate.";
+      color:var(--muted);
+      font-size:.88rem;
+    }
+
+    .template-grid{
+      display:grid;
+      grid-template-columns:minmax(270px,.75fr) minmax(340px,1.25fr);
+      gap:16px;
+      align-items:start;
+    }
+
+    .rx-preview{
+      white-space:pre-wrap;
+      background:white;
+      border:1px solid #d4c9df;
+      border-radius:12px;
+      padding:24px;
+      min-height:520px;
+      box-shadow:0 16px 34px rgba(46,23,73,.10);
+      font-family:"DM Sans",sans-serif;
+    }
+
+    .shortcut-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .shortcut{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:white;
+      padding:14px;
+    }
+
+    .shortcut b{font-family:"Syne",sans-serif}
+    .shortcut span{display:block;color:var(--muted);font-size:.84rem;margin-top:3px}
+
+    .hide-by-search{display:none !important}
+    .no-results{
+      display:none;
+      padding:18px;
+      border:1px dashed #cdbde5;
+      background:#faf7ff;
+      border-radius:14px;
+      color:var(--muted);
+      margin-top:12px;
+    }
+
+    .footer{
+      margin-top:28px;
+      color:var(--muted);
+      font-size:.85rem;
+      text-align:center;
+    }
+
+    @media (max-width:1100px){
+      .shell{grid-template-columns:1fr}
+      .sidebar{
+        position:sticky;
+        top:var(--header-h);
+        z-index:900;
+        max-height:none;
+        overflow:auto;
+        display:flex;
+        gap:6px;
+        padding:8px;
+        border-radius:14px;
+      }
+      .side-title,.side-note{display:none}
+      .tab-btn{min-width:max-content;width:auto;margin:0}
+      .tab-btn .num{display:none}
+      .hero-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .rx-anatomy,.template-grid{grid-template-columns:1fr}
+    }
+
+    @media (max-width:760px){
+      :root{--header-h:112px}
+      .topbar-inner{grid-template-columns:1fr;padding:9px 14px;gap:7px}
+      .shell{padding:14px 14px 54px;gap:12px}
+      .hero{padding:20px}
+      .hero-grid,.grid-2,.grid-3,.calc-layout,.shortcut-grid{grid-template-columns:1fr}
+      .fields{grid-template-columns:1fr}
+      .mini-flow{grid-template-columns:1fr}
+      .mini-flow div:not(:last-child):after{
+        content:"↓";
+        right:auto;
+        bottom:-17px;
+      }
+      .brand small{font-size:.78rem}
+      .section-head{align-items:start;flex-direction:column}
+      .rx-paper{padding:16px}
+    }
+
+
+    .atlas-index{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin:16px 0 24px;
+    }
+
+    .atlas-index a{
+      text-decoration:none;
+      border:1px solid var(--line);
+      background:white;
+      border-radius:14px;
+      padding:13px 14px;
+      font-weight:800;
+      box-shadow:0 7px 18px rgba(64,35,92,.05);
+    }
+
+    .atlas-index a:hover{
+      border-color:#bda5e8;
+      background:#f7f2ff;
+    }
+
+    .exercise{
+      margin:14px 0;
+      padding:15px 16px;
+      border:1px solid #e1d6ef;
+      border-radius:15px;
+      background:linear-gradient(135deg,#fff,#fcf9ff);
+    }
+
+    .exercise h5{
+      margin:0 0 7px;
+      font:800 1rem "Syne",sans-serif;
+      letter-spacing:-.02em;
+    }
+
+    .exercise .stem{
+      color:var(--muted);
+      margin:0 0 10px;
+      font-size:.92rem;
+    }
+
+    .calc-steps{
+      margin:8px 0 0;
+      padding:0;
+      list-style:none;
+      counter-reset:rxstep;
+    }
+
+    .calc-steps li{
+      counter-increment:rxstep;
+      position:relative;
+      padding:9px 10px 9px 43px;
+      margin:7px 0;
+      border-radius:11px;
+      background:#f7f3ff;
+      border:1px solid #e0d4f4;
+    }
+
+    .calc-steps li:before{
+      content:counter(rxstep);
+      position:absolute;
+      left:10px;
+      top:9px;
+      width:23px;
+      height:23px;
+      display:grid;
+      place-items:center;
+      border-radius:7px;
+      background:#7a4bd8;
+      color:white;
+      font:700 .7rem "Space Mono",monospace;
+    }
+
+    .final-answer{
+      display:inline-flex;
+      margin-top:9px;
+      padding:7px 11px;
+      border-radius:999px;
+      background:#eaf8f3;
+      border:1px solid #bfe4d6;
+      color:#176b50;
+      font:800 .78rem "Space Mono",monospace;
+    }
+
+    .method-box{
+      border:1px solid #d8c8f0;
+      background:#faf7ff;
+      border-radius:15px;
+      padding:15px;
+      margin:12px 0;
+    }
+
+    .method-box h5{
+      margin:0 0 6px;
+      font:800 .96rem "Syne",sans-serif;
+    }
+
+    .formula-sequence{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:8px;
+      margin:12px 0;
+    }
+
+    .formula-sequence > div{
+      border:1px solid #e1d5f4;
+      border-radius:12px;
+      background:white;
+      padding:11px;
+      min-height:90px;
+    }
+
+    .formula-sequence b{
+      display:block;
+      font-family:"Syne",sans-serif;
+      margin-bottom:4px;
+    }
+
+    .formula-sequence code{
+      font-size:.73rem;
+      color:#6540a7;
+      white-space:normal;
+    }
+
+    .trans-note{
+      margin:12px 0;
+      padding:12px 14px;
+      border-left:4px solid #e0912f;
+      border-radius:0 12px 12px 0;
+      background:#fff8e9;
+      color:#78510e;
+    }
+
+    @media (max-width:900px){
+      .atlas-index{grid-template-columns:1fr}
+      .formula-sequence{grid-template-columns:1fr 1fr}
+    }
+
+    @media (max-width:560px){
+      .formula-sequence{grid-template-columns:1fr}
+    }
+
+    @media print{
+      .topbar,.sidebar,.btn-row,.search-wrap{display:none !important}
+      .shell{display:block;padding:0}
+      .tab-panel{display:block !important}
+      details.category:not([open]) .category-body{display:block}
+      body{background:white}
+      .card,.calc-card,.hero,details.category{box-shadow:none}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">Rx</div>
+        <div>
+          <h1>Prescription Writing — Go-To Reviewer</h1>
+          <small>Solids • liquids • parenterals • complete formula atlas • writing templates</small>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <span aria-hidden="true">⌕</span>
+        <input id="globalSearch" type="search" placeholder="Search a category, formula, drug form, or instruction…" aria-label="Search reviewer" />
+        <span class="kbd">/</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar" aria-label="Main reviewer tabs">
+      <div class="side-title">Reviewer sections</div>
+      <button class="tab-btn active" data-tab="foundations"><span>Foundations</span><span class="num">1</span></button>
+      <button class="tab-btn" data-tab="solids"><span>Solids</span><span class="num">2</span></button>
+      <button class="tab-btn" data-tab="liquids"><span>Liquids & Parenterals</span><span class="num">3</span></button>
+      <button class="tab-btn" data-tab="formula-atlas"><span>Formula Atlas</span><span class="num">4</span></button>
+      <button class="tab-btn" data-tab="tools"><span>Calculators & Templates</span><span class="num">5</span></button>
+      <button class="tab-btn" data-tab="cram"><span>Cram Sheet</span><span class="num">6</span></button>
+      <div class="side-note">
+        <strong>Study-use reviewer.</strong><br>
+        Content is limited to the two uploaded prescription-writing transes.
+      </div>
+    </aside>
+
+    <main>
+      <!-- FOUNDATIONS -->
+      <section id="foundations" class="tab-panel active">
+        <div class="hero searchable" data-search="overview foundation steps prescription workflow">
+          <span class="eyebrow">Master workflow</span>
+          <h2>One prescription, five moves.</h2>
+          <p>Every case becomes easier when you follow the same sequence: <strong>extract the order</strong>, <strong>classify the preparation</strong>, <strong>calculate</strong>, <strong>write</strong>, then <strong>check</strong>.</p>
+          <div class="hero-grid">
+            <div class="step-chip"><b>1. Extract</b><span>Patient, drug, dose, route, frequency, duration, available preparation.</span></div>
+            <div class="step-chip"><b>2. Classify</b><span>Tablet? Compounded powder? Oral suspension? Injection? Drops?</span></div>
+            <div class="step-chip"><b>3. Calculate</b><span>Units, total mass, total volume, or number of containers.</span></div>
+            <div class="step-chip"><b>4. Write</b><span>Inscription → subscription → signatura.</span></div>
+            <div class="step-chip"><b>5. Check</b><span>Generic name, dosage form, strength, quantity, directions, credentials.</span></div>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <h3>Prescription anatomy</h3>
+            <p>Click a label to highlight the matching section of the sample prescription.</p>
+          </div>
+          <span class="page-badge">Solids p.1</span>
+        </div>
+
+        <div class="rx-anatomy searchable" data-search="parts prescription prescriber patient superscription inscription subscription signatura signature prc ptr s2">
+          <div class="rx-paper" aria-label="Annotated sample prescription">
+            <div id="rx-prescriber" class="rx-block">
+              <strong>JUANA DELA CRUZ, M.D.</strong><br>
+              General Medicine<br>
+              Clinic Address • Telephone Number
+            </div>
+            <div class="rx-line"></div>
+            <div id="rx-patient" class="rx-block">
+              <strong>Name:</strong> Patient Name &nbsp;&nbsp;
+              <strong>Age:</strong> ___ &nbsp;&nbsp;
+              <strong>Date:</strong> _______<br>
+              <strong>Address:</strong> ______________________
+            </div>
+            <div id="rx-super" class="rx-block rx-symbol">Rx</div>
+            <div id="rx-inscription" class="rx-block">
+              <strong>Generic drug name + dosage form</strong>
+              <span style="float:right"><strong>Strength / concentration</strong></span>
+            </div>
+            <div id="rx-subscription" class="rx-block">
+              <strong>Dispense No. ___ tablets / capsules / bottles</strong><br>
+              or: Divide into ___ equal parts and dispense as papers/capsules.
+            </div>
+            <div id="rx-signatura" class="rx-block">
+              <strong>Label:</strong> Take / give / instill / insert / inject…<br>
+              Include dose, route, frequency, timing, duration, and special instructions.
+            </div>
+            <div style="height:54px"></div>
+            <div id="rx-signature" class="rx-block" style="text-align:right">
+              Prescriber’s Signature<br>
+              Prescriber’s Name, M.D.<br>
+              PRC License No. _______<br>
+              PTR No. _______<br>
+              S2 / Opium License No. _______ when required
+            </div>
+          </div>
+
+          <div class="legend">
+            <button data-rx-target="rx-prescriber"><b>Prescriber identity</b><span class="muted tiny">Full name, classification/degree, address, telephone number.</span></button>
+            <button data-rx-target="rx-patient"><b>Patient + date</b><span class="muted tiny">Name, address, age; include weight when dose calculation needs it.</span></button>
+            <button data-rx-target="rx-super"><b>Superscription</b><span class="muted tiny"><strong>Rx / R/</strong>, from “recipe.”</span></button>
+            <button data-rx-target="rx-inscription"><b>Inscription</b><span class="muted tiny">The medicine: generic name, dosage form, amount per dose and/or strength.</span></button>
+            <button data-rx-target="rx-subscription"><b>Subscription</b><span class="muted tiny">Directions to the pharmacist: dispense, mix, divide, reconstitute.</span></button>
+            <button data-rx-target="rx-signatura"><b>Signatura / Label</b><span class="muted tiny">Directions intended for the patient.</span></button>
+            <button data-rx-target="rx-signature"><b>Signature + credentials</b><span class="muted tiny">Signature, M.D., PRC, PTR, and S2/Opium License when applicable.</span></button>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <h3>What to extract before calculating</h3>
+            <p>Do not write the prescription until these are clear.</p>
+          </div>
+          <span class="page-badge">Solids pp.1–2</span>
+        </div>
+
+        <div class="grid-3">
+          <article class="card searchable" data-search="patient details age address weight sex pediatric">
+            <h4>Patient details</h4>
+            <p><strong>Name, age, sex, address, date</strong>, and <strong>weight</strong> when the dose is weight-based. Age is especially important in children and older adults.</p>
+          </article>
+          <article class="card searchable" data-search="drug generic dosage form route strength">
+            <h4>Medication identity</h4>
+            <p><strong>Generic name</strong>, <strong>dosage form</strong>, route, prescribed dose, and the strength or concentration that is actually available.</p>
+          </article>
+          <article class="card searchable" data-search="frequency duration timing round the clock as needed">
+            <h4>Administration plan</h4>
+            <p>Frequency, timing, whether it is <strong>round the clock</strong> or as needed, and the total duration in days, weeks, or months.</p>
+          </article>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <h3>Metric-writing rules</h3>
+            <p>These are easy exam points—and easy places to lose points.</p>
+          </div>
+          <span class="page-badge">Solids p.2</span>
+        </div>
+
+        <div class="grid-2">
+          <article class="card searchable" data-search="metric grams milligrams micrograms leading zero ml cc">
+            <h4>Write quantities in the correct unit</h4>
+            <table>
+              <tr><th>Quantity</th><th>Preferred writing</th></tr>
+              <tr><td>1 gram or more</td><td><strong>1 gram</strong>, etc.</td></tr>
+              <tr><td>Less than 1 gram</td><td>Use <strong>milligrams</strong>: 300 mg, not 0.3 g.</td></tr>
+              <tr><td>Less than 1 milligram</td><td>Use <strong>micrograms</strong>: 100 mcg, not 0.1 mg.</td></tr>
+              <tr><td>Decimal below 1</td><td>Use a <strong>leading zero</strong>: 0.5 mL, not .5 mL.</td></tr>
+              <tr><td>Liquid volume</td><td>Use <strong>mL</strong>, not cc.</td></tr>
+            </table>
+          </article>
+
+          <article class="card searchable" data-search="traditional inscription basis adjuvant corrective vehicle">
+            <h4>Multiple-ingredient inscription order</h4>
+            <div class="mini-flow">
+              <div>Basis<br><span class="muted tiny">chief action</span></div>
+              <div>Adjuvant<br><span class="muted tiny">assists action</span></div>
+              <div>Corrective<br><span class="muted tiny">corrects taste/effects</span></div>
+              <div>Vehicle<br><span class="muted tiny">solvent/bulk</span></div>
+              <div>Final bulk<br><span class="muted tiny">“to make”</span></div>
+            </div>
+            <div class="callout info"><strong>Modern practice:</strong> Not every prescription contains all four classical components. The trans emphasizes <strong>simplicity</strong> and <strong>rationality</strong>.</div>
+          </article>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <h3>Frequency translations used in the transes</h3>
+          </div>
+          <span class="page-badge">Both transes</span>
+        </div>
+
+        <div class="shortcut-grid searchable" data-search="bid tid qid hs once daily every 12 8 6 hours">
+          <div class="shortcut"><b>Once daily</b><span>1 dose/day</span></div>
+          <div class="shortcut"><b>BID / every 12 h</b><span>2 doses/day</span></div>
+          <div class="shortcut"><b>TID / every 8 h</b><span>3 doses/day</span></div>
+          <div class="shortcut"><b>QID / every 6 h</b><span>4 doses/day</span></div>
+          <div class="shortcut"><b>h.s.</b><span>At bedtime</span></div>
+          <div class="shortcut"><b>Round the clock</b><span>Use the full 24-hour schedule</span></div>
+          <div class="shortcut"><b>As needed</b><span>State the indication when given</span></div>
+          <div class="shortcut"><b>Every 4 h example</b><span>One solid example used 16 waking hours = 4 doses/day</span></div>
+        </div>
+      </section>
+
+      <!-- SOLIDS -->
+      <section id="solids" class="tab-panel">
+        <div class="hero searchable" data-search="solids tablets capsules powders suppository aerosol">
+          <span class="eyebrow">Trans 1 categories</span>
+          <h2>Prescription Writing: Solids</h2>
+          <p>Work through the exact solid categories used in the trans: <strong>single-ingredient tablet</strong>, <strong>capsule</strong>, <strong>powder</strong>, <strong>suppository</strong>, <strong>multiple-ingredient capsule</strong>, <strong>multiple-ingredient powder</strong>, and <strong>aerosol</strong>.</p>
+        </div>
+
+        <details class="category searchable" open data-search="solid single ingredient tablet total dose number tablets single dose method">
+          <summary>
+            <div class="summary-main">
+              <h4>A. Solid, Single Ingredient, Tablet</h4>
+              <p>Ready-made tablet strength satisfies the required dose.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="pill-row"><span class="pill">Ready-made unit</span><span class="pill">Single-dose method</span><span class="pill">Dispense number of tablets</span></div>
+            <span class="formula">Total dose = dose per intake × doses/day × number of days</span>
+            <span class="formula">Number of tablets = total dose ÷ strength per tablet</span>
+            <div class="grid-2">
+              <div>
+                <h4>Writing pattern</h4>
+                <p><strong>Inscription:</strong> Generic name + <strong>tablet</strong> + strength.</p>
+                <p><strong>Subscription:</strong> Dispense No. ___ tablets.</p>
+                <p><strong>Label:</strong> Take ___ tablet(s) orally every ___ hours / ___ times daily for ___ days.</p>
+              </div>
+              <div>
+                <h4>High-yield checks</h4>
+                <p>Always state the <strong>dosage form</strong>. Use a tablet strength that matches the required dose whenever possible.</p>
+                <div class="callout danger"><strong>Regulated drug:</strong> Include the appropriate <strong>S2 number</strong> and indicate <strong>No refills</strong>.</div>
+              </div>
+            </div>
+            <div class="worked">
+              <h5>Worked example — Paracetamol 500 mg</h5>
+              <p>500 mg × 4 doses/day × 3 days = <strong>6,000 mg</strong>. Then 6,000 mg ÷ 500 mg/tablet = <strong>12 tablets</strong>.</p>
+            </div>
+            <div class="worked">
+              <h5>Weight-based tablet example — Clarithromycin</h5>
+              <p>15 mg/kg/day × 33 kg = 495 mg/day. Divide into 2 doses = 247.5 mg/dose. The trans rounds to the available <strong>250 mg tablet</strong>: 1 tablet twice daily × 7 days = <strong>14 tablets</strong>.</p>
+            </div>
+            <span class="page-badge">Solids pp.2–3</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="solid single ingredient capsule ready-made powder make capsules tacrolimus carbocisteine">
+          <summary>
+            <div class="summary-main">
+              <h4>B. Solid, Single Ingredient, Capsule</h4>
+              <p>Use a ready-made capsule when it satisfies the required dose; compound only when needed.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <span class="formula">Number of capsules = dose per intake × doses/day × days ÷ strength per capsule</span>
+            <div class="grid-2">
+              <div>
+                <h4>Ready-made capsule</h4>
+                <p>Write the generic name, <strong>capsule</strong>, strength, total number to dispense, and complete patient directions.</p>
+              </div>
+              <div>
+                <h4>When a custom capsule is needed</h4>
+                <p>If a ready-made preparation is inadequate for the patient’s required dose, use the <strong>powder form</strong> and instruct the pharmacist to make capsules.</p>
+              </div>
+            </div>
+            <div class="worked">
+              <h5>Worked example — Tacrolimus</h5>
+              <p>1 mg × 2/day × 60 days = 120 mg. At 1 mg/capsule, dispense <strong>120 capsules</strong>.</p>
+            </div>
+            <div class="worked">
+              <h5>Worked example — Carbocisteine</h5>
+              <p>500 mg × 3/day × 7 days = 10,500 mg. At 500 mg/capsule, dispense <strong>21 capsules</strong>.</p>
+            </div>
+            <span class="page-badge">Solids pp.3–5</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="solid single ingredient powder multiple dose single dose paper capsule 600 mg">
+          <summary>
+            <div class="summary-main">
+              <h4>C. Solid, Single Ingredient, Powder</h4>
+              <p>Usually written by the multiple-dose method and divided into papers or capsules.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <span class="formula">Total number of doses = doses/day × days</span>
+            <span class="formula">Total amount = dose per intake × total number of doses</span>
+            <div class="grid-2">
+              <div>
+                <h4>Multiple-dose method</h4>
+                <p>Write the <strong>total amount</strong>, then instruct: “Divide into ___ equal parts and dispense as papers/capsules.” The physician performs the computation.</p>
+              </div>
+              <div>
+                <h4>Single-dose method</h4>
+                <p>Writes the amount in each individual unit. The trans states this may be preferred for a <strong>very potent drug</strong>.</p>
+              </div>
+            </div>
+            <div class="callout info"><strong>General packaging rule from the trans:</strong> If the weight of one dose is <strong>&lt; 600 mg</strong>, use capsules. If it is <strong>≥ 600 mg</strong>, use papers—unless the patient’s needs require otherwise.</div>
+            <div class="worked">
+              <h5>Worked example — Magnesium trisilicate</h5>
+              <p>1 g three times daily for 5 days: 3 × 5 = 15 doses; 1 g × 15 = <strong>15 g total</strong>. Divide into <strong>15 equal parts</strong> and dispense as papers.</p>
+            </div>
+            <div class="worked">
+              <h5>Weight-based powder example — Phenoxymethylpenicillin</h5>
+              <p>15 kg × 10 mg/kg/dose = 150 mg/dose. Four doses/day × 7 days = 28 doses. 150 mg × 28 = <strong>4,200 mg or 4.2 g</strong>.</p>
+            </div>
+            <span class="page-badge">Solids pp.5–6</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="suppository rectal insert per rectum anus glycerin paracetamol">
+          <summary>
+            <div class="summary-main">
+              <h4>D. Solid, Single Ingredient, Suppository</h4>
+              <p>Directions must state exactly where and how the suppository is inserted.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="grid-2">
+              <div>
+                <h4>Required wording</h4>
+                <p>Use <strong>Insert</strong>, not “take.” The trans accepts:</p>
+                <p>• Insert suppository <strong>per rectum</strong><br>• Insert suppository <strong>into the anus</strong></p>
+              </div>
+              <div>
+                <h4>Quantity</h4>
+                <p>Calculate the number of suppositories from frequency × days, unless it is explicitly a single dose.</p>
+              </div>
+            </div>
+            <div class="worked">
+              <h5>Worked example — Glycerin suppository</h5>
+              <p>Single adult dose, 2.5 g at bedtime: write <strong>Dispense No. 1 suppository</strong>; label: “Insert 1 suppository into the rectum at bedtime as a single dose.”</p>
+            </div>
+            <span class="page-badge">Solids p.6</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="solid multiple ingredients capsule powder basis adjuvant excipient lactose">
+          <summary>
+            <div class="summary-main">
+              <h4>E. Solid, Multiple Ingredients, Capsule</h4>
+              <p>Compute the total amount of every ingredient, then mix and divide into equal capsules.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <span class="formula">Total amount of each ingredient = dose per capsule × total number of capsules</span>
+            <p>Use the <strong>powder form</strong> of each drug. If the total amount per capsule is too small, an excipient such as <strong>lactose</strong> may be added.</p>
+            <div class="worked">
+              <h5>Worked example — Chlorpheniramine + phenylephrine</h5>
+              <p>Twice daily for 5 days = 10 capsules. Chlorpheniramine 2 mg × 10 = <strong>20 mg</strong>. Phenylephrine 10 mg × 10 = <strong>100 mg</strong>. Mix and divide into 10 equal parts and dispense as capsules.</p>
+            </div>
+            <div class="worked">
+              <h5>Single-dose-method example — Trimethoprim + sulfamethoxazole</h5>
+              <p>Write the amount intended for <strong>one capsule</strong>, then instruct “For one capsule. Make No. 14.”</p>
+            </div>
+            <span class="page-badge">Solids pp.6–7</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="solid multiple ingredients powder papers antacid aromatic powder round off potent">
+          <summary>
+            <div class="summary-main">
+              <h4>F. Solid, Multiple Ingredients, Powder</h4>
+              <p>Compute the total quantity of every component and divide into papers.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <span class="formula">Total amount of each ingredient = dose per intake × total number of doses</span>
+            <p>The inscription may include a <strong>basis</strong>, <strong>adjuvant</strong>, and an optional flavoring powder. When the combined single dose exceeds 600 mg, the trans uses <strong>papers</strong>.</p>
+            <div class="callout danger"><strong>Never round off the dose of a very potent drug.</strong> The trans specifically warns against rounding drugs given in microgram doses.</div>
+            <div class="worked">
+              <h5>Worked example — Ibuprofen + paracetamol powder</h5>
+              <p>Every 6 hours for 5 days = 20 doses. Ibuprofen 200 mg × 20 = <strong>4,000 mg</strong>. Paracetamol 325 mg × 20 = <strong>6,500 mg</strong>. Mix and divide into 20 papers.</p>
+            </div>
+            <span class="page-badge">Solids pp.7–8</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="solid aerosol inhaler metered dose inhaler dry powder inhaler actuation puff">
+          <summary>
+            <div class="summary-main">
+              <h4>G. Solid, Single Ingredient, Aerosol</h4>
+              <p>Specify the device, strength per actuation/puff, frequency, and number of devices.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <p>The trans includes <strong>metered-dose inhalers</strong> and <strong>dry-powder inhalers</strong>. The inscription should identify the drug, device/form, and strength per puff or actuation.</p>
+            <div class="grid-2">
+              <div>
+                <h4>Label essentials</h4>
+                <p>State the number of puffs, route by inhalation, frequency, duration, and indication when needed.</p>
+              </div>
+              <div>
+                <h4>Device examples in the trans</h4>
+                <p>Metered-dose inhaler, Ellipta device, rotacap, rotahaler, turbohaler, dischaler, handihaler.</p>
+              </div>
+            </div>
+            <div class="worked">
+              <h5>Worked example — Umeclidinium</h5>
+              <p>62.5 mcg/actuation through an Ellipta device, one puff once daily for one month; dispense <strong>one device</strong>.</p>
+            </div>
+            <span class="page-badge">Solids p.8</span>
+          </div>
+        </details>
+      </section>
+
+      <!-- LIQUIDS -->
+      <section id="liquids" class="tab-panel">
+        <div class="hero searchable" data-search="liquids oral stock solution suspension parenteral aerosol ophthalmic otic">
+          <span class="eyebrow">Trans 2 categories</span>
+          <h2>Prescription Writing: Liquids & Parenterals</h2>
+          <p>Use the exact categories from the liquid trans: <strong>single-ingredient oral</strong>, <strong>multiple-ingredient oral</strong>, <strong>solution for parenteral use</strong>, <strong>dry solids for reconstitution</strong>, <strong>liquid aerosol</strong>, and <strong>ophthalmic/otic preparations</strong>.</p>
+        </div>
+
+        <details class="category searchable" open data-search="liquid single ingredient oral teaspoonful drops stock solution suspension bottles">
+          <summary>
+            <div class="summary-main">
+              <h4>A. Liquid, Single Ingredient, Oral</h4>
+              <p>Includes teaspoonful dosing, drops, stock solutions, syrups, suspensions, and oral drops.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <h4>1) Teaspoonful</h4>
+            <span class="formula">Total amount = volume per intake × total number of doses</span>
+            <div class="callout info"><strong>Wording:</strong> Write <strong>teaspoonful</strong>, not “teaspoon.” One teaspoonful = <strong>5 mL</strong>.</div>
+
+            <h4>2) Drops</h4>
+            <p>The amount may be prescribed using a stock solution, but the trans stresses the use of an <strong>Official Medicine Dropper</strong> when accuracy depends on drops.</p>
+            <div class="callout warn"><strong>Official dropper:</strong> 3 mm external diameter at delivery; held vertically, it delivers <strong>20 drops of water per mL</strong>. Other liquids may have different drops/mL.</div>
+
+            <h4>3) Ready-made stock solution / suspension</h4>
+            <span class="formula">Total daily dose = weight × prescribed mg/kg/day</span>
+            <span class="formula">Dose per administration = total daily dose ÷ doses/day</span>
+            <span class="formula">Volume per dose = ordered dose ÷ available dose × available volume</span>
+            <span class="formula">Total volume = mL per dose × doses/day × days</span>
+            <span class="formula">Number of bottles = total volume ÷ bottle volume → round up</span>
+
+            <div class="worked">
+              <h5>Worked example — Amoxicillin oral drops</h5>
+              <p>7.5 kg × 40 mg/kg/day = 300 mg/day. Divide by 3 = 100 mg/dose. At 100 mg/mL, give <strong>1 mL/dose</strong>. For 10 days: 1 × 3 × 10 = <strong>30 mL</strong>. With 10-mL bottles, dispense <strong>3 bottles</strong>.</p>
+            </div>
+
+            <div class="worked">
+              <h5>Worked example — Clarithromycin suspension</h5>
+              <p>20 kg × 15 mg/kg/day = 300 mg/day. Divide by 2 = 150 mg/dose. At 250 mg/5 mL, 150 mg = <strong>3 mL</strong>. Total: 3 mL × 2 × 7 = <strong>42 mL</strong>. A 60-mL bottle is sufficient: dispense <strong>1 bottle</strong>.</p>
+            </div>
+            <span class="page-badge">Liquids pp.1–3</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="household measures teaspoon tablespoon glass drop ml dram ounce">
+          <summary>
+            <div class="summary-main">
+              <h4>Household Measures Used in Oral Liquids</h4>
+              <p>Memorize the equivalents listed in the trans.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <table>
+              <tr><th>Measure</th><th>Approximate equivalent</th><th>Other equivalent in trans</th></tr>
+              <tr><td>1 drop</td><td><strong>1/20 mL</strong></td><td>1 minim</td></tr>
+              <tr><td>1 teaspoonful</td><td><strong>5 mL</strong></td><td>1 dram</td></tr>
+              <tr><td>1 tablespoon</td><td><strong>15 mL</strong></td><td>1/2 fluid ounce</td></tr>
+              <tr><td>1 glassful</td><td><strong>250 mL</strong></td><td>8 fluid ounces</td></tr>
+            </table>
+            <span class="page-badge">Liquids p.1</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="drops per ml distilled water lugol tincture belladonna digitalis ether chloroform">
+          <summary>
+            <div class="summary-main">
+              <h4>Official Medicine Dropper: Drops per mL</h4>
+              <p>The number of drops varies with the liquid.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <table>
+              <tr><th>Solution</th><th>Drops/mL</th></tr>
+              <tr><td>Distilled water</td><td>20</td></tr>
+              <tr><td>Fowler’s solution</td><td>20</td></tr>
+              <tr><td>Lugol’s solution</td><td>20</td></tr>
+              <tr><td>Saturated solution of potassium iodide</td><td>30</td></tr>
+              <tr><td>Opium tincture</td><td>40</td></tr>
+              <tr><td>Belladonna tincture</td><td>45</td></tr>
+              <tr><td>Digitalis tincture</td><td>45</td></tr>
+              <tr><td>Chenopodium oil</td><td>45</td></tr>
+              <tr><td>Ether</td><td>60</td></tr>
+              <tr><td>Chloroform</td><td>80</td></tr>
+            </table>
+            <p class="muted tiny">The trans attributes the difference to dropper diameter, surface tension, and specific gravity.</p>
+            <span class="page-badge">Liquids p.2</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="liquid multiple ingredient oral basis adjuvant corrective vehicle official magistral extemporaneous">
+          <summary>
+            <div class="summary-main">
+              <h4>B. Liquid, Multiple Ingredient, Oral</h4>
+              <p>Compute the total amount of each ingredient and the final bulk.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <span class="formula">Total number of doses = doses/day × days</span>
+            <span class="formula">Total amount of each drug = dose per intake × total number of doses</span>
+            <span class="formula">Total bulk = volume per intake × total number of doses</span>
+            <p>Write the active ingredients first, then the vehicle. Follow the final ingredient with <strong>“to make”</strong> and the desired final volume.</p>
+
+            <div class="grid-2">
+              <div class="card">
+                <h4>Extemporaneous / magistral order</h4>
+                <p>The preparation is compounded according to the <strong>physician’s formula</strong>.</p>
+              </div>
+              <div class="card">
+                <h4>Official prescription order</h4>
+                <p>Calls for a preparation with a definite formula in the <strong>pharmacopeia</strong> or <strong>National Formulary</strong>.</p>
+              </div>
+            </div>
+
+            <div class="worked">
+              <h5>Worked example — Dextromethorphan + ammonium chloride</h5>
+              <p>20 doses total. Dextromethorphan: 10 mg × 20 = <strong>200 mg</strong>. Ammonium chloride: 300 mg × 20 = <strong>6 g</strong>. One teaspoonful × 20 = <strong>100 mL total bulk</strong>. Add vehicle “to make 100 mL.”</p>
+            </div>
+
+            <div class="worked">
+              <h5>Flavoring as a percentage of total bulk</h5>
+              <p>For a 150-mL final volume with flavoring syrup at 20%: 150 mL × 0.20 = <strong>30 mL syrup</strong>.</p>
+            </div>
+
+            <div class="callout info"><strong>Vehicle types listed in the trans:</strong> aqueous, hydroalcoholic, and alcoholic vehicles.</div>
+            <span class="page-badge">Liquids pp.3–5</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="liquid solution parenteral injection ampule prefilled syringe desired dose volume">
+          <summary>
+            <div class="summary-main">
+              <h4>C. Liquid, Solution, Parenteral</h4>
+              <p>Ready-made injectable solution in an ampule, vial, or prefilled syringe.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <span class="formula">Volume to administer = ordered dose ÷ dose on hand × volume on hand</span>
+            <p>State the official drug name, concentration, container, number to dispense, route, dose volume, frequency, and timing.</p>
+            <div class="worked">
+              <h5>Worked example — Midazolam</h5>
+              <p>Ordered 1.5 mg; available 5 mg/mL. (1.5 ÷ 5) × 1 mL = <strong>0.3 mL</strong>. Label: inject 0.3 mL (1.5 mg) by slow IV push at the specified time.</p>
+            </div>
+            <div class="worked">
+              <h5>Practice Exercise No. 25 — Dexamethasone for fetal lung maturation</h5>
+              <p><strong>Order:</strong> 6 mg every 12 hours for 4 doses. <strong>Dexamet®:</strong> 5 mg/mL in 1-mL ampules.</p>
+              <p><strong>Total number of doses</strong> = 2 doses/day × 2 days = <strong>4 doses</strong>.</p>
+              <p><strong>Volume per dose</strong> = (6 mg ÷ 5 mg) × 1 mL = <strong>1.2 mL/dose</strong>.</p>
+              <p>Each ampule contains only 1 mL, so <strong>ampules per dose</strong> = 1.2 mL ÷ 1 mL/ampule = 1.2 → <strong>round up to 2 ampules per dose</strong>.</p>
+              <p><strong>Total ampules</strong> = 2 ampules/dose × 4 doses = <strong>8 ampules</strong>.</p>
+              <div class="callout warn"><strong>Trans inconsistency to notice:</strong> the case stem states intramuscular administration, while the sample prescription figure states intravenous administration. The calculation is unchanged; follow the route specified by the case/instructor when writing the label.</div>
+            </div>
+            <div class="worked">
+              <h5>Ready-made single-dose examples</h5>
+              <p>Diphenhydramine 50 mg/mL: dispense 1 ampule and inject 1 mL IM as a single dose. Filgrastim 300 mcg/0.5 mL: dispense 1 prefilled syringe and inject the full 0.5 mL subcutaneously as a single dose.</p>
+            </div>
+            <span class="page-badge">Liquids pp.5–6</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="dry solid parenteral reconstitution dissolve vial sterile water negative skin test">
+          <summary>
+            <div class="summary-main">
+              <h4>D. Liquid, Solution/Suspension from Dry Solids, Parenteral</h4>
+              <p>Dry sterile powder that must be reconstituted before injection.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <p><strong>Reconstitution</strong> means adding a diluent to a dry solid to produce a liquid. When the final product is a solution, begin the instruction with <strong>“Dissolve.”</strong></p>
+            <div class="mini-flow">
+              <div>Dry sterile drug</div>
+              <div>Add specified diluent</div>
+              <div>Dissolve / swirl</div>
+              <div>Withdraw required volume</div>
+              <div>Inject by stated route</div>
+            </div>
+            <div class="callout warn"><strong>Skin-test instruction in the trans:</strong> “Inject only after a negative skin test” is generally included for parenteral drugs likely to cause hypersensitivity, especially antimicrobials, except in life-threatening or emergency situations.</div>
+            <div class="worked">
+              <h5>Worked example — Ceftazidime</h5>
+              <p>1 g every 8 hours for 3 days = 9 doses. Dispense <strong>9 vials</strong>. Dissolve each vial in 3 mL sterile water, further dilute as specified, then infuse for 30 minutes.</p>
+            </div>
+            <div class="worked">
+              <h5>Worked example — Ceftriaxone</h5>
+              <p>20 kg × 50 mg/kg/day = 1,000 mg/day. Divide into 2 doses = <strong>500 mg/dose</strong>. For 24 hours only: dispense <strong>2 vials of 500 mg</strong>.</p>
+            </div>
+            <span class="page-badge">Liquids pp.7–8</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="liquid aerosol nebule respule nebulizer salbutamol budesonide">
+          <summary>
+            <div class="summary-main">
+              <h4>E. Liquid, Aerosol</h4>
+              <p>Nebules or respules administered using a nebulizer.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <span class="formula">Number of nebules/respules = administrations/day × number of days</span>
+            <p>The label should specify the nebulizer, frequency, duration, and indication when needed.</p>
+            <div class="worked">
+              <h5>Worked example — Budesonide respules</h5>
+              <p>Every 12 hours for 2 days = 2 doses/day × 2 days = <strong>4 respules</strong>.</p>
+            </div>
+            <span class="page-badge">Liquids p.8</span>
+          </div>
+        </details>
+
+        <details class="category searchable" data-search="ophthalmic otic eye drops ear drops instill conjunctival sac bottle">
+          <summary>
+            <div class="summary-main">
+              <h4>F. Liquid, Ophthalmic/Otic Preparations</h4>
+              <p>Specify the exact site: right, left, or both eyes/ears.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <span class="formula">Drops/day = drops per site × number of sites × administrations/day</span>
+            <span class="formula">Total volume = total drops × (1/20 mL per drop, when using the trans equivalent)</span>
+            <span class="formula">Number of bottles = total volume ÷ bottle volume → round up</span>
+            <p>Use <strong>Instill</strong>. For ophthalmic preparations, the trans specifies instillation into the <strong>conjunctival sac</strong>.</p>
+            <div class="callout info"><strong>Two eye medications:</strong> The trans states that a <strong>5-minute interval</strong> should be specified to avoid washing out the previously instilled drug.</div>
+            <div class="worked">
+              <h5>Worked example — Ofloxacin otic drops</h5>
+              <p>3 drops × 4/day = 12 drops/day. At 20 drops/mL, that is 0.6 mL/day. For 7 days = <strong>4.2 mL</strong>; a 5-mL bottle is enough, so dispense <strong>1 bottle</strong>.</p>
+            </div>
+            <div class="worked">
+              <h5>Worked example — Prednisolone eye drops, both eyes</h5>
+              <p>1 drop × 2 eyes × 3/day = 6 drops/day = 0.3 mL/day. For 5 days = <strong>1.5 mL total</strong>.</p>
+            </div>
+            <span class="page-badge">Liquids pp.8–9</span>
+          </div>
+        </details>
+      </section>
+
+
+      <!-- FORMULA ATLAS -->
+      <section id="formula-atlas" class="tab-panel">
+        <div class="hero searchable" data-search="formula atlas all practice exercises complete calculations">
+          <span class="eyebrow">Complete calculation guide</span>
+          <h2>Formula Atlas: every distinct case pattern</h2>
+          <p>This tab groups the formulas by the <strong>exact prescription categories in the transes</strong>. Each case shows the formula chain, the substitution, and the final quantity to write in the prescription.</p>
+        </div>
+
+        <div class="callout info searchable" data-search="how to use formula atlas">
+          <strong>How to use this tab:</strong> First identify the dosage form. Then choose the matching case pattern. Work from the first formula to the last—do not jump straight to the number of tablets, bottles, or ampules.
+        </div>
+
+        <div class="atlas-index">
+          <a href="#atlas-solid-tablet">Solid: tablet</a>
+          <a href="#atlas-solid-capsule">Solid: capsule</a>
+          <a href="#atlas-solid-powder">Solid: powder</a>
+          <a href="#atlas-solid-special">Suppository & aerosol</a>
+          <a href="#atlas-liquid-oral">Liquid: single oral</a>
+          <a href="#atlas-liquid-multiple">Liquid: multiple oral</a>
+          <a href="#atlas-parenteral-ready">Parenteral: ready-made solution</a>
+          <a href="#atlas-parenteral-dry">Parenteral: dry solid</a>
+          <a href="#atlas-drops-aerosol">Nebules, eye & ear drops</a>
+        </div>
+
+        <!-- SOLID TABLET -->
+        <details id="atlas-solid-tablet" class="category searchable" open data-search="solid single ingredient tablet formula exercises 1 2 3 4">
+          <summary>
+            <div class="summary-main">
+              <h4>A. Solid, Single Ingredient, Tablet</h4>
+              <p>Fixed dose, weight-based dose, multiple medicines, and regulated-drug cases.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="method-box">
+              <h5>Case pattern 1 — fixed dose using a ready-made tablet</h5>
+              <div class="formula-sequence">
+                <div><b>1. Administrations</b><code>frequency/day × days</code></div>
+                <div><b>2. Total dose</b><code>dose/intake × administrations</code></div>
+                <div><b>3. Tablets</b><code>total dose ÷ tablet strength</code></div>
+                <div><b>Shortcut</b><code>tablets/intake × frequency × days</code></div>
+              </div>
+            </div>
+
+            <div class="method-box">
+              <h5>Case pattern 2 — dose stated in mg/kg/day</h5>
+              <div class="formula-sequence">
+                <div><b>1. Daily dose</b><code>weight × mg/kg/day</code></div>
+                <div><b>2. Dose/intake</b><code>daily dose ÷ divided doses</code></div>
+                <div><b>3. Tablets/intake</b><code>dose/intake ÷ available strength</code></div>
+                <div><b>4. Total tablets</b><code>tablets/intake × frequency × days</code></div>
+              </div>
+              <div class="callout warn"><strong>When the exact dose is not available:</strong> use the available preparation chosen in the trans and show the rounding step explicitly.</div>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 1 — Mebendazole chewable tablet</h5>
+              <p class="stem">500 mg as a single dose; available as a 500-mg chewable tablet.</p>
+              <ol class="calc-steps">
+                <li>Total number of doses = <strong>1</strong>.</li>
+                <li>Number of tablets = 500 mg ÷ 500 mg/tablet = <strong>1 tablet</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 1 chewable tablet</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 2 — Diazepam, regulated drug</h5>
+              <p class="stem">5 mg once daily after dinner for 10 days; available as 5-mg tablets.</p>
+              <ol class="calc-steps">
+                <li>Total dose = 5 mg × 1 dose/day × 10 days = <strong>50 mg</strong>.</li>
+                <li>Number of tablets = 50 mg ÷ 5 mg/tablet = <strong>10 tablets</strong>.</li>
+                <li>Add the appropriate <strong>S2 number</strong> and indicate <strong>No refills</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 10 tablets</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 3 — Two medicines in one prescription</h5>
+              <p class="stem">Metformin 1,000 mg/day in 2 divided doses plus atorvastatin 40 mg once daily, both for 3 months (90 days).</p>
+              <ol class="calc-steps">
+                <li>Metformin dose/intake = 1,000 mg/day ÷ 2 = <strong>500 mg</strong>.</li>
+                <li>Metformin total dose = 500 mg × 2 × 90 = <strong>90,000 mg</strong>.</li>
+                <li>Metformin tablets = 90,000 ÷ 500 = <strong>180 tablets</strong>.</li>
+                <li>Atorvastatin total dose = 40 mg × 1 × 90 = <strong>3,600 mg</strong>.</li>
+                <li>Atorvastatin tablets = 3,600 ÷ 40 = <strong>90 tablets</strong>.</li>
+              </ol>
+              <span class="final-answer">Metformin No. 180 • Atorvastatin No. 90</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 4 — Clarithromycin, weight-based tablet dose</h5>
+              <p class="stem">33 kg; 15 mg/kg/day in 2 divided doses for 7 days; available as 250- and 500-mg tablets.</p>
+              <ol class="calc-steps">
+                <li>Daily dose = 33 kg × 15 mg/kg/day = <strong>495 mg/day</strong>.</li>
+                <li>Dose/intake = 495 mg/day ÷ 2 = <strong>247.5 mg</strong>.</li>
+                <li>Use the available 250-mg tablet as shown in the trans: <strong>1 tablet/dose</strong>.</li>
+                <li>Total tablets = 1 × 2/day × 7 days = <strong>14 tablets</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 14 tablets</span>
+            </div>
+            <span class="page-badge">Solids pp.2–3</span>
+          </div>
+        </details>
+
+        <!-- SOLID CAPSULE -->
+        <details id="atlas-solid-capsule" class="category searchable" data-search="solid single ingredient capsule formula exercises 5 6 7">
+          <summary>
+            <div class="summary-main">
+              <h4>B. Solid, Single Ingredient, Capsule</h4>
+              <p>Ready-made capsules and the single-dose versus multiple-dose compounding methods.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="method-box">
+              <h5>Ready-made capsule</h5>
+              <span class="formula">Number of capsules = dose/intake × frequency/day × days ÷ capsule strength</span>
+            </div>
+            <div class="grid-2">
+              <div class="method-box">
+                <h5>Compounded capsule: single-dose method</h5>
+                <p>Write the amount required in <strong>one capsule</strong>, then write: “For one capsule. Make No. ___.”</p>
+              </div>
+              <div class="method-box">
+                <h5>Compounded capsule: multiple-dose method</h5>
+                <p>Total drug = dose/capsule × number of capsules. Then divide into equal parts and dispense as capsules.</p>
+              </div>
+            </div>
+
+            <div class="exercise">
+              <h5>Sample — Ibuprofen capsule</h5>
+              <p class="stem">200 mg every 6 hours round the clock for 3 days.</p>
+              <ol class="calc-steps">
+                <li>Frequency = 24 ÷ 6 = <strong>4 doses/day</strong>.</li>
+                <li>Total capsules = 1 capsule × 4/day × 3 days = <strong>12 capsules</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 12 capsules</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Prescription No. 5 — Tacrolimus</h5>
+              <ol class="calc-steps">
+                <li>Total dose = 1 mg × 2/day × 60 days = <strong>120 mg</strong>.</li>
+                <li>Capsules = 120 mg ÷ 1 mg/capsule = <strong>120 capsules</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 120 capsules</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Prescription No. 6 — Carbocisteine</h5>
+              <ol class="calc-steps">
+                <li>Total dose = 500 mg × 3/day × 7 days = <strong>10,500 mg</strong>.</li>
+                <li>Capsules = 10,500 mg ÷ 500 mg/capsule = <strong>21 capsules</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 21 capsules</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Prescription No. 7 — Vitamin D softgel</h5>
+              <ol class="calc-steps">
+                <li>Total dose = 800 IU × 1/day × 90 days = <strong>72,000 IU</strong>.</li>
+                <li>Capsules = 72,000 IU ÷ 800 IU/capsule = <strong>90 capsules</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 90 softgel capsules</span>
+            </div>
+            <span class="page-badge">Solids pp.3–5</span>
+          </div>
+        </details>
+
+        <!-- SOLID POWDER -->
+        <details id="atlas-solid-powder" class="category searchable" data-search="solid powder formula multiple dose single dose papers capsules exercises 8 9">
+          <summary>
+            <div class="summary-main">
+              <h4>C. Solid, Single Ingredient, Powder</h4>
+              <p>Fixed dose, mg/kg/dose, and mg/kg/day cases.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="method-box">
+              <h5>Multiple-dose method</h5>
+              <span class="formula">Total number of doses = frequency/day × days</span>
+              <span class="formula">Total drug = dose/intake × total number of doses</span>
+              <p>Write the total quantity, then: “Divide into ___ equal parts and dispense as papers/capsules.”</p>
+            </div>
+
+            <div class="method-box">
+              <h5>Weight-based dose stated as mg/kg/dose</h5>
+              <span class="formula">Dose/intake = weight × mg/kg/dose</span>
+              <span class="formula">Total drug = dose/intake × frequency/day × days</span>
+            </div>
+
+            <div class="method-box">
+              <h5>Weight-based dose stated as mg/kg/day</h5>
+              <span class="formula">Daily dose = weight × mg/kg/day</span>
+              <span class="formula">Dose/intake = daily dose ÷ divided doses</span>
+              <p>For the <strong>single-dose method</strong>, write this dose per paper/capsule and state how many to make.</p>
+            </div>
+
+            <div class="callout info"><strong>Packaging rule in the trans:</strong> one dose &lt; 600 mg → capsule; one dose ≥ 600 mg → paper, provided the patient can use that dosage form.</div>
+
+            <div class="exercise">
+              <h5>Sample — Magnesium trisilicate, multiple-dose method</h5>
+              <ol class="calc-steps">
+                <li>Total doses = 3/day × 5 days = <strong>15 doses</strong>.</li>
+                <li>Total drug = 1 g/dose × 15 = <strong>15 g</strong>.</li>
+                <li>One dose is 1 g (≥600 mg), so the trans uses <strong>papers</strong>.</li>
+              </ol>
+              <span class="final-answer">15 g total • Divide into 15 papers</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 8 — Phenoxymethylpenicillin, mg/kg/dose</h5>
+              <ol class="calc-steps">
+                <li>Dose/intake = 15 kg × 10 mg/kg/dose = <strong>150 mg</strong>.</li>
+                <li>Total doses = 4/day × 7 days = <strong>28 doses</strong>.</li>
+                <li>Total drug = 150 mg × 28 = <strong>4,200 mg = 4.2 g</strong>.</li>
+              </ol>
+              <span class="final-answer">4.2 g total • Divide into 28 equal parts</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 9 — Amoxicillin, mg/kg/day, single-dose method</h5>
+              <ol class="calc-steps">
+                <li>Daily dose = 10 kg × 90 mg/kg/day = <strong>900 mg/day</strong>.</li>
+                <li>Dose/intake = 900 mg/day ÷ 3 = <strong>300 mg</strong>.</li>
+                <li>Total papers = 3/day × 10 days = <strong>30 papers</strong>.</li>
+                <li>Check total drug if needed: 300 mg × 30 = <strong>9,000 mg = 9 g</strong>.</li>
+              </ol>
+              <span class="final-answer">300 mg for one paper • Make No. 30</span>
+            </div>
+            <span class="page-badge">Solids pp.5–6</span>
+          </div>
+        </details>
+
+        <!-- SPECIAL SOLIDS -->
+        <details id="atlas-solid-special" class="category searchable" data-search="suppository multiple ingredients capsule powder aerosol formulas exercises 10 11 12 13 14">
+          <summary>
+            <div class="summary-main">
+              <h4>D–G. Suppository, Multiple Ingredients, and Solid Aerosol</h4>
+              <p>The remaining solid categories and their distinct formulas.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="method-box">
+              <h5>D. Suppository</h5>
+              <span class="formula">Dose/intake = weight × mg/kg/dose</span>
+              <span class="formula">Number of suppositories = suppositories/intake × administrations/day × days</span>
+              <p>Choose the available strength that matches the calculated dose. Use <strong>Insert</strong> in the label.</p>
+            </div>
+
+            <div class="exercise">
+              <h5>Sample — Paracetamol rectal suppository</h5>
+              <p class="stem">25 kg; 10 mg/kg/dose every 4 hours as needed for 4 days; available 125 mg and 250 mg.</p>
+              <ol class="calc-steps">
+                <li>Dose/intake = 25 kg × 10 mg/kg/dose = <strong>250 mg</strong>.</li>
+                <li>Choose one <strong>250-mg suppository</strong> per dose.</li>
+                <li>The sample prescription dispenses <strong>16 suppositories</strong>, corresponding to 4/day × 4 days.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 16 suppositories</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 10 — Glycerin suppository</h5>
+              <ol class="calc-steps">
+                <li>The ordered dose equals one available adult suppository: <strong>2.5 g</strong>.</li>
+                <li>It is a single dose, so the required quantity is <strong>1 suppository</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 1 suppository</span>
+            </div>
+
+            <div class="method-box">
+              <h5>E. Multiple-ingredient capsule</h5>
+              <span class="formula">Total doses = frequency/day × days</span>
+              <span class="formula">Total of each drug = amount/capsule × total doses</span>
+              <p>If the powder mixture is too small, add an excipient such as <strong>lactose</strong> as shown in the trans.</p>
+            </div>
+
+            <div class="exercise">
+              <h5>Sample — Noscapine + guaifenesin</h5>
+              <ol class="calc-steps">
+                <li>Total capsules = 3/day × 5 days = <strong>15</strong>.</li>
+                <li>Noscapine = 15 mg × 15 = <strong>225 mg</strong>.</li>
+                <li>Guaifenesin = 100 mg × 15 = <strong>1,500 mg</strong>.</li>
+              </ol>
+              <span class="final-answer">Mix and divide into 15 capsules</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 11 — Chlorpheniramine + phenylephrine</h5>
+              <ol class="calc-steps">
+                <li>Total capsules = 2/day × 5 days = <strong>10</strong>.</li>
+                <li>Chlorpheniramine = 2 mg × 10 = <strong>20 mg</strong>.</li>
+                <li>Phenylephrine = 10 mg × 10 = <strong>100 mg</strong>.</li>
+                <li>Add lactose in sufficient amount, then divide into 10 capsules.</li>
+              </ol>
+              <span class="final-answer">20 mg + 100 mg total • Make No. 10</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 12 — Trimethoprim + sulfamethoxazole, single-dose method</h5>
+              <ol class="calc-steps">
+                <li>Total capsules = 2/day × 7 days = <strong>14</strong>.</li>
+                <li>Write the contents of <strong>one capsule</strong>: trimethoprim 80 mg + sulfamethoxazole 400 mg.</li>
+                <li>Instruction: “For one capsule. Make No. 14.”</li>
+              </ol>
+              <span class="final-answer">80 mg + 400 mg per capsule • Make No. 14</span>
+            </div>
+
+            <div class="method-box">
+              <h5>F. Multiple-ingredient powder</h5>
+              <span class="formula">Total amount of each ingredient = amount/intake × total number of doses</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Sample — Antacid mixture</h5>
+              <ol class="calc-steps">
+                <li>Total papers = 3/day × 5 days = <strong>15</strong>.</li>
+                <li>Dried aluminum hydroxide gel = 600 mg × 15 = <strong>9,000 mg = 9 g</strong>.</li>
+                <li>Magnesium trisilicate = 1 g × 15 = <strong>15 g</strong>.</li>
+                <li>Add aromatic powder in sufficient amount; divide into 15 papers.</li>
+              </ol>
+              <span class="final-answer">9 g + 15 g • Divide into 15 papers</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Prescription No. 13 — Ibuprofen + paracetamol powders</h5>
+              <ol class="calc-steps">
+                <li>Total papers = 4/day × 5 days = <strong>20</strong>.</li>
+                <li>Ibuprofen = 200 mg × 20 = <strong>4,000 mg</strong>.</li>
+                <li>Paracetamol = 325 mg × 20 = <strong>6,500 mg</strong>.</li>
+              </ol>
+              <span class="final-answer">4,000 mg + 6,500 mg • Divide into 20 papers</span>
+            </div>
+
+            <div class="method-box">
+              <h5>G. Solid aerosol / inhaler</h5>
+              <span class="formula">Total actuations = puffs/intake × administrations/day × days</span>
+              <span class="formula">Devices = total actuations ÷ actuations/device → round up</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Sample — Terbutaline metered-dose inhaler</h5>
+              <ol class="calc-steps">
+                <li>Administrations = 4/day × 3 days = <strong>12 administrations</strong>.</li>
+                <li>At 1–2 puffs each time, total use = <strong>12–24 puffs</strong>.</li>
+                <li>One inhaler contains 400 doses, so <strong>one inhaler</strong> is sufficient.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 1 inhaler</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 14 — Umeclidinium Ellipta</h5>
+              <ol class="calc-steps">
+                <li>Total actuations = 1 puff/day × 30 days = <strong>30 puffs</strong>.</li>
+                <li>The sample prescription dispenses <strong>one Ellipta device</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 1 device</span>
+            </div>
+            <span class="page-badge">Solids pp.6–8</span>
+          </div>
+        </details>
+
+        <!-- SINGLE ORAL LIQUID -->
+        <details id="atlas-liquid-oral" class="category searchable" open data-search="liquid single ingredient oral formulas teaspoonful drops bottles exercises 15 16 17 18">
+          <summary>
+            <div class="summary-main">
+              <h4>A. Liquid, Single Ingredient, Oral</h4>
+              <p>Teaspoonful, medicinal drops, stock solution, and weight-based suspension cases.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="method-box">
+              <h5>Case pattern 1 — dose already given in mL</h5>
+              <span class="formula">Total number of doses = frequency/day × days</span>
+              <span class="formula">Total volume = mL/intake × total number of doses</span>
+              <span class="formula">Bottles = total volume ÷ bottle size → round up</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Sample — Paregoric teaspoonful</h5>
+              <p class="stem">5 mL every 4 hours as needed for 3 days; the sample dispenses 60 mL.</p>
+              <ol class="calc-steps">
+                <li>The trans uses 4 administrations/day for this example.</li>
+                <li>Total volume = 5 mL × 4/day × 3 days = <strong>60 mL</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense 60 mL</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Sample — Ambroxol infant drops</h5>
+              <ol class="calc-steps">
+                <li>Total volume = 0.5 mL/dose × 2/day × 5 days = <strong>5 mL</strong>.</li>
+                <li>The only available bottle is 15 mL, so dispense <strong>one 15-mL bottle</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 1 bottle (15 mL)</span>
+            </div>
+
+            <div class="method-box">
+              <h5>Case pattern 2 — convert mL to drops</h5>
+              <span class="formula">Number of drops = ordered volume in mL × drops/mL for that liquid</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Sample — Belladonna tincture</h5>
+              <ol class="calc-steps">
+                <li>Usual dose = <strong>0.6 mL</strong>.</li>
+                <li>Belladonna tincture = <strong>45 drops/mL</strong>.</li>
+                <li>Drops/dose = 0.6 mL × 45 drops/mL = <strong>27 drops</strong>.</li>
+              </ol>
+              <span class="final-answer">Dose per intake = 27 drops</span>
+            </div>
+
+            <div class="method-box">
+              <h5>Case pattern 3 — mg/kg/day suspension or oral drops</h5>
+              <div class="formula-sequence">
+                <div><b>1. Daily dose</b><code>weight × mg/kg/day</code></div>
+                <div><b>2. Dose/intake</b><code>daily dose ÷ divided doses</code></div>
+                <div><b>3. mL/intake</b><code>ordered mg ÷ available mg × available mL</code></div>
+                <div><b>4. Bottles</b><code>mL/intake × frequency × days ÷ bottle size</code></div>
+              </div>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 15 — Amoxicillin oral drops</h5>
+              <ol class="calc-steps">
+                <li>Daily dose = 7.5 kg × 40 mg/kg/day = <strong>300 mg/day</strong>.</li>
+                <li>Dose/intake = 300 mg ÷ 3 = <strong>100 mg</strong>.</li>
+                <li>Volume/intake = 100 mg ÷ 100 mg/mL = <strong>1 mL</strong>.</li>
+                <li>Total volume = 1 mL × 3/day × 10 days = <strong>30 mL</strong>.</li>
+                <li>Bottles = 30 mL ÷ 10 mL/bottle = <strong>3 bottles</strong>.</li>
+              </ol>
+              <span class="final-answer">Give 1 mL/dose • Dispense 3 bottles</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 16 — Clarithromycin suspension</h5>
+              <ol class="calc-steps">
+                <li>Daily dose = 20 kg × 15 mg/kg/day = <strong>300 mg/day</strong>.</li>
+                <li>Dose/intake = 300 mg ÷ 2 = <strong>150 mg</strong>.</li>
+                <li>Volume/intake = (150 mg ÷ 250 mg) × 5 mL = <strong>3 mL</strong>.</li>
+                <li>Total volume = 3 mL × 2/day × 7 days = <strong>42 mL</strong>.</li>
+                <li>One 60-mL bottle covers 42 mL.</li>
+              </ol>
+              <span class="final-answer">Give 3 mL/dose • Dispense 1 bottle</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 17 — Clindamycin oral solution</h5>
+              <ol class="calc-steps">
+                <li>Daily dose = 30 kg × 20 mg/kg/day = <strong>600 mg/day</strong>.</li>
+                <li>Dose/intake = 600 mg ÷ 4 = <strong>150 mg</strong>.</li>
+                <li>Volume/intake = (150 mg ÷ 75 mg) × 5 mL = <strong>10 mL</strong>.</li>
+                <li>Total volume = 10 mL × 4/day × 7 days = <strong>280 mL</strong>.</li>
+                <li>Bottles = 280 ÷ 60 = 4.67 → <strong>5 bottles</strong>.</li>
+              </ol>
+              <span class="final-answer">Give 10 mL/dose • Dispense 5 bottles</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 18 — Metronidazole suspension</h5>
+              <ol class="calc-steps">
+                <li>Daily dose = 25 kg × 30 mg/kg/day = <strong>750 mg/day</strong>.</li>
+                <li>Dose/intake = 750 mg ÷ 3 = <strong>250 mg</strong>.</li>
+                <li>Volume/intake = (250 mg ÷ 125 mg) × 5 mL = <strong>10 mL</strong>.</li>
+                <li>Total volume = 10 mL × 3/day × 10 days = <strong>300 mL</strong>.</li>
+                <li>Bottles = 300 ÷ 60 = <strong>5 bottles</strong>.</li>
+              </ol>
+              <span class="final-answer">Give 10 mL/dose • Dispense 5 bottles</span>
+            </div>
+            <span class="page-badge">Liquids pp.1–3</span>
+          </div>
+        </details>
+
+        <!-- MULTIPLE ORAL LIQUID -->
+        <details id="atlas-liquid-multiple" class="category searchable" data-search="liquid multiple ingredient oral formulas total bulk percentage syrup exercises 19 20 21">
+          <summary>
+            <div class="summary-main">
+              <h4>B. Liquid, Multiple Ingredient, Oral</h4>
+              <p>Total amounts of ingredients, final bulk, flavoring percentage, and ready-made bottle count.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="formula-sequence">
+              <div><b>1. Total doses</b><code>frequency/day × days</code></div>
+              <div><b>2. Final bulk</b><code>mL/intake × total doses</code></div>
+              <div><b>3. Each drug</b><code>dose/intake × total doses</code></div>
+              <div><b>4. % vehicle</b><code>final bulk × decimal percentage</code></div>
+            </div>
+            <div class="callout info"><strong>“To make”:</strong> The final vehicle is added until the preparation reaches the stated total bulk—not in addition to it.</div>
+
+            <div class="exercise">
+              <h5>Sample — Dextromethorphan + ammonium chloride</h5>
+              <ol class="calc-steps">
+                <li>Total doses = 4/day × 5 days = <strong>20</strong>.</li>
+                <li>Total bulk = 5 mL × 20 = <strong>100 mL</strong>.</li>
+                <li>Dextromethorphan = 10 mg × 20 = <strong>200 mg</strong>.</li>
+                <li>Ammonium chloride = 300 mg × 20 = <strong>6,000 mg = 6 g</strong>.</li>
+                <li>Terpin hydrate elixir is added <strong>to make 100 mL</strong>.</li>
+              </ol>
+              <span class="final-answer">200 mg + 6 g • Final bulk 100 mL</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 19A — Isoniazid + pyridoxine, compounded</h5>
+              <ol class="calc-steps">
+                <li>Total doses = 1/day × 30 days = <strong>30</strong>.</li>
+                <li>Total bulk = 5 mL × 30 = <strong>150 mL</strong>.</li>
+                <li>Isoniazid = 200 mg × 30 = <strong>6,000 mg = 6 g</strong>.</li>
+                <li>Pyridoxine HCl = 10 mg × 30 = <strong>300 mg = 0.3 g</strong>.</li>
+                <li>Strawberry syrup = 150 mL × 0.20 = <strong>30 mL</strong>.</li>
+                <li>Distilled water is added <strong>to make 150 mL</strong>.</li>
+              </ol>
+              <span class="final-answer">6 g + 0.3 g + 30 mL syrup • Final bulk 150 mL</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 19B — Same dose using a ready-made 120-mL syrup</h5>
+              <ol class="calc-steps">
+                <li>Total doses = 1/day × 180 days = <strong>180</strong>.</li>
+                <li>Total volume = 5 mL × 180 = <strong>900 mL</strong>.</li>
+                <li>Bottles = 900 mL ÷ 120 mL = 7.5 → <strong>8 bottles</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 8 bottles</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 20 — Amlodipine + valsartan syrup</h5>
+              <ol class="calc-steps">
+                <li>Total doses = 1/day × 30 days = <strong>30</strong>.</li>
+                <li>Total bulk = 5 mL × 30 = <strong>150 mL</strong>.</li>
+                <li>Valsartan = 80 mg × 30 = <strong>2,400 mg = 2.4 g</strong>.</li>
+                <li>Amlodipine = 5 mg × 30 = <strong>150 mg = 0.15 g</strong>.</li>
+                <li>Orange syrup = 150 mL × 0.20 = <strong>30 mL</strong>.</li>
+              </ol>
+              <span class="final-answer">2.4 g + 0.15 g + 30 mL syrup • Final bulk 150 mL</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 21 — Cefuroxime + bromhexine syrup</h5>
+              <p class="stem">One teaspoonful every 8 hours for 10 days; grape syrup is 40% of total bulk.</p>
+              <ol class="calc-steps">
+                <li>Frequency = 24 ÷ 8 = <strong>3 doses/day</strong>.</li>
+                <li>Total doses = 3/day × 10 days = <strong>30</strong>.</li>
+                <li>Total bulk = 5 mL × 30 = <strong>150 mL</strong>.</li>
+                <li>Cefuroxime = 250 mg × 30 = <strong>7,500 mg = 7.5 g</strong>.</li>
+                <li>Bromhexine = 4 mg × 30 = <strong>120 mg</strong>.</li>
+                <li>Grape syrup = 150 mL × 0.40 = <strong>60 mL</strong>.</li>
+              </ol>
+              <div class="trans-note"><strong>Typographical issue in the trans:</strong> the displayed line says “1 a day × 30 days,” but the case itself is every 8 hours for 10 days. The correct route to the same 30 doses is <strong>3/day × 10 days</strong>.</div>
+              <span class="final-answer">7.5 g + 120 mg + 60 mL syrup • Final bulk 150 mL</span>
+            </div>
+            <span class="page-badge">Liquids pp.3–5</span>
+          </div>
+        </details>
+
+        <!-- READY PARENTERAL -->
+        <details id="atlas-parenteral-ready" class="category searchable" open data-search="parenteral solution injection formula exercises 22 23 24 25 dexamethasone">
+          <summary>
+            <div class="summary-main">
+              <h4>C. Liquid, Solution, Parenteral</h4>
+              <p>Desired volume, ampules per dose, total ampules, and prefilled-syringe cases.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="formula-sequence">
+              <div><b>1. Volume/dose</b><code>ordered dose ÷ dose on hand × volume on hand</code></div>
+              <div><b>2. Containers/dose</b><code>volume needed ÷ volume/container → round up</code></div>
+              <div><b>3. Total doses</b><code>frequency/day × days</code></div>
+              <div><b>4. Total containers</b><code>containers/dose × total doses</code></div>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 22 — Diphenhydramine IM</h5>
+              <ol class="calc-steps">
+                <li>Volume = (50 mg ÷ 50 mg) × 1 mL = <strong>1 mL</strong>.</li>
+                <li>The dose uses one 1-mL ampule.</li>
+              </ol>
+              <span class="final-answer">Inject 1 mL • Dispense 1 ampule</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 23 — Filgrastim prefilled syringe</h5>
+              <ol class="calc-steps">
+                <li>Ordered dose = <strong>300 mcg</strong>.</li>
+                <li>Available prefilled syringe = <strong>300 mcg/0.5 mL</strong>.</li>
+                <li>The full syringe provides the exact dose: <strong>0.5 mL</strong>.</li>
+              </ol>
+              <span class="final-answer">Inject 1 prefilled syringe • Dispense No. 1</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 24 — Midazolam</h5>
+              <ol class="calc-steps">
+                <li>Volume = (1.5 mg ÷ 5 mg) × 1 mL = <strong>0.3 mL</strong>.</li>
+                <li>One ampule is sufficient for the single dose.</li>
+              </ol>
+              <span class="final-answer">Inject 0.3 mL • Dispense 1 ampule</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 25 — Dexamethasone: complete solution</h5>
+              <p class="stem">6 mg every 12 hours for 4 doses. Dexamet® 5 mg/mL in 1-mL ampules; Penadex® 4 mg/mL in 2-mL ampules.</p>
+              <ol class="calc-steps">
+                <li>Total doses = 2/day × 2 days = <strong>4 doses</strong>.</li>
+                <li><strong>Using Dexamet®:</strong> volume/dose = (6 mg ÷ 5 mg) × 1 mL = <strong>1.2 mL</strong>.</li>
+                <li>Dexamet ampules/dose = 1.2 mL ÷ 1 mL/ampule = 1.2 → <strong>2 ampules/dose</strong>.</li>
+                <li>Total Dexamet ampules = 2 × 4 = <strong>8 ampules</strong>.</li>
+                <li><strong>Alternative using Penadex®:</strong> volume/dose = (6 mg ÷ 4 mg) × 1 mL = <strong>1.5 mL</strong>.</li>
+                <li>Each Penadex ampule contains 2 mL, so one ampule covers one dose: 1 × 4 = <strong>4 ampules</strong>.</li>
+              </ol>
+              <div class="trans-note"><strong>What the sample uses:</strong> The figure selects Dexamet® and writes <strong>Dispense No. 8 ampules</strong>. Also note that the stem says IM while the figure says IV; use the route required by the case/instructor.</div>
+              <span class="final-answer">Dexamet: 1.2 mL/dose • Dispense 8 ampules</span>
+            </div>
+            <span class="page-badge">Liquids pp.5–6</span>
+          </div>
+        </details>
+
+        <!-- DRY PARENTERAL -->
+        <details id="atlas-parenteral-dry" class="category searchable" data-search="dry solid parenteral reconstitution formula exercises 26 27 28 29">
+          <summary>
+            <div class="summary-main">
+              <h4>D. Liquid from Dry Solids, Parenteral</h4>
+              <p>Reconstitution, number of doses, dose per vial, and number of vials.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="method-box">
+              <h5>Fixed dose matching a vial strength</h5>
+              <span class="formula">Total doses = frequency/day × days</span>
+              <span class="formula">Vials/dose = ordered dose ÷ dose per vial → round up when needed</span>
+              <span class="formula">Total vials = vials/dose × total doses</span>
+            </div>
+            <div class="method-box">
+              <h5>Weight-based dose in mg/kg/day</h5>
+              <span class="formula">Daily dose = weight × mg/kg/day</span>
+              <span class="formula">Dose/intake = daily dose ÷ divided doses</span>
+              <span class="formula">Choose vial strength → compute vials needed</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Sample — Crystalline Penicillin G</h5>
+              <p class="stem">1,000,000 units every 6 hours for 4 days; available as 1,000,000-unit vials.</p>
+              <ol class="calc-steps">
+                <li>Frequency = 24 ÷ 6 = <strong>4 doses/day</strong>.</li>
+                <li>Total doses = 4/day × 4 days = <strong>16 doses</strong>.</li>
+                <li>Each dose uses one 1,000,000-unit vial.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 16 vials</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 26 — RSV vaccine reconstitution</h5>
+              <ol class="calc-steps">
+                <li>Withdraw the entire supplied adjuvant suspension and transfer it into the lyophilized antigen vial.</li>
+                <li>Gently swirl until dissolved; do not shake vigorously.</li>
+                <li>After reconstitution, withdraw <strong>0.5 mL</strong>.</li>
+                <li>It is a single dose, so dispense <strong>one complete two-vial box</strong>.</li>
+              </ol>
+              <span class="final-answer">Reconstitute supplied components • Inject 0.5 mL once</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 27 — Ceftazidime</h5>
+              <ol class="calc-steps">
+                <li>Total doses = 3/day × 3 days = <strong>9 doses</strong>.</li>
+                <li>Total drug = 1 g × 9 = <strong>9 g</strong>.</li>
+                <li>Each vial contains 1 g, so total vials = 9 g ÷ 1 g/vial = <strong>9 vials</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 9 vials</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 28 — Ceftriaxone, weight-based</h5>
+              <ol class="calc-steps">
+                <li>Daily dose = 20 kg × 50 mg/kg/day = <strong>1,000 mg/day</strong>.</li>
+                <li>Dose/intake = 1,000 mg ÷ 2 = <strong>500 mg</strong>.</li>
+                <li>Total doses = 2/day × 1 day = <strong>2 doses</strong>.</li>
+                <li>Choose the 500-mg vial: 1 vial/dose × 2 = <strong>2 vials</strong>.</li>
+              </ol>
+              <span class="final-answer">500 mg/dose • Dispense No. 2 vials</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 29 — Pantoprazole</h5>
+              <ol class="calc-steps">
+                <li>Ordered dose = <strong>40 mg</strong>.</li>
+                <li>Available vial = <strong>40 mg/vial</strong>.</li>
+                <li>Vials = 40 mg ÷ 40 mg/vial = <strong>1 vial</strong>.</li>
+                <li>Dissolve the vial in the stated 2 mL sterile NSS before administration.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 1 vial</span>
+            </div>
+            <span class="page-badge">Liquids pp.7–8</span>
+          </div>
+        </details>
+
+        <!-- AEROSOL AND DROPS -->
+        <details id="atlas-drops-aerosol" class="category searchable" data-search="liquid aerosol nebule respule ophthalmic otic formulas exercises 30 31 32">
+          <summary>
+            <div class="summary-main">
+              <h4>E–F. Liquid Aerosol and Ophthalmic/Otic Preparations</h4>
+              <p>Nebules/respules and total drop-volume calculations.</p>
+            </div>
+            <span class="summary-icon">+</span>
+          </summary>
+          <div class="category-body">
+            <div class="method-box">
+              <h5>E. Nebules / respules</h5>
+              <span class="formula">Number of nebules/respules = administrations/day × days × units/administration</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Sample — Salbutamol nebules</h5>
+              <p class="stem">One 2.5-mg/2.5-mL nebule every 4 hours for 2 days.</p>
+              <ol class="calc-steps">
+                <li>Frequency = 24 ÷ 4 = <strong>6 doses/day</strong>.</li>
+                <li>Nebules = 1 × 6/day × 2 days = <strong>12 nebules</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 12 nebules</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Exercise No. 30 — Budesonide respules</h5>
+              <ol class="calc-steps">
+                <li>Frequency = every 12 hours = <strong>2 doses/day</strong>.</li>
+                <li>Respules = 1 × 2/day × 2 days = <strong>4 respules</strong>.</li>
+              </ol>
+              <span class="final-answer">Dispense No. 4 respules</span>
+            </div>
+
+            <div class="method-box">
+              <h5>F. Ophthalmic / otic drops</h5>
+              <span class="formula">Drops/day = drops/site/dose × number of sites × administrations/day</span>
+              <span class="formula">Total drops = drops/day × days</span>
+              <span class="formula">Total mL = total drops ÷ drops/mL</span>
+              <span class="formula">Bottles = total mL ÷ bottle size → round up</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Prescription No. 31 — Ofloxacin otic drops</h5>
+              <ol class="calc-steps">
+                <li>Use the upper ordered amount for supply calculation: 3 drops/dose.</li>
+                <li>Drops/day = 3 × 1 ear × 4/day = <strong>12 drops/day</strong>.</li>
+                <li>Total drops = 12 × 7 = <strong>84 drops</strong>.</li>
+                <li>Total volume = 84 drops ÷ 20 drops/mL = <strong>4.2 mL</strong>.</li>
+                <li>Bottles = 4.2 mL ÷ 5 mL/bottle = 0.84 → <strong>1 bottle</strong>.</li>
+              </ol>
+              <span class="final-answer">Total 4.2 mL • Dispense 1 bottle</span>
+            </div>
+
+            <div class="exercise">
+              <h5>Practice Prescription No. 32 — Prednisolone eye drops, both eyes</h5>
+              <ol class="calc-steps">
+                <li>Drops/day = 1 drop × 2 eyes × 3/day = <strong>6 drops/day</strong>.</li>
+                <li>Total drops = 6 × 5 days = <strong>30 drops</strong>.</li>
+                <li>Total volume = 30 ÷ 20 drops/mL = <strong>1.5 mL</strong>.</li>
+                <li>The sample prescription dispenses <strong>one bottle</strong>.</li>
+              </ol>
+              <span class="final-answer">Total 1.5 mL • Dispense 1 bottle</span>
+            </div>
+            <span class="page-badge">Liquids pp.8–9</span>
+          </div>
+        </details>
+
+        <div class="footer">
+          The Formula Atlas follows the formulas, examples, and practice-exercise solutions shown in the uploaded solid and liquid prescription-writing transes. Noted inconsistencies are identified rather than silently corrected.
+        </div>
+      </section>
+
+      <!-- TOOLS -->
+      <section id="tools" class="tab-panel">
+        <div class="hero searchable" data-search="calculators templates builder prescription">
+          <span class="eyebrow">Interactive tools</span>
+          <h2>Calculate first. Write second.</h2>
+          <p>These calculators mirror the formulas used in the transes. They show the intermediate steps so you can study the method—not just get an answer.</p>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <h3>Calculators</h3>
+            <p>Values are educational examples. Keep units consistent.</p>
+          </div>
+        </div>
+
+        <div class="calc-layout">
+          <article class="calc-card searchable" data-search="tablet capsule calculator units total dose">
+            <h4>Ready-made tablet or capsule</h4>
+            <p class="muted tiny">Total dose → number of units.</p>
+            <div class="fields">
+              <label>Dose per intake
+                <input id="solidDose" type="number" min="0" step="any" value="500">
+              </label>
+              <label>Doses per day
+                <input id="solidFreq" type="number" min="0" step="any" value="4">
+              </label>
+              <label>Number of days
+                <input id="solidDays" type="number" min="0" step="any" value="3">
+              </label>
+              <label>Strength per unit
+                <input id="solidStrength" type="number" min="0" step="any" value="500">
+              </label>
+            </div>
+            <div class="btn-row"><button class="btn" onclick="calcSolid()">Calculate</button></div>
+            <div id="solidResult" class="result"></div>
+          </article>
+
+          <article class="calc-card searchable" data-search="weight based oral liquid calculator suspension bottles">
+            <h4>Weight-based oral liquid</h4>
+            <p class="muted tiny">mg/kg/day → mg/dose → mL/dose → bottles.</p>
+            <div class="fields">
+              <label>Weight (kg)
+                <input id="liqWeight" type="number" min="0" step="any" value="7.5">
+              </label>
+              <label>Dose (mg/kg/day)
+                <input id="liqMgKg" type="number" min="0" step="any" value="40">
+              </label>
+              <label>Doses per day
+                <input id="liqFreq" type="number" min="0" step="any" value="3">
+              </label>
+              <label>Number of days
+                <input id="liqDays" type="number" min="0" step="any" value="10">
+              </label>
+              <label>Available strength (mg)
+                <input id="liqAvailMg" type="number" min="0" step="any" value="100">
+              </label>
+              <label>Available volume (mL)
+                <input id="liqAvailMl" type="number" min="0" step="any" value="1">
+              </label>
+              <label>Bottle size (mL)
+                <input id="liqBottle" type="number" min="0" step="any" value="10">
+              </label>
+            </div>
+            <div class="btn-row"><button class="btn" onclick="calcLiquid()">Calculate</button></div>
+            <div id="liqResult" class="result"></div>
+          </article>
+
+          <article class="calc-card searchable" data-search="powder compounded capsule paper multiple dose calculator">
+            <h4>Compounded powder</h4>
+            <p class="muted tiny">Total number of doses and total mass.</p>
+            <div class="fields">
+              <label>Dose per intake (mg)
+                <input id="powDose" type="number" min="0" step="any" value="1000">
+              </label>
+              <label>Doses per day
+                <input id="powFreq" type="number" min="0" step="any" value="3">
+              </label>
+              <label>Number of days
+                <input id="powDays" type="number" min="0" step="any" value="5">
+              </label>
+            </div>
+            <div class="btn-row"><button class="btn" onclick="calcPowder()">Calculate</button></div>
+            <div id="powResult" class="result"></div>
+          </article>
+
+          <article class="calc-card searchable" data-search="parenteral injection desired dose calculator ml">
+            <h4>Parenteral volume</h4>
+            <p class="muted tiny">Ordered dose ÷ dose on hand × volume on hand.</p>
+            <div class="fields">
+              <label>Ordered dose
+                <input id="injOrdered" type="number" min="0" step="any" value="1.5">
+              </label>
+              <label>Dose on hand
+                <input id="injHand" type="number" min="0" step="any" value="5">
+              </label>
+              <label>Volume on hand (mL)
+                <input id="injVolume" type="number" min="0" step="any" value="1">
+              </label>
+            </div>
+            <div class="btn-row"><button class="btn" onclick="calcInjection()">Calculate</button></div>
+            <div id="injResult" class="result"></div>
+          </article>
+
+          <article class="calc-card searchable" data-search="eye ear drop calculator bottle">
+            <h4>Ophthalmic / otic drops</h4>
+            <p class="muted tiny">Drop count → total volume → number of bottles.</p>
+            <div class="fields">
+              <label>Drops per site per dose
+                <input id="dropDose" type="number" min="0" step="any" value="3">
+              </label>
+              <label>Number of sites
+                <input id="dropSites" type="number" min="1" step="1" value="1">
+              </label>
+              <label>Administrations/day
+                <input id="dropFreq" type="number" min="0" step="any" value="4">
+              </label>
+              <label>Number of days
+                <input id="dropDays" type="number" min="0" step="any" value="7">
+              </label>
+              <label>Drops per mL
+                <input id="dropPerMl" type="number" min="0" step="any" value="20">
+              </label>
+              <label>Bottle size (mL)
+                <input id="dropBottle" type="number" min="0" step="any" value="5">
+              </label>
+            </div>
+            <div class="btn-row"><button class="btn" onclick="calcDrops()">Calculate</button></div>
+            <div id="dropResult" class="result"></div>
+          </article>
+
+          <article class="calc-card searchable" data-search="multiple ingredient liquid total bulk flavor syrup percentage">
+            <h4>Multiple-ingredient liquid: final bulk</h4>
+            <p class="muted tiny">Number of doses, final volume, and flavoring percentage.</p>
+            <div class="fields">
+              <label>Volume per intake (mL)
+                <input id="bulkDoseMl" type="number" min="0" step="any" value="5">
+              </label>
+              <label>Doses per day
+                <input id="bulkFreq" type="number" min="0" step="any" value="1">
+              </label>
+              <label>Number of days
+                <input id="bulkDays" type="number" min="0" step="any" value="30">
+              </label>
+              <label>Flavoring (% of bulk)
+                <input id="bulkPercent" type="number" min="0" step="any" value="20">
+              </label>
+            </div>
+            <div class="btn-row"><button class="btn" onclick="calcBulk()">Calculate</button></div>
+            <div id="bulkResult" class="result"></div>
+          </article>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <h3>Prescription builder</h3>
+            <p>Fill in the already-calculated values. The builder formats the major prescription parts.</p>
+          </div>
+        </div>
+
+        <div class="template-grid searchable" data-search="prescription template builder inscription subscription signatura">
+          <div class="calc-card">
+            <label>Quick template
+              <select id="templateType" onchange="applyTemplate()">
+                <option value="tablet">Ready-made tablet/capsule</option>
+                <option value="liquid">Oral liquid/suspension</option>
+                <option value="powder">Compounded powder</option>
+                <option value="suppository">Suppository</option>
+                <option value="injection">Parenteral solution</option>
+                <option value="reconstituted">Dry solid for reconstitution</option>
+                <option value="nebule">Nebule/respule</option>
+                <option value="drops">Ophthalmic/otic drops</option>
+                <option value="inhaler">Inhaler/device</option>
+              </select>
+            </label>
+
+            <div class="fields">
+              <label>Prescriber
+                <input id="bPrescriber" value="JUANA DELA CRUZ, M.D.">
+              </label>
+              <label>Patient
+                <input id="bPatient" value="Patient Name">
+              </label>
+              <label>Age / sex
+                <input id="bAge" value="___ / ___">
+              </label>
+              <label>Date
+                <input id="bDate" value="__________">
+              </label>
+              <label>Address
+                <input id="bAddress" value="______________________">
+              </label>
+              <label>Drug + dosage form
+                <input id="bDrug" value="Paracetamol tablet">
+              </label>
+              <label>Strength / concentration
+                <input id="bStrength" value="500 mg">
+              </label>
+              <label>Subscription
+                <input id="bDispense" value="Dispense No. 12 tablets">
+              </label>
+            </div>
+
+            <label style="margin-top:10px">Label / Signatura
+              <textarea id="bLabel">Take one tablet orally every four hours as needed for pain for three days.</textarea>
+            </label>
+
+            <div class="btn-row">
+              <button class="btn" onclick="renderRx()">Render</button>
+              <button class="btn secondary" onclick="copyRx()">Copy</button>
+            </div>
+          </div>
+
+          <div id="rxPreview" class="rx-preview" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- CRAM -->
+      <section id="cram" class="tab-panel">
+        <div class="hero searchable" data-search="cram sheet summary formulas">
+          <span class="eyebrow">Final tab</span>
+          <h2>Prescription Writing Cram Sheet</h2>
+          <p>The fastest possible pass through the formulas, category cues, verbs, and exam traps from both transes.</p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card searchable" data-search="core formulas total dose units volume bottles">
+            <h4>Core formulas</h4>
+            <span class="formula">Total dose = dose/intake × doses/day × days</span>
+            <span class="formula">Units to dispense = total dose ÷ strength per unit</span>
+            <span class="formula">Daily weight-based dose = weight × mg/kg/day</span>
+            <span class="formula">Dose per administration = daily dose ÷ doses/day</span>
+            <span class="formula">mL per dose = ordered mg ÷ available mg × available mL</span>
+            <span class="formula">Total liquid volume = mL/dose × doses/day × days</span>
+            <span class="formula">Bottles = total volume ÷ bottle size → round up</span>
+          </article>
+
+          <article class="card searchable" data-search="verbs take give insert instill inject dissolve shake">
+            <h4>Use the correct action verb</h4>
+            <table>
+              <tr><th>Preparation</th><th>Preferred verb</th></tr>
+              <tr><td>Tablet / capsule / oral liquid</td><td><strong>Take</strong> or <strong>Give</strong></td></tr>
+              <tr><td>Suppository</td><td><strong>Insert</strong></td></tr>
+              <tr><td>Eye / ear drops</td><td><strong>Instill</strong></td></tr>
+              <tr><td>Injection</td><td><strong>Inject</strong></td></tr>
+              <tr><td>Dry solid forming a solution</td><td><strong>Dissolve</strong></td></tr>
+              <tr><td>Suspension</td><td><strong>Shake well before use</strong></td></tr>
+              <tr><td>Nebule / respule</td><td>Place/empty into nebulizer and <strong>inhale</strong></td></tr>
+            </table>
+          </article>
+        </div>
+
+        <div class="section-head">
+          <div><h3>Category cue → what to calculate</h3></div>
+        </div>
+
+        <table class="searchable" data-search="category cue calculation tablets capsule powder suppository liquid injection drops aerosol">
+          <tr><th>Category</th><th>Main calculation</th><th>What the subscription usually says</th></tr>
+          <tr><td>Ready-made tablet/capsule</td><td>Number of units</td><td>Dispense No. ___ tablets/capsules</td></tr>
+          <tr><td>Compounded powder/capsule</td><td>Total doses + total mass of each ingredient</td><td>Mix/divide into ___ equal parts; dispense as papers/capsules</td></tr>
+          <tr><td>Suppository</td><td>Number of suppositories</td><td>Dispense No. ___ suppositories</td></tr>
+          <tr><td>Ready-made oral liquid</td><td>mL/dose → total mL → bottles</td><td>Dispense No. ___ bottle(s), ___ mL each</td></tr>
+          <tr><td>Multiple-ingredient oral liquid</td><td>Total amount of each drug + final bulk</td><td>Mix; vehicle “to make” final volume</td></tr>
+          <tr><td>Ready-made injection</td><td>mL to administer + containers</td><td>Dispense No. ___ ampule(s)/vial(s)/syringe(s)</td></tr>
+          <tr><td>Dry solid injection</td><td>Dose/vial + number of vials</td><td>Dissolve/reconstitute, then inject as directed</td></tr>
+          <tr><td>Nebule/respule</td><td>Administrations × days</td><td>Dispense No. ___ nebules/respules</td></tr>
+          <tr><td>Eye/ear drops</td><td>Total drops → mL → bottles</td><td>Dispense No. ___ bottle(s)</td></tr>
+          <tr><td>Inhaler/device</td><td>Puffs/day and duration; usually devices</td><td>Dispense No. ___ device(s)</td></tr>
+        </table>
+
+        <div class="section-head">
+          <div><h3>Classic traps</h3></div>
+        </div>
+
+        <div class="grid-3">
+          <div class="callout danger searchable" data-search="trap dosage form">
+            <strong>Do not omit the dosage form.</strong><br>
+            Write “Paracetamol <strong>tablet</strong>,” not just “Paracetamol.”
+          </div>
+          <div class="callout danger searchable" data-search="trap leading zero">
+            <strong>Use a leading zero.</strong><br>
+            Write <strong>0.5 mL</strong>, not .5 mL.
+          </div>
+          <div class="callout danger searchable" data-search="trap teaspoonful">
+            <strong>Write teaspoonful.</strong><br>
+            The liquid trans specifically says not to write “teaspoon.”
+          </div>
+          <div class="callout danger searchable" data-search="trap round up bottles">
+            <strong>Round bottles up.</strong><br>
+            A calculated 4.67 bottles means dispense <strong>5 bottles</strong>.
+          </div>
+          <div class="callout danger searchable" data-search="trap potent rounding">
+            <strong>Never round a potent drug.</strong><br>
+            Especially drugs given in microgram doses.
+          </div>
+          <div class="callout danger searchable" data-search="trap regulated s2 no refills">
+            <strong>Regulated drug?</strong><br>
+            Add the appropriate <strong>S2 number</strong> and <strong>No refills</strong>.
+          </div>
+          <div class="callout danger searchable" data-search="trap eye ear laterality">
+            <strong>State laterality/site.</strong><br>
+            Right, left, or both eye(s)/ear(s).
+          </div>
+          <div class="callout danger searchable" data-search="trap suspension shake">
+            <strong>Suspension?</strong><br>
+            Include <strong>Shake well before use</strong>.
+          </div>
+          <div class="callout danger searchable" data-search="trap label complete">
+            <strong>Complete label.</strong><br>
+            Dose, route, frequency, timing, duration, and special instructions.
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div><h3>10-point final check</h3></div>
+        </div>
+
+        <div class="grid-2 searchable" data-search="final check checklist">
+          <div class="card">
+            <p>☐ Patient identity, age, address, date, and weight when needed</p>
+            <p>☐ Rx / R/ present</p>
+            <p>☐ Generic name used</p>
+            <p>☐ Dosage form stated</p>
+            <p>☐ Strength or concentration stated</p>
+          </div>
+          <div class="card">
+            <p>☐ Correct amount to dispense</p>
+            <p>☐ Label has dose + route + frequency + duration</p>
+            <p>☐ Special directions included</p>
+            <p>☐ Signature, M.D., PRC, PTR included</p>
+            <p>☐ S2 / Opium License and “No refills” when applicable</p>
+          </div>
+        </div>
+
+        <div class="footer">
+          Based exclusively on the uploaded <strong>Prescription Writing (Solids)</strong> and <strong>Prescription Writing (Liquids)</strong> transes. Page references inside the reviewer correspond to those files.
+        </div>
+      </section>
+
+      <div id="noResults" class="no-results">No matching section found in the current tab. Try a broader term or switch tabs.</div>
+    </main>
+  </div>
+
+  <script>
+    const tabButtons = [...document.querySelectorAll('.tab-btn')];
+    const panels = [...document.querySelectorAll('.tab-panel')];
+
+    function activateTab(id){
+      tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+      panels.forEach(p => p.classList.toggle('active', p.id === id));
+      window.scrollTo({top:0, behavior:'smooth'});
+      runSearch();
+    }
+
+    tabButtons.forEach(btn => btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
+
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement.tagName.toLowerCase();
+      if (e.key === '/' && !['input','textarea','select'].includes(tag)){
+        e.preventDefault();
+        document.getElementById('globalSearch').focus();
+      }
+      if (!['input','textarea','select'].includes(tag) && ['1','2','3','4','5','6'].includes(e.key)){
+        activateTab(tabButtons[Number(e.key)-1].dataset.tab);
+      }
+    });
+
+    // Search
+    const searchInput = document.getElementById('globalSearch');
+    const noResults = document.getElementById('noResults');
+    function runSearch(){
+      const q = searchInput.value.trim().toLowerCase();
+      const active = document.querySelector('.tab-panel.active');
+      const items = [...active.querySelectorAll('.searchable')];
+      let visible = 0;
+      items.forEach(item => {
+        const text = (item.innerText + ' ' + (item.dataset.search || '')).toLowerCase();
+        const match = !q || text.includes(q);
+        item.classList.toggle('hide-by-search', !match);
+        if (match) visible++;
+      });
+      noResults.style.display = q && visible === 0 ? 'block' : 'none';
+    }
+    searchInput.addEventListener('input', runSearch);
+
+    // Anatomy interaction
+    document.querySelectorAll('[data-rx-target]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.rx-block,.legend button').forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.rxTarget).classList.add('active');
+      });
+    });
+
+    // Helpers
+    const n = id => Number(document.getElementById(id).value);
+    const clean = x => Number.isFinite(x) ? Number(x.toFixed(4)).toLocaleString(undefined,{maximumFractionDigits:4}) : '—';
+    const valid = (...vals) => vals.every(v => Number.isFinite(v) && v > 0);
+
+    function calcSolid(){
+      const dose=n('solidDose'), freq=n('solidFreq'), days=n('solidDays'), strength=n('solidStrength');
+      const box=document.getElementById('solidResult');
+      if(!valid(dose,freq,days,strength)){ box.innerHTML='Please enter positive values.'; return; }
+      const total=dose*freq*days, units=total/strength;
+      box.innerHTML = `<strong>Step 1:</strong> ${clean(dose)} × ${clean(freq)} × ${clean(days)} = <strong>${clean(total)}</strong> total dose.<br>
+      <strong>Step 2:</strong> ${clean(total)} ÷ ${clean(strength)} = <strong>${clean(units)} unit(s)</strong> to dispense.`;
+    }
+
+    function calcLiquid(){
+      const wt=n('liqWeight'), mgkg=n('liqMgKg'), freq=n('liqFreq'), days=n('liqDays'),
+            availMg=n('liqAvailMg'), availMl=n('liqAvailMl'), bottle=n('liqBottle');
+      const box=document.getElementById('liqResult');
+      if(!valid(wt,mgkg,freq,days,availMg,availMl,bottle)){ box.innerHTML='Please enter positive values.'; return; }
+      const daily=wt*mgkg, perDose=daily/freq, mlDose=(perDose/availMg)*availMl,
+            totalMl=mlDose*freq*days, bottles=Math.ceil(totalMl/bottle);
+      box.innerHTML = `<strong>Daily dose:</strong> ${clean(wt)} × ${clean(mgkg)} = <strong>${clean(daily)} mg/day</strong><br>
+      <strong>Dose per administration:</strong> ${clean(daily)} ÷ ${clean(freq)} = <strong>${clean(perDose)} mg</strong><br>
+      <strong>Volume per dose:</strong> ${clean(perDose)} ÷ ${clean(availMg)} × ${clean(availMl)} = <strong>${clean(mlDose)} mL</strong><br>
+      <strong>Total volume:</strong> ${clean(mlDose)} × ${clean(freq)} × ${clean(days)} = <strong>${clean(totalMl)} mL</strong><br>
+      <strong>Bottles:</strong> ${clean(totalMl)} ÷ ${clean(bottle)} = ${clean(totalMl/bottle)} → <strong>${bottles} bottle(s)</strong>.`;
+    }
+
+    function calcPowder(){
+      const dose=n('powDose'), freq=n('powFreq'), days=n('powDays');
+      const box=document.getElementById('powResult');
+      if(!valid(dose,freq,days)){ box.innerHTML='Please enter positive values.'; return; }
+      const count=freq*days, total=dose*count;
+      const pkg = dose < 600 ? 'capsules' : 'papers';
+      box.innerHTML = `<strong>Total doses:</strong> ${clean(freq)} × ${clean(days)} = <strong>${clean(count)}</strong><br>
+      <strong>Total amount:</strong> ${clean(dose)} mg × ${clean(count)} = <strong>${clean(total)} mg</strong> (${clean(total/1000)} g).<br>
+      <strong>General trans rule:</strong> At ${clean(dose)} mg per dose, use <strong>${pkg}</strong>, unless patient factors require otherwise.`;
+    }
+
+    function calcInjection(){
+      const ordered=n('injOrdered'), hand=n('injHand'), volume=n('injVolume');
+      const box=document.getElementById('injResult');
+      if(!valid(ordered,hand,volume)){ box.innerHTML='Please enter positive values.'; return; }
+      const answer=(ordered/hand)*volume;
+      box.innerHTML = `<strong>Volume:</strong> (${clean(ordered)} ÷ ${clean(hand)}) × ${clean(volume)} mL = <strong>${clean(answer)} mL</strong>.`;
+    }
+
+    function calcDrops(){
+      const dose=n('dropDose'), sites=n('dropSites'), freq=n('dropFreq'), days=n('dropDays'),
+            perMl=n('dropPerMl'), bottle=n('dropBottle');
+      const box=document.getElementById('dropResult');
+      if(!valid(dose,sites,freq,days,perMl,bottle)){ box.innerHTML='Please enter positive values.'; return; }
+      const dailyDrops=dose*sites*freq, totalDrops=dailyDrops*days, totalMl=totalDrops/perMl,
+            bottles=Math.ceil(totalMl/bottle);
+      box.innerHTML = `<strong>Drops/day:</strong> ${clean(dose)} × ${clean(sites)} × ${clean(freq)} = <strong>${clean(dailyDrops)}</strong><br>
+      <strong>Total drops:</strong> ${clean(dailyDrops)} × ${clean(days)} = <strong>${clean(totalDrops)}</strong><br>
+      <strong>Total volume:</strong> ${clean(totalDrops)} ÷ ${clean(perMl)} = <strong>${clean(totalMl)} mL</strong><br>
+      <strong>Bottles:</strong> ${clean(totalMl)} ÷ ${clean(bottle)} = ${clean(totalMl/bottle)} → <strong>${bottles} bottle(s)</strong>.`;
+    }
+
+    function calcBulk(){
+      const ml=n('bulkDoseMl'), freq=n('bulkFreq'), days=n('bulkDays'), pct=n('bulkPercent');
+      const box=document.getElementById('bulkResult');
+      if(!valid(ml,freq,days) || !Number.isFinite(pct) || pct < 0){ box.innerHTML='Please enter valid values.'; return; }
+      const doses=freq*days, bulk=ml*doses, flavor=bulk*(pct/100);
+      box.innerHTML = `<strong>Total number of doses:</strong> ${clean(freq)} × ${clean(days)} = <strong>${clean(doses)}</strong><br>
+      <strong>Total bulk:</strong> ${clean(ml)} mL × ${clean(doses)} = <strong>${clean(bulk)} mL</strong><br>
+      <strong>Flavoring:</strong> ${clean(bulk)} × ${clean(pct)}% = <strong>${clean(flavor)} mL</strong>.`;
+    }
+
+    // Builder
+    const templates = {
+      tablet:{
+        drug:'Paracetamol tablet',
+        strength:'500 mg',
+        dispense:'Dispense No. 12 tablets',
+        label:'Take one tablet orally every four hours as needed for pain for three days.'
+      },
+      liquid:{
+        drug:'Amoxicillin oral drops',
+        strength:'100 mg/mL',
+        dispense:'Dispense No. 3 bottles, 10 mL each',
+        label:'Shake well before use. Give 1 mL orally every eight hours round the clock for ten days.'
+      },
+      powder:{
+        drug:'Magnesium trisilicate powder',
+        strength:'15 grams total',
+        dispense:'Divide into 15 equal parts and dispense as papers',
+        label:'Place the contents of one paper in 1/4 glass of water and take three times a day one hour after meals for five days.'
+      },
+      suppository:{
+        drug:'Glycerin suppository',
+        strength:'2.5 g',
+        dispense:'Dispense No. 1 suppository',
+        label:'Insert one suppository into the rectum at bedtime as a single dose.'
+      },
+      injection:{
+        drug:'Midazolam solution for injection',
+        strength:'5 mg/mL',
+        dispense:'Dispense No. 1 ampule',
+        label:'For injection. Inject 0.3 mL (1.5 mg) by slow intravenous push at the specified time.'
+      },
+      reconstituted:{
+        drug:'Ceftazidime powder for injection',
+        strength:'1 g/vial',
+        dispense:'Dispense No. 9 vials',
+        label:'For injection. Dissolve the contents of one vial in 3 mL sterile water, further dilute as directed, and infuse over 30 minutes every eight hours round the clock for three days. Inject after a negative skin test.'
+      },
+      nebule:{
+        drug:'Budesonide respule',
+        strength:'250 mcg/2 mL',
+        dispense:'Dispense No. 4 respules',
+        label:'Place one respule in the nebulizer and inhale the mist completely every twelve hours for two days.'
+      },
+      drops:{
+        drug:'Ofloxacin otic solution',
+        strength:'3 mg/mL',
+        dispense:'Dispense No. 1 bottle',
+        label:'Instill 2–3 drops into the left ear every six hours round the clock for seven days.'
+      },
+      inhaler:{
+        drug:'Umeclidinium inhalation powder (Ellipta device)',
+        strength:'62.5 mcg/actuation',
+        dispense:'Dispense No. 1 device',
+        label:'Inhale one puff once daily for one month.'
+      }
+    };
+
+    function applyTemplate(){
+      const t=templates[document.getElementById('templateType').value];
+      document.getElementById('bDrug').value=t.drug;
+      document.getElementById('bStrength').value=t.strength;
+      document.getElementById('bDispense').value=t.dispense;
+      document.getElementById('bLabel').value=t.label;
+      renderRx();
+    }
+
+    function renderRx(){
+      const v = id => document.getElementById(id).value.trim();
+      const text =
+`${v('bPrescriber')}
+General Medicine
+Clinic Address • Telephone Number
+
+Name: ${v('bPatient')}        Age/Sex: ${v('bAge')}        Date: ${v('bDate')}
+Address: ${v('bAddress')}
+
+Rx
+
+${v('bDrug')}                                      ${v('bStrength')}
+${v('bDispense')}
+
+Label: ${v('bLabel')}
+
+
+Prescriber’s Signature
+${v('bPrescriber')}
+PRC License No. __________
+PTR No. __________________
+S2 / Opium License No. __________ when required`;
+      document.getElementById('rxPreview').textContent=text;
+    }
+
+    async function copyRx(){
+      const text=document.getElementById('rxPreview').textContent;
+      try{
+        await navigator.clipboard.writeText(text);
+        alert('Prescription text copied.');
+      }catch{
+        alert('Copy failed. Select the preview text manually.');
+      }
+    }
+
+    // Initial renders
+    calcSolid();
+    calcLiquid();
+    calcPowder();
+    calcInjection();
+    calcDrops();
+    calcBulk();
+    renderRx();
+  </script>
+</body>
+</html>
