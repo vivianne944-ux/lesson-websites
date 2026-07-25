@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Interactive teaching guide for rational drug therapy sample cases and ESSC scoring, based on PHA Lecture 1.06 V1.">
+<title>Rational Drug Therapy Cases & ESSC Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f8fb;--paper:#fff;--ink:#172338;--muted:#637083;--line:#dbe4eb;
+  --navy:#103f5f;--blue:#2c78aa;--sky:#eaf5fb;--teal:#177b72;--mint:#e9f7f3;
+  --gold:#9c6808;--cream:#fff6df;--red:#a13f47;--rose:#fff0f2;--purple:#6652b8;
+  --shadow:0 12px 30px rgba(28,49,70,.08);--radius:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:145px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.62;overflow-wrap:break-word}
+button,input,select,textarea{font:inherit}
+strong{font-weight:800;color:#102d45}
+code,.mono,.badge,.score,.eyebrow{font-family:"Space Mono",ui-monospace,monospace}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar{max-width:1420px;margin:auto;padding:10px 22px 7px;display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,420px);gap:18px;align-items:center}
+.eyebrow{font-size:.69rem;letter-spacing:.11em;text-transform:uppercase;color:var(--blue);font-weight:700}
+h1{font-family:"Syne";font-size:clamp(1.05rem,2vw,1.55rem);line-height:1.15;margin:.12rem 0 0}
+.searchbox{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.searchbox input{width:100%;border:1px solid #cbd6df;border-radius:12px;padding:.7rem .82rem;background:#fff;outline:none}
+.searchbox input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(44,120,170,.13)}
+.search-count{font-size:.7rem;color:var(--muted);min-width:65px;text-align:right}
+.tabs-wrap{max-width:1420px;margin:auto;padding:0 22px 10px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:thin}
+.tab-btn{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:#425165;border-radius:999px;padding:.52rem .78rem;font-size:.8rem;font-weight:750;cursor:pointer;white-space:nowrap;transition:.18s}
+.tab-btn:hover{transform:translateY(-1px);border-color:#8fb8d0}
+.tab-btn[aria-selected="true"]{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 6px 15px rgba(16,63,95,.18)}
+main{max-width:1420px;margin:auto;padding:26px 22px 88px}
+.panel{display:none;animation:fade .24s ease}
+.panel.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.section-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;flex-wrap:wrap;margin:4px 0 20px}
+.section-head h2{font-family:"Syne";font-size:clamp(1.55rem,3vw,2.35rem);line-height:1.08;margin:.1rem 0}
+.section-head p{max-width:890px;margin:.35rem 0 0;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;font-size:.66rem;letter-spacing:.055em;text-transform:uppercase;padding:.32rem .5rem;border-radius:999px;background:#eef4f7;border:1px solid #dce6eb;color:#405568;white-space:nowrap}
+.grid{display:grid;gap:18px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);min-width:0}
+.card h3,.card h4{font-family:"Syne";line-height:1.2;margin:.05rem 0 .7rem}.card h3{font-size:1.2rem}.card h4{font-size:1rem}
+.kicker{font-family:"Space Mono";font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);font-weight:700}
+ul,ol{padding-left:1.2rem;margin:.55rem 0}li{margin:.28rem 0}
+.callout{border:1px solid;border-radius:16px;padding:16px 18px;margin:15px 0}
+.callout .label{font-family:"Space Mono";font-size:.68rem;letter-spacing:.075em;text-transform:uppercase;font-weight:700;margin-bottom:5px}
+.core{background:var(--sky);border-color:#b9dceb}.core .label{color:#1f668f}
+.good{background:var(--mint);border-color:#b8ded7}.good .label{color:var(--teal)}
+.note{background:var(--cream);border-color:#ead49c}.note .label{color:var(--gold)}
+.warn{background:var(--rose);border-color:#edc0c6}.warn .label{color:var(--red)}
+.flow{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+.flow .step{position:relative;flex:1 1 150px;text-align:center;border:1px solid #cad9e3;background:#fff;border-radius:14px;padding:13px;font-weight:750;min-width:0}
+.flow .step:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);z-index:2;color:var(--blue);font-size:1.2rem}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:#fff;margin:14px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th,td{padding:12px 13px;border-bottom:1px solid var(--line);border-right:1px solid #edf1f4;vertical-align:top;text-align:left;white-space:normal;word-break:normal;overflow-wrap:break-word}
+th:last-child,td:last-child{border-right:0}tr:last-child td{border-bottom:0}
+th{background:#e9f3f9;color:#153b53;font-size:.77rem;text-transform:uppercase;letter-spacing:.035em}
+td{font-size:.9rem}
+.winner td{background:#f1fbf7}
+.score{display:inline-block;background:#fff1ba;color:#795300;border:1px solid #efd473;border-radius:7px;padding:.1rem .34rem;font-size:.73rem;font-weight:700;white-space:nowrap}
+.total{font-family:"Space Mono";font-weight:700;color:var(--red);white-space:nowrap}
+.subhead{font-family:"Syne";font-size:1.25rem;margin:28px 0 10px;border-left:5px solid var(--blue);padding-left:12px}
+details{border:1px solid var(--line);border-radius:14px;background:#fff;margin:12px 0;overflow:hidden}
+summary{cursor:pointer;font-weight:800;padding:14px 16px;background:#f8fafc;list-style:none}
+summary::-webkit-details-marker{display:none}summary::after{content:"＋";float:right;color:var(--blue)}details[open] summary::after{content:"−"}
+.details-body{padding:4px 16px 16px}
+.reasoning{counter-reset:reason}
+.reason{display:grid;grid-template-columns:42px minmax(0,1fr);gap:12px;align-items:start;padding:14px 0;border-bottom:1px dashed #d9e2e9}
+.reason:last-child{border-bottom:0}.reason::before{counter-increment:reason;content:counter(reason);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;font-family:"Space Mono";font-weight:700}
+.practice{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.practice-grid{display:grid;grid-template-columns:minmax(150px,1.4fr) repeat(4,minmax(95px,.7fr)) minmax(70px,.5fr) 42px;gap:8px;align-items:center;margin-bottom:8px}
+.practice-head{font-family:"Space Mono";font-size:.69rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
+.practice input,.practice select,.practice textarea{width:100%;border:1px solid #cad6df;border-radius:10px;padding:.62rem .65rem;background:#fff}
+.practice input:focus,.practice select:focus,.practice textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(44,120,170,.11)}
+.practice .row-total{font-family:"Space Mono";font-weight:700;text-align:center}
+.icon-btn{border:0;background:#f3f6f8;border-radius:10px;height:40px;cursor:pointer;color:var(--red);font-weight:800}
+.practice-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.action{border:0;border-radius:11px;padding:.65rem .9rem;cursor:pointer;font-weight:750;background:var(--navy);color:#fff}
+.action.secondary{background:#eaf1f5;color:#26465b}
+.result-box{margin-top:15px;padding:14px 16px;border-radius:14px;background:var(--mint);border:1px solid #b8ded7}
+.prescription{background:#fff;border:2px solid #27303a;border-radius:4px;padding:18px;max-width:640px;font-family:"DM Sans";margin:14px 0}
+.prescription .rx{font-family:serif;font-size:1.3rem;margin:10px 0}.prescription .indent{margin-left:42px}
+.lock{background:linear-gradient(135deg,#103f5f,#1e668c);color:#fff;border-radius:18px;padding:20px;margin-top:20px}
+.lock h3{font-family:"Syne";margin:0 0 12px}.lock strong{color:#fff}
+.lock-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.lock-item{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.17);border-radius:13px;padding:12px}
+.lock-item b{display:block;font-family:"Space Mono";font-size:.65rem;text-transform:uppercase;letter-spacing:.055em;margin-bottom:4px;color:#dff5ff}
+.hidden-by-search{display:none!important}
+mark{background:#ffe88a;color:inherit;border-radius:3px}
+.footer-note{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
+#toTop{position:fixed;right:18px;bottom:18px;border:0;border-radius:50%;width:46px;height:46px;background:var(--navy);color:#fff;cursor:pointer;box-shadow:0 8px 22px rgba(16,63,95,.25);opacity:0;pointer-events:none;transition:.2s}
+#toTop.show{opacity:1;pointer-events:auto}
+@media(max-width:980px){.topbar{grid-template-columns:1fr}.grid.two,.grid.three,.lock-grid{grid-template-columns:1fr 1fr}.practice-grid{grid-template-columns:minmax(140px,1.5fr) repeat(4,minmax(72px,.7fr)) 58px 38px}.flow .step:not(:last-child)::after{display:none}}
+@media(max-width:650px){.topbar,.tabs-wrap,main{padding-left:14px;padding-right:14px}.grid.two,.grid.three,.lock-grid{grid-template-columns:1fr}.practice-grid{grid-template-columns:1fr 1fr}.practice-head{display:none}.practice-grid input{grid-column:1/-1}.practice-grid .row-total{padding:.55rem;background:#f4f7f9;border-radius:9px}.icon-btn{height:38px}.section-head h2{font-size:1.65rem}}
+@media print{header,#toTop,.practice-actions,.icon-btn{display:none!important}.panel{display:block!important;break-before:page}body{background:#fff}.card,.practice{box-shadow:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">Pharmacology · Lecture 1.06 · Case Add-on</div>
+      <h1>Rational Drug Therapy Cases & ESSC Scoring Guide</h1>
+    </div>
+    <div class="searchbox">
+      <input id="searchInput" type="search" placeholder="Search the active tab…" aria-label="Search active tab">
+      <span class="search-count" id="searchCount">0 matches</span>
+    </div>
+  </div>
+  <div class="tabs-wrap">
+    <nav class="tabs" aria-label="Reviewer tabs">
+      <button class="tab-btn" data-tab="start" aria-selected="true">1 · Start Here</button>
+      <button class="tab-btn" data-tab="analyze" aria-selected="false">2 · Analyze a Case</button>
+      <button class="tab-btn" data-tab="scoring" aria-selected="false">3 · ESSC Scoring Lab</button>
+      <button class="tab-btn" data-tab="case1" aria-selected="false">4 · Case 1: Cough</button>
+      <button class="tab-btn" data-tab="case2" aria-selected="false">5 · Case 2: AGE</button>
+      <button class="tab-btn" data-tab="case3" aria-selected="false">6 · Case 3: Angina</button>
+      <button class="tab-btn" data-tab="thirdy" aria-selected="false">7 · Mini Case: Thirdy</button>
+      <button class="tab-btn" data-tab="cram" aria-selected="false">8 · Cram Sheet</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="panel active" id="start" data-title="Start Here">
+  <div class="section-head"><div><span class="badge">What this file fixes</span><h2>How the cases are actually solved</h2><p>The lecture gives the sequence and the completed ESSC tables, but it does not fully spell out the thinking between the case stem and every plus sign. This reviewer makes that reasoning visible without changing the lecture’s chosen answers.</p></div><span class="badge">Source: Trans 1.06 V1, pp. 2–8</span></div>
+  <div class="grid three">
+    <article class="card"><div class="kicker">First decision</div><h3>What is the problem?</h3><p>Turn the stem into a concise diagnosis using the <strong>age, pattern, severity, key positives, key negatives, examination findings, and likely cause</strong>.</p></article>
+    <article class="card"><div class="kicker">Second decision</div><h3>What must treatment achieve?</h3><p>The <strong>primary therapeutic objective</strong> controls the rest of the analysis. A drug may affect a symptom but still be a poor choice if it does not address the main objective.</p></article>
+    <article class="card"><div class="kicker">Final decision</div><h3>Which option best fits?</h3><p>Compare drug groups using <strong>Efficacy, Safety, Suitability, and Cost</strong>; select the winning group, then repeat ESSC for the specific drugs inside that group.</p></article>
+  </div>
+  <div class="callout note"><div class="label">Your question about the pluses</div><strong>Yes, the lecture states that scores run from + to ++++ and that drugs should be compared vertically or column-by-column.</strong> However, it does <strong>not</strong> provide fixed numerical cutoffs defining exactly when a drug deserves one, two, three, or four pluses. The scoring is therefore <strong>comparative and justified by the data written in each column</strong>.</div>
+  <div class="flow">
+    <div class="step">Diagnosis</div><div class="step">Objective</div><div class="step">Non-drug care</div><div class="step">Drug groups</div><div class="step">Group ESSC</div><div class="step">Specific-drug ESSC</div><div class="step">Prescription</div><div class="step">Counsel & monitor</div>
+  </div>
+  <div class="lock"><h3>The single biggest idea</h3><div class="lock-grid"><div class="lock-item"><b>Efficacy</b>Can it achieve the objective?</div><div class="lock-item"><b>Safety</b>What harm may occur?</div><div class="lock-item"><b>Suitability</b>Does it fit this exact patient?</div><div class="lock-item"><b>Cost</b>What is the total treatment cost?</div></div></div>
+</section>
+
+<section class="panel" id="analyze" data-title="Analyze a Case">
+  <div class="section-head"><div><span class="badge">Separate method tab</span><h2>How to analyze any sample case</h2><p>Use the same order every time. Do not jump straight from the diagnosis to a favorite drug.</p></div><span class="badge">Lecture process</span></div>
+  <div class="card reasoning">
+    <div class="reason"><div><h3>Build a one-line problem representation</h3><p><strong>Who is the patient?</strong> Include age, main symptom, time course, severity, important examination findings, comorbidities, current drugs, and clues that change treatment choice.</p><div class="callout core"><div class="label">Example</div>“A 1-year-old child with frequent watery non-bloody stools and clinical signs of mild dehydration, without fever, vomiting, abdominal pain, or concerning examination findings.”</div></div></div>
+    <div class="reason"><div><h3>Define the diagnosis completely enough to guide treatment</h3><p>Do not stop at the symptom. The lecture’s Case 2 includes the <strong>illness, hydration status, and probable etiology</strong>: acute gastroenteritis, mild dehydration, probably viral.</p></div></div>
+    <div class="reason"><div><h3>State the primary therapeutic objective</h3><p>Phrase it as an action: <strong>suppress the cough</strong>, <strong>rehydrate and prevent further dehydration</strong>, <strong>stop an attack as soon as it starts</strong>, or <strong>relieve itch and clear wheals</strong>.</p><div class="callout warn"><div class="label">Common mistake</div>Treating a visible symptom while missing the actual priority. In Case 2, “stop the diarrhea” is not the primary objective; the lecture prioritizes <strong>rehydration</strong>.</div></div></div>
+    <div class="reason"><div><h3>List non-drug measures before drugs</h3><p>These are part of rational therapy, not decorative extras: stop smoking, continue breastfeeding, avoid triggers, prevent scratching, and similar lecture-listed measures.</p></div></div>
+    <div class="reason"><div><h3>Create a reasonable inventory of effective drug groups</h3><p>Only compare options that could plausibly address the condition or objective. The lecture first scores <strong>groups</strong>, not individual brands or formulations.</p></div></div>
+    <div class="reason"><div><h3>Fill one ESSC column at a time</h3><p>Compare all groups under <strong>Efficacy</strong>, then all under <strong>Safety</strong>, then <strong>Suitability</strong>, then <strong>Cost</strong>. This prevents the first drug you read from setting an unfair standard.</p></div></div>
+    <div class="reason"><div><h3>Select the winning group, then repeat with specific drugs</h3><p>The first winner is the <strong>P-drug group</strong>. The second round identifies the <strong>specific P-drug</strong>. A lower-scoring option is not universally “wrong”; it can remain an alternative when circumstances change.</p></div></div>
+    <div class="reason"><div><h3>Write, counsel, and monitor</h3><p>The final answer is not merely a drug name. It includes the prescription and patient information on effects, side effects, instructions, warnings, follow-up, and confirmation of understanding.</p></div></div>
+  </div>
+  <div class="grid two">
+    <article class="card"><h3>Case clues that usually affect Suitability</h3><ul><li><strong>Age:</strong> pediatric or geriatric dose and dosage form</li><li><strong>Occupation/routine:</strong> dosing convenience and ability to adhere</li><li><strong>Comorbidities:</strong> contraindications and vulnerability</li><li><strong>Current drugs:</strong> possible interactions</li><li><strong>Local availability:</strong> practicality</li></ul></article>
+    <article class="card"><h3>Keep each fact in the correct column</h3><ul><li>MOA, PK, PD → <strong>Efficacy</strong></li><li>Adverse effects and toxicity → <strong>Safety</strong></li><li>Contraindications, age, interactions, form, frequency → <strong>Suitability</strong></li><li>Total cost for the treatment duration → <strong>Cost</strong></li></ul></article>
+  </div>
+</section>
+
+<section class="panel" id="scoring" data-title="ESSC Scoring Lab">
+  <div class="section-head"><div><span class="badge">Separate scoring tab</span><h2>How to assign the pluses</h2><p>The lecture gives a relative scale, not rigid cutoffs. Use these anchors to make your score defensible and consistent.</p></div><span class="badge">+ to ++++</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Mark</th><th>Practical anchor</th><th>How to phrase the rationale</th></tr></thead>
+      <tbody>
+        <tr><td><span class="score">−</span></td><td><strong>Not appropriate / disqualifying</strong> for this case or criterion.</td><td>“Not indicated for this patient,” “no appropriate dosage form,” or another clear incompatibility shown by the case data.</td></tr>
+        <tr><td><span class="score">+</span></td><td><strong>Clearly unfavorable</strong>; major limitations compared with the other options.</td><td>“Has several important adverse effects,” “poor patient fit,” or “most expensive in the comparison.”</td></tr>
+        <tr><td><span class="score">++</span></td><td><strong>Mixed or moderate</strong>; usable, but with meaningful limitations.</td><td>“Effective but less convenient,” “similar safety but requires preparation,” or “mid-range cost.”</td></tr>
+        <tr><td><span class="score">+++</span></td><td><strong>Good and favorable</strong>; only minor disadvantages.</td><td>“Effective with manageable adverse effects,” “appropriate form and frequency,” or “relatively inexpensive.”</td></tr>
+        <tr><td><span class="score">++++</span></td><td><strong>Best or most favorable</strong> among the options being compared.</td><td>“Most directly achieves the objective,” “fewest relevant harms,” “best fit for this patient,” or “lowest total treatment cost.”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout note"><div class="label">Important</div>This anchor scale is a <strong>practical interpretation</strong> to help you apply the lecture. The trans itself only states the range and the need for vertical comparison. A plus score is not a universal property of a drug; it may change when the <strong>patient, objective, dose, formulation, availability, or price</strong> changes.</div>
+  <div class="grid two">
+    <article class="card"><h3>Score vertically, not drug-by-drug</h3><ol><li>Compare every option’s efficacy.</li><li>Rank them and justify the differences.</li><li>Move to safety only after efficacy is finished.</li><li>Repeat for suitability and cost.</li></ol></article>
+    <article class="card"><h3>Do not contaminate columns</h3><p>A drug should not lose <strong>Efficacy</strong> points because it has adverse effects; those belong under <strong>Safety</strong>. A pregnancy or age restriction belongs under <strong>Suitability</strong>, not Safety.</p></article>
+  </div>
+
+  <h3 class="subhead">Practice calculator</h3>
+  <div class="practice" id="practiceLab">
+    <div class="practice-grid practice-head"><div>Option</div><div>E</div><div>S</div><div>Suit.</div><div>C</div><div>Total</div><div></div></div>
+    <div id="practiceRows"></div>
+    <div class="practice-actions">
+      <button class="action" id="addRow">Add option</button>
+      <button class="action secondary" id="loadCase2">Load Case 2 groups</button>
+      <button class="action secondary" id="clearRows">Clear</button>
+    </div>
+    <div class="result-box" id="winnerBox"><strong>Tip:</strong> Add at least two options, assign the scores, then compare the written rationale—not just the total.</div>
+  </div>
+
+  <details><summary>A four-question check before accepting a score</summary><div class="details-body"><ol><li><strong>Compared with what?</strong> A score only makes sense relative to the other options.</li><li><strong>For which patient?</strong> Suitability is patient-specific.</li><li><strong>For which objective?</strong> Efficacy must match the primary therapeutic objective.</li><li><strong>Can I defend every plus using the data inside that same column?</strong> If not, revise it.</li></ol></div></details>
+</section>
+
+<section class="panel" id="case1" data-title="Case 1: Post-inflammatory Cough">
+  <div class="section-head"><div><span class="badge">Sample Case 1</span><h2>52-year-old taxi driver with persistent cough</h2><p>This case teaches the setup of rational therapy, but the lecture intentionally does not provide the completed ESSC table.</p></div><span class="badge">p. 3</span></div>
+  <article class="card"><p>A 52-year-old taxi driver has sore throat and cough that began with a cold two weeks earlier. Sneezing has stopped, but the cough remains, especially at night. He is a heavy smoker and examination reveals only throat inflammation.</p></article>
+  <div class="grid three">
+    <div class="callout core"><div class="label">Diagnosis</div><strong>Post-inflammatory cough</strong></div>
+    <div class="callout core"><div class="label">Objective</div><strong>Suppress the cough</strong></div>
+    <div class="callout core"><div class="label">Non-drug measure</div><strong>Stop smoking</strong></div>
+  </div>
+  <div class="card"><div class="kicker">Inventory</div><h3>Possible P-drug groups</h3><div class="pillrow"><span class="badge">Opioid agonists</span> <span class="badge">Antihistamines</span></div></div>
+  <h3 class="subhead">How to think through it</h3>
+  <div class="grid two">
+    <article class="card"><h3>What the stem already tells you</h3><ul><li>The acute cold symptoms have mostly resolved.</li><li>The remaining treatment target is the <strong>cough</strong>.</li><li>Smoking is a modifiable factor and is therefore included as a <strong>non-drug measure</strong>.</li><li>The patient’s work as a <strong>taxi driver</strong> is a patient-specific clue that should be considered under Suitability when comparing concrete drugs.</li></ul></article>
+    <article class="card"><h3>What you must not invent</h3><p>The V1 lecture states that <strong>no ESSC criteria table was given</strong> for this sample case. Therefore, the lecture does not establish a winning group or a specific P-drug.</p><div class="callout warn"><div class="label">Correct exam behavior</div>Present the diagnosis, objective, non-drug measure, and inventory. Then explain what information you would compare under ESSC rather than fabricating the missing scores.</div></article>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>Criterion</th><th>Questions to answer before scoring the two groups</th></tr></thead><tbody>
+    <tr><td><strong>Efficacy</strong></td><td>How well does each group suppress the persistent cough? What do its MOA, PK, and PD show?</td></tr>
+    <tr><td><strong>Safety</strong></td><td>What adverse effects, frequency, seriousness, predictability, and toxicity are listed?</td></tr>
+    <tr><td><strong>Suitability</strong></td><td>Does the choice fit the patient’s age, occupation, current medicines, contraindications, dosing schedule, and available forms?</td></tr>
+    <tr><td><strong>Cost</strong></td><td>What is the total cost for the intended treatment duration?</td></tr>
+  </tbody></table></div>
+  <div class="lock"><h3>Lock it in</h3><div class="lock-grid"><div class="lock-item"><b>Diagnosis</b>Post-inflammatory cough</div><div class="lock-item"><b>Objective</b>Suppress cough</div><div class="lock-item"><b>Non-drug</b>Stop smoking</div><div class="lock-item"><b>Trap</b>No lecture ESSC winner</div></div></div>
+</section>
+
+<section class="panel" id="case2" data-title="Case 2: Acute Gastroenteritis">
+  <div class="section-head"><div><span class="badge">Sample Case 2</span><h2>1-year-old with acute gastroenteritis and mild dehydration</h2><p>This case is the clearest example of how the therapeutic objective controls ESSC selection.</p></div><span class="badge">pp. 3–4</span></div>
+  <article class="card"><p>A 1-year-old boy has seven episodes of loose watery, non-bloody, non-mucoid, non-foul-smelling stool, about half a cup per episode. There is no fever, vomiting, or abdominal pain. He remains active but is thirsty, with dry lips and slightly sunken eyes; pulses are full and the abdomen is soft and non-tender.</p></article>
+  <div class="grid three">
+    <div class="callout core"><div class="label">Diagnosis</div><strong>Acute gastroenteritis, mild dehydration, probably viral</strong></div>
+    <div class="callout core"><div class="label">Objective</div><strong>Rehydrate and prevent further dehydration</strong></div>
+    <div class="callout core"><div class="label">Non-drug measure</div>Continue <strong>breastfeeding</strong></div>
+  </div>
+  <div class="callout note"><div class="label">Why the diagnosis is written this way</div>The lecture includes the <strong>illness</strong>, the <strong>hydration status</strong>, and the <strong>probable etiology</strong>. That level of detail directs management better than writing only “diarrhea.”</div>
+
+  <h3 class="subhead">Round 1 · Choose the P-drug group</h3>
+  <div class="table-wrap"><table><thead><tr><th>Group</th><th>Efficacy</th><th>Safety</th><th>Suitability</th><th>Cost</th><th>Total</th></tr></thead><tbody>
+    <tr class="winner"><td><strong>ORS</strong></td><td>Replaces fluid with Na, K, Cl, and glucose<br><span class="score">+++</span></td><td>Nil side effects listed<br><span class="score">++++</span></td><td>Indicated for the patient<br><span class="score">++++</span></td><td><span class="score">++</span></td><td class="total">13</td></tr>
+    <tr><td>Opioid agonist</td><td>Inhibits GI secretion and delays intestinal transit<br><span class="score">+++</span></td><td>Respiratory depression, drowsiness, dry mouth, headache, nausea, vomiting, urinary retention, constipation<br><span class="score">+</span></td><td>Not indicated; tablet form; needs prescription<br><span class="score">−</span></td><td><span class="score">+</span></td><td class="total">5</td></tr>
+    <tr><td>Zinc sulfate</td><td>Restores mucosal barrier integrity and enterocyte brush-border enzyme activity<br><span class="score">+++</span></td><td>Nausea, stomach upset, heartburn<br><span class="score">+++</span></td><td>Adjunctive therapy; syrup form; once-daily dosing<br><span class="score">+++</span></td><td><span class="score">++</span></td><td class="total">11</td></tr>
+  </tbody></table></div>
+
+  <div class="grid two">
+    <article class="card"><h3>Why ORS wins</h3><p>The primary objective is <strong>rehydration</strong>. ORS directly fits that objective and is also rated best in Safety and Suitability for this child. Its total of <strong>13</strong> exceeds zinc sulfate’s 11 and the opioid agonist’s 5.</p></article>
+    <article class="card"><h3>Why “stops diarrhea” is not enough</h3><p>The opioid agonist may affect intestinal activity and therefore receives efficacy points, but it performs poorly in <strong>Safety</strong> and is marked <strong>not suitable</strong> for this patient. A drug can do something physiologically yet still lose the overall comparison.</p></article>
+  </div>
+  <div class="callout warn"><div class="label">Arithmetic note</div>The V1 table displays a total of <strong>5</strong> for the opioid agonist: +++ (3) + + (1) + − (0) + + (1) = 5.</div>
+
+  <h3 class="subhead">Round 2 · Choose the specific ORS product</h3>
+  <div class="table-wrap"><table><thead><tr><th>Specific ORS</th><th>E</th><th>S</th><th>Suitability</th><th>Cost</th><th>Total</th></tr></thead><tbody>
+    <tr><td>Pedialyte 45</td><td><span class="score">+++</span></td><td><span class="score">+++</span></td><td>Ready to use<br><span class="score">+++</span></td><td>₱106/500 mL bottle<br><span class="score">+</span></td><td class="total">10</td></tr>
+    <tr class="winner"><td><strong>Glucolyte Plus</strong></td><td><span class="score">+++</span></td><td><span class="score">+++</span></td><td>Must be mixed<br><span class="score">++</span></td><td>₱5/sachet<br><span class="score">+++</span></td><td class="total">11</td></tr>
+    <tr><td>Hydrite tablets</td><td><span class="score">+++</span></td><td><span class="score">+++</span></td><td>Must be mixed<br><span class="score">++</span></td><td>₱12/tablet<br><span class="score">++</span></td><td class="total">10</td></tr>
+  </tbody></table></div>
+  <p class="card"><strong>How the differences were created:</strong> The lecture gives all three the same Efficacy and Safety score. Pedialyte is more convenient because it is already prepared, but it is the most expensive. Glucolyte loses one Suitability point because it must be mixed, yet its low cost gives it the highest total.</p>
+  <div class="prescription">
+    <div>Michael Ang, 1 year old <span style="float:right">June 28, 2012</span></div>
+    <div class="rx">Rx</div>
+    <div class="indent"><strong>Oral rehydrating solution (Glucolyte sachet)</strong><br>Dispense No. 10<br><br>Label: Dissolve the contents of one sachet in 100 mL clean water and give 3–4 oz (100–120 mL) for every watery stool.</div>
+  </div>
+  <div class="callout note"><div class="label">Lecture example</div>The prescription above is reproduced for study of rational prescribing and ESSC selection.</div>
+  <div class="lock"><h3>Lock it in</h3><div class="lock-grid"><div class="lock-item"><b>Primary problem</b>Mild dehydration</div><div class="lock-item"><b>Winning group</b>ORS · 13</div><div class="lock-item"><b>Winning product</b>Glucolyte · 11</div><div class="lock-item"><b>Main lesson</b>Objective beats symptom-chasing</div></div></div>
+</section>
+
+<section class="panel" id="case3" data-title="Case 3: Stable Angina">
+  <div class="section-head"><div><span class="badge">Sample Case 3</span><h2>60-year-old with exertional chest pain relieved by rest</h2><p>This case demonstrates selection of a rapid, practical option for an acute attack, followed by comparison within the winning drug group.</p></div><span class="badge">pp. 3–5</span></div>
+  <article class="card"><p>A 60-year-old man has several attacks of suffocating chest pain during physical labor that disappear quickly after he stops. Family history is positive for fatal heart attacks. He occasionally takes aspirin. BP is 130/85 mmHg, pulse 78/min and regular, weight is normal, and a right carotid murmur is present.</p></article>
+  <div class="grid two">
+    <div class="callout core"><div class="label">Diagnosis</div><strong>Stable angina pectoris</strong></div>
+    <div class="callout core"><div class="label">Objective</div><strong>Stop an attack as soon as it starts</strong> by decreasing preload, contractility, and afterload</div>
+  </div>
+  <div class="card"><div class="kicker">Inventory</div><h3>Effective drug groups</h3><p><span class="badge">Nitrates</span> <span class="badge">Beta blockers</span> <span class="badge">Calcium-channel blockers</span></p></div>
+
+  <h3 class="subhead">Round 1 · Choose the P-drug group</h3>
+  <div class="table-wrap"><table><thead><tr><th>Group</th><th>Efficacy</th><th>Safety</th><th>Suitability</th><th>Cost shown</th><th>Displayed total</th></tr></thead><tbody>
+    <tr class="winner"><td><strong>Nitrates</strong></td><td>Peripheral vasodilation; PK includes high first-pass metabolism and varying absorption; tolerance<br><span class="score">+++</span></td><td>Flushing, headache, temporary tachycardia, nitrate poisoning<br><span class="score">++</span></td><td>Contraindications listed; fast-effect forms include injection, SL tablet and oromucosal spray; OD–BID or PRN<br><span class="score">+++</span></td><td>₱15/tablet</td><td class="total">8</td></tr>
+    <tr><td>Beta blockers</td><td>Reduce heart contractility and heart rate; other PD and PK effects listed<br><span class="score">+++</span></td><td>Multiple cardiovascular, respiratory, metabolic, neurologic and sexual adverse effects<br><span class="score">+</span></td><td>Several contraindications; IV or oral forms; OD–BID<br><span class="score">+</span></td><td>₱10</td><td class="total">5</td></tr>
+    <tr><td>Calcium-channel blockers</td><td>Coronary and peripheral vasodilation; reduced contractility and heart rate<br><span class="score">+++</span></td><td>Tachycardia, dizziness, flushing, hypotension, CHF, SSS, AV block<br><span class="score">+</span></td><td>Contraindications listed; IV or oral forms; OD–BID<br><span class="score">+</span></td><td>₱12</td><td class="total">5</td></tr>
+  </tbody></table></div>
+  <div class="callout note"><div class="label">How to read this table</div>All three groups are scored <strong>+++ for Efficacy</strong>, so the winner is created mainly by the differences in <strong>Safety and Suitability</strong>. Nitrates receive the highest displayed total and are selected as the P-drug group.</div>
+  <div class="callout warn"><div class="label">Table limitation</div>The group table shows prices, but the visible V1 table does not display a separate cost-plus mark. The totals match the visible E, S, and Suitability pluses.</div>
+
+  <h3 class="subhead">Round 2 · Choose the specific nitrate</h3>
+  <div class="table-wrap"><table><thead><tr><th>Nitrate</th><th>Efficacy</th><th>Safety</th><th>Suitability</th><th>Cost</th><th>Displayed total</th></tr></thead><tbody>
+    <tr><td>Glyceryl trinitrate / nitroglycerin</td><td>SL 0.5–30 min; oral 0.5–7 h; transdermal 1–24 h; tolerance<br><span class="score">++</span></td><td>Flushing, headache, tachycardia, nitrate poisoning<br><span class="score">++</span></td><td>Tablets, patch, ointment<br><span class="score">+++</span></td><td>₱16/tab; ₱38/patch<br><span class="score">+</span></td><td class="total">8</td></tr>
+    <tr class="winner"><td><strong>Isosorbide dinitrate</strong></td><td>SL 2–30 min; oral 0.5–4 h; retard 0.5–10 h; tolerance<br><span class="score">++</span></td><td>Same nitrate effects<br><span class="score">++</span></td><td>SL, regular tablet and sustained-release options<br><span class="score">++</span></td><td>₱5, ₱8 or ₱9 per tablet depending on form<br><span class="score">+++</span></td><td class="total">9</td></tr>
+    <tr><td>Isosorbide mononitrate</td><td>Oral 0.5–4 h; SR 1–10 h; tolerance<br><span class="score">++</span></td><td>Same nitrate effects<br><span class="score">++</span></td><td>20 mg tablet or SR 60 mg OD<br><span class="score">++</span></td><td>₱22/tab<br><span class="score">++</span></td><td class="total">7</td></tr>
+  </tbody></table></div>
+  <div class="callout warn"><div class="label">Visible scoring inconsistency</div>For isosorbide mononitrate, the visible pluses appear to total <strong>8</strong>, while the lecture table displays <strong>7</strong>. Keep the lecture’s displayed winner—<strong>isosorbide dinitrate</strong>—but be ready to flag the arithmetic discrepancy rather than silently “correcting” the source.</div>
+
+  <div class="prescription">
+    <div>Mr. Paul Smith, 60 years old <span style="float:right">July 15, 2011</span></div>
+    <div class="rx">Rx</div>
+    <div class="indent"><strong>Isosorbide dinitrate 5 mg sublingual tablet</strong><br>Dispense No. 10<br><br>Label: Take 1 tablet sublingually as needed for chest pain. May take a second tablet if pain persists after 20 minutes.</div>
+  </div>
+  <div class="callout note"><div class="label">Lecture example only</div>This reproduces the prescription shown in the lecture for learning the rational-prescribing sequence; it is not individualized medical advice.</div>
+  <div class="lock"><h3>Lock it in</h3><div class="lock-grid"><div class="lock-item"><b>Diagnostic clue</b>Exertion → pain; rest → relief</div><div class="lock-item"><b>Winning group</b>Nitrates · 8</div><div class="lock-item"><b>Winning drug</b>Isosorbide dinitrate · 9</div><div class="lock-item"><b>Key differentiator</b>Cost among nitrates</div></div></div>
+</section>
+
+<section class="panel" id="thirdy" data-title="Mini Case Thirdy">
+  <div class="section-head"><div><span class="badge">Appendix mini case</span><h2>Thirdy: recurrent itchy rash after outdoor activity</h2><p>This appendix case applies the entire rational-therapy process, including group ESSC and specific-drug ESSC.</p></div><span class="badge">pp. 6–8</span></div>
+  <article class="card"><p>Thirdy is a 10-year-old boy who develops itchy maculopapular rashes on the chest, back, and extremities after playing outdoors during a provincial visit. Similar episodes occurred with climate changes and travel. Family history is positive for atopic dermatitis. Vital signs are stable, weight is 30 kg, breath sounds are clear, and the other systems are unremarkable.</p></article>
+  <h3 class="subhead">Step 1 · Diagnose from the pattern</h3>
+  <div class="grid two">
+    <article class="card"><h3>Mechanism described in the appendix</h3><p>Antigen-triggered <strong>cutaneous mast-cell degranulation</strong> releases mediators such as histamine. Histamine signaling produces itch, while vasodilation and increased permeability contribute to edema and the wheal-and-flare appearance.</p></article>
+    <article class="card"><h3>Why the appendix calls it physical urticaria</h3><p>The condition is recurrent and linked to <strong>climate changes, travel, heat, and outdoor activity</strong>. The appendix identifies the pattern as <strong>physical urticaria / chronic inducible urticaria</strong>.</p></article>
+  </div>
+  <div class="grid two">
+    <article class="card"><div class="kicker">Therapeutic objectives</div><ul><li>Relieve itchiness</li><li>Clear rash and wheals</li><li>Maintain skin integrity and prevent infection</li><li>Identify triggers</li><li>Educate the child and family</li></ul></article>
+    <article class="card"><div class="kicker">Non-drug measures</div><ul><li>Wear sunscreen daily</li><li>Avoid tight clothing</li><li>Do not scratch</li><li>Keep nails short and clean</li><li>Minimize high temperature and excessive sweating</li></ul></article>
+  </div>
+
+  <h3 class="subhead">Round 1 · Choose the drug group</h3>
+  <div class="table-wrap"><table><thead><tr><th>Group</th><th>Efficacy</th><th>Safety</th><th>Suitability</th><th>Cost</th><th>Total</th></tr></thead><tbody>
+    <tr><td>First-generation antihistamines</td><td>H1 competition; peak 2–5 h<br><span class="score">+++</span></td><td>Many listed adverse effects including drowsiness, dry mouth, dizziness and confusion<br><span class="score">+</span></td><td>Oral/IV, tablet/syrup, given three times daily<br><span class="score">+++</span></td><td>₱120/bottle<br><span class="score">+++</span></td><td class="total">10</td></tr>
+    <tr class="winner"><td><strong>Second-generation antihistamines</strong></td><td>Peripheral H1 inverse agonism; blocks capillary leakage and itch; onset 20–60 min<br><span class="score">++++</span></td><td>Minimally sedating with fewer listed effects<br><span class="score">+++</span></td><td>Long-lasting, 1–2 times daily, tablet/syrup, suitable for an active child<br><span class="score">++++</span></td><td>Moderately priced options<br><span class="score">++++</span></td><td class="total">15</td></tr>
+    <tr><td>Oral glucocorticoids</td><td>Suppress inflammation but do not block histamine receptors; slower onset<br><span class="score">+</span></td><td>Multiple systemic adverse effects listed<br><span class="score">+</span></td><td>Excessive for uncomplicated acute urticaria in this comparison; tapering concerns<br><span class="score">+</span></td><td>Generic oral products listed as low-cost<br><span class="score">+</span></td><td class="total">4</td></tr>
+  </tbody></table></div>
+  <div class="callout good"><div class="label">Winner</div><strong>Second-generation antihistamines</strong> obtain the highest score because they combine rapid efficacy, less sedation, child-appropriate dosage forms, convenient dosing, and favorable relative cost in the appendix comparison.</div>
+
+  <h3 class="subhead">Round 2 · Cetirizine versus loratadine</h3>
+  <div class="table-wrap"><table><thead><tr><th>Drug</th><th>Efficacy</th><th>Safety</th><th>Suitability</th><th>Cost</th><th>Total</th></tr></thead><tbody>
+    <tr class="winner"><td><strong>Cetirizine (Allerkid)</strong></td><td>Rapid onset; relieves pruritus, wheals and erythema; up to 24-hour relief<br><span class="score">++++</span></td><td>Mild listed effects; minimal sedation<br><span class="score">++++</span></td><td>Syrup or tablet; 10 mg once daily or 5 mg twice daily; may be taken with or without food; suitable for a 10-year-old<br><span class="score">++++</span></td><td>Generic syrup about ₱120–180; tablets about ₱10–20<br><span class="score">++++</span></td><td class="total">16</td></tr>
+    <tr><td>Loratadine (Claritin)</td><td>Effective for acute and chronic urticaria with sustained relief<br><span class="score">++++</span></td><td>Low sedation and few listed adverse effects<br><span class="score">++++</span></td><td>Tablet, capsule or syrup; once-daily dosing<br><span class="score">++++</span></td><td>About ₱19.25–38.25 per 10 mg tablet; ₱297.75/60 mL bottle<br><span class="score">++</span></td><td class="total">14</td></tr>
+  </tbody></table></div>
+  <div class="callout note"><div class="label">The deciding column</div>The appendix gives cetirizine and loratadine the <strong>same Efficacy, Safety, and Suitability scores</strong>. Cetirizine wins solely because it receives the better <strong>Cost</strong> score.</div>
+  <div class="prescription">
+    <div>Thirdy So, 10 years old</div>
+    <div class="rx">Rx</div>
+    <div class="indent"><strong>Cetirizine tablet 10 mg</strong><br>Dispense No. 7<br><br>Label: Take 1 tablet orally once daily for 7 days.</div>
+  </div>
+  <div class="lock"><h3>Lock it in</h3><div class="lock-grid"><div class="lock-item"><b>Diagnosis</b>Physical / chronic inducible urticaria</div><div class="lock-item"><b>Winning group</b>2nd-gen antihistamines · 15</div><div class="lock-item"><b>Winning drug</b>Cetirizine · 16</div><div class="lock-item"><b>Decisive column</b>Cost</div></div></div>
+</section>
+
+<section class="panel" id="cram" data-title="Cram Sheet">
+  <div class="section-head"><div><span class="badge">Rapid retrieval</span><h2>Cases and ESSC in one screen</h2><p>Use this after studying the reasoning tabs—not as a replacement for them.</p></div><span class="badge">High-yield</span></div>
+  <div class="table-wrap"><table><thead><tr><th>Case</th><th>Diagnosis</th><th>Objective</th><th>Non-drug</th><th>Winner</th></tr></thead><tbody>
+    <tr><td>1 · Taxi driver with cough</td><td>Post-inflammatory cough</td><td>Suppress cough</td><td>Stop smoking</td><td>No ESSC winner supplied</td></tr>
+    <tr><td>2 · Child with watery stools</td><td>AGE, mild dehydration, probably viral</td><td>Rehydrate; prevent further dehydration</td><td>Continue breastfeeding</td><td>ORS → Glucolyte Plus</td></tr>
+    <tr><td>3 · Exertional chest pain</td><td>Stable angina pectoris</td><td>Stop attack as soon as it starts</td><td>Not listed in the case summary</td><td>Nitrates → Isosorbide dinitrate</td></tr>
+    <tr><td>Thirdy · Recurrent itchy rash</td><td>Physical / chronic inducible urticaria</td><td>Relieve itch; clear wheals; prevent recurrence/complications</td><td>Avoid triggers and scratching; skin care measures</td><td>2nd-gen antihistamines → Cetirizine</td></tr>
+  </tbody></table></div>
+  <div class="grid two">
+    <article class="card"><h3>ESSC memory cue</h3><ul><li><strong>E:</strong> Can it work?</li><li><strong>S:</strong> What harm can it cause?</li><li><strong>S:</strong> Does it fit this patient?</li><li><strong>C:</strong> What is the whole-course cost?</li></ul></article>
+    <article class="card"><h3>Scoring memory cue</h3><ul><li><strong>++++</strong> best in this comparison</li><li><strong>+++</strong> good</li><li><strong>++</strong> mixed/moderate</li><li><strong>+</strong> poor</li><li><strong>−</strong> not appropriate</li></ul></article>
+  </div>
+  <div class="callout warn"><div class="label">Exam traps</div><ul><li>Do not put side effects under Efficacy.</li><li>Do not put age, pregnancy, contraindications, or drug interactions under Safety when the issue is patient fit; place them under Suitability.</li><li>Do not compare unit price alone when the full treatment duration differs.</li><li>Do not invent a winner for Case 1.</li><li>Do not hide arithmetic inconsistencies in the lecture tables; flag them.</li></ul></div>
+  <div class="lock"><h3>Final sequence</h3><div class="lock-grid"><div class="lock-item"><b>1</b>Diagnose</div><div class="lock-item"><b>2</b>Set objective</div><div class="lock-item"><b>3</b>Score groups then drugs</div><div class="lock-item"><b>4</b>Prescribe, counsel, monitor</div></div></div>
+</section>
+
+<div class="footer-note">Based on PHA Lecture 1.06 V1. Explanatory scoring anchors are clearly distinguished from the lecture’s explicit rules.</div>
+</main>
+<button id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+const tabs=[...document.querySelectorAll(".tab-btn")];
+const panels=[...document.querySelectorAll(".panel")];
+const searchInput=document.getElementById("searchInput");
+const searchCount=document.getElementById("searchCount");
+
+function activateTab(id){
+  tabs.forEach(b=>b.setAttribute("aria-selected", String(b.dataset.tab===id)));
+  panels.forEach(p=>p.classList.toggle("active",p.id===id));
+  searchInput.value="";
+  clearSearch();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+id);
+}
+tabs.forEach(b=>b.addEventListener("click",()=>activateTab(b.dataset.tab)));
+const hash=location.hash.slice(1);
+if(hash && document.getElementById(hash)) activateTab(hash);
+
+function clearSearch(){
+  document.querySelectorAll(".hidden-by-search").forEach(el=>el.classList.remove("hidden-by-search"));
+  document.querySelectorAll("mark[data-search]").forEach(m=>m.replaceWith(document.createTextNode(m.textContent)));
+  searchCount.textContent="0 matches";
+}
+searchInput.addEventListener("input",()=>{
+  clearSearch();
+  const q=searchInput.value.trim().toLowerCase();
+  if(!q)return;
+  const panel=document.querySelector(".panel.active");
+  const blocks=[...panel.querySelectorAll(".card,.callout,details,.table-wrap,.prescription,.lock")];
+  let matches=0;
+  blocks.forEach(block=>{
+    const hit=block.textContent.toLowerCase().includes(q);
+    block.classList.toggle("hidden-by-search",!hit);
+    if(hit)matches++;
+  });
+  searchCount.textContent=`${matches} match${matches===1?"":"es"}`;
+});
+
+const plusOptions=[
+  {label:"−",value:0},{label:"+",value:1},{label:"++",value:2},{label:"+++",value:3},{label:"++++",value:4}
+];
+const rowsEl=document.getElementById("practiceRows");
+function makeSelect(value=0,label){
+  const s=document.createElement("select");
+  s.setAttribute("aria-label",label);
+  plusOptions.forEach(o=>{
+    const op=document.createElement("option");op.value=o.value;op.textContent=o.label;
+    if(Number(value)===o.value)op.selected=true;s.appendChild(op);
+  });
+  s.addEventListener("change",updatePractice);
+  return s;
+}
+function addPracticeRow(name="",scores=[0,0,0,0]){
+  const row=document.createElement("div");row.className="practice-grid practice-row";
+  const input=document.createElement("input");input.placeholder="Drug group or drug";input.value=name;
+  input.addEventListener("input",updatePractice);row.appendChild(input);
+  ["Efficacy","Safety","Suitability","Cost"].forEach((lab,i)=>row.appendChild(makeSelect(scores[i],lab)));
+  const total=document.createElement("div");total.className="row-total";total.textContent="0";row.appendChild(total);
+  const del=document.createElement("button");del.className="icon-btn";del.type="button";del.textContent="×";del.title="Remove row";
+  del.addEventListener("click",()=>{row.remove();updatePractice()});row.appendChild(del);
+  rowsEl.appendChild(row);updatePractice();
+}
+function updatePractice(){
+  const rows=[...document.querySelectorAll(".practice-row")];
+  let best=-1,winners=[];
+  rows.forEach(row=>{
+    const name=row.querySelector("input").value.trim()||"Unnamed option";
+    const total=[...row.querySelectorAll("select")].reduce((a,s)=>a+Number(s.value),0);
+    row.querySelector(".row-total").textContent=total;
+    if(total>best){best=total;winners=[name]}else if(total===best){winners.push(name)}
+  });
+  const box=document.getElementById("winnerBox");
+  if(!rows.length){box.innerHTML="<strong>Tip:</strong> Add at least two options and compare each column vertically.";return}
+  if(best===0){box.innerHTML="<strong>No scores yet.</strong> Assign the pluses and write a rationale for every column.";return}
+  box.innerHTML=winners.length===1
+    ? `<strong>Current highest total:</strong> ${winners[0]} (${best}). Now verify that every score is supported by the correct column data.`
+    : `<strong>Current tie:</strong> ${winners.join(", ")} (${best}). Recheck the evidence; do not force a winner without a defensible difference.`;
+}
+document.getElementById("addRow").addEventListener("click",()=>addPracticeRow());
+document.getElementById("clearRows").addEventListener("click",()=>{rowsEl.innerHTML="";addPracticeRow();addPracticeRow();});
+document.getElementById("loadCase2").addEventListener("click",()=>{
+  rowsEl.innerHTML="";
+  addPracticeRow("ORS",[3,4,4,2]);
+  addPracticeRow("Opioid agonist",[3,1,0,1]);
+  addPracticeRow("Zinc sulfate",[3,3,3,2]);
+});
+addPracticeRow();addPracticeRow();
+
+const toTop=document.getElementById("toTop");
+window.addEventListener("scroll",()=>toTop.classList.toggle("show",scrollY>500));
+toTop.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+</script>
+</body>
+</html>
