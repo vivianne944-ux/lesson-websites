@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qs1 questions</title>
+<style>
+:root {
+  --ink:#202333; --muted:#687087; --line:#d9dcea; --soft:#f6f4fb;
+  --purple:#7453d6; --purple2:#9273e8; --white:#fff; --green:#176b4b;
+  --shadow:0 10px 28px rgba(40,31,78,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#f5f1ff 0,#fff 360px);line-height:1.5}
+header{padding:28px 24px 16px;max-width:1500px;margin:auto}
+h1{margin:0;font-size:clamp(2rem,4vw,3.4rem);line-height:1.05}
+.controls{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+ .controls-inner{max-width:1500px;margin:auto;padding:12px 24px;display:grid;grid-template-columns:minmax(260px,1fr) 220px 220px auto;gap:10px}
+input,select,button{font:inherit;border:1px solid #cbcfe0;border-radius:10px;padding:10px 12px;background:#fff;color:var(--ink)}
+button{cursor:pointer;font-weight:700}
+button.primary{background:var(--purple);color:#fff;border-color:var(--purple)}
+main{max-width:1500px;margin:20px auto 70px;padding:0 24px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--muted);box-shadow:0 4px 12px rgba(40,31,78,.05)}
+.table-wrap{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:auto}
+table.master{width:100%;border-collapse:separate;border-spacing:0;min-width:1120px}
+ .master thead th{position:static;background:#5f42bf;color:#fff;padding:14px;text-align:left;font-size:.92rem;border-right:1px solid rgba(255,255,255,.2)}
+.master thead th:nth-child(1){width:17%} .master thead th:nth-child(2){width:9%} .master thead th:nth-child(3){width:34%} .master thead th:nth-child(4){width:40%}
+.master tbody td{vertical-align:top;padding:16px;border-top:1px solid var(--line);border-right:1px solid var(--line)}
+.master tbody tr:nth-child(even){background:#fbfaff}
+.master tbody tr:hover{background:#f3efff}
+.topic-pill{display:inline-block;background:#eee8ff;color:#4d31a8;border:1px solid #d8cbff;border-radius:999px;padding:6px 9px;font-weight:800;font-size:.82rem}
+.section-cell strong{display:block;color:var(--purple);font-size:1.05rem} .section-cell span{display:block;color:var(--muted);font-size:.85rem;margin-top:3px}
+.question-cell p:first-child{margin-top:0} ol,ul{margin:.4rem 0 .75rem;padding-left:1.5rem} p{margin:.55rem 0}
+.answer-line{display:flex;gap:10px;align-items:center;background:#e9f7f0;border:1px solid #bfe4d2;border-radius:10px;padding:9px 11px;margin-bottom:12px;color:var(--green);font-weight:800}
+.answer-line span{text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;background:var(--green);color:#fff;border-radius:6px;padding:3px 6px}
+.source-ref{margin-top:14px;padding-top:10px;border-top:1px dashed #b8bdd0;color:var(--muted);font-size:.82rem}
+.source-gap,.row-note{background:#fff5d7;border-left:4px solid #e9b949;padding:8px 10px;border-radius:6px;color:#6d5515}
+.row-note{background:#edf5ff;border-left-color:#4d91e8;color:#264c7a}
+.mini{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+.mini th,.mini td{border:1px solid #afb4c5;padding:7px;vertical-align:top} .mini th{background:#eee8ff}
+.mnemonic{border:1px dashed #777d90;border-radius:8px;padding:10px;background:#fafafa}
+.rx{border:1px solid #8f95a7;border-radius:10px;padding:14px;background:#fff} .rxmark{font-family:Georgia,serif;font-size:2.1rem;margin:.3rem 0} .sig{text-align:right}
+details{margin:10px 0;background:#f8f8fb;border:1px solid var(--line);border-radius:8px;padding:8px 10px} summary{cursor:pointer;font-weight:800}
+body.study-mode .rationale-content,body.study-mode .answer-line{display:none}
+.hidden-row{display:none!important}
+footer{max-width:1500px;margin:0 auto 40px;padding:0 24px;color:var(--muted);font-size:.9rem}
+@media(max-width:950px){.controls-inner{grid-template-columns:1fr 1fr} .controls-inner input{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Qs1 questions</h1>
+</header>
+<div class="controls">
+  <div class="controls-inner">
+    <input id="search" type="search" placeholder="Search questions, choices, or rationales…" aria-label="Search">
+    <select id="topic"><option value="">All topics</option><option>Reading Materials / Didactic Study Guide</option><option>Introductory Concepts</option><option>Nature &amp; Sources of Drugs / Dosage Forms</option><option>Pharmacokinetics 1 &amp; 2</option><option>Pharmacodynamics &amp; Drug Receptors</option><option>Rational Drug Use</option><option>Adverse Drug Reactions</option><option>NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout</option><option>Prescription Writing</option></select>
+    <select id="section"><option value="">All sections</option><option>2028A</option><option>2028B</option><option>2028C</option></select>
+    <button id="study" class="primary">Hide answers</button>
+  </div>
+</div>
+<main>
+  <div class="stats"><span class="stat"><strong id="visibleCount">48</strong> visible rows</span><span class="stat">48 total entries</span><span class="stat">9 topic groups</span><span class="stat">3 quiz sections</span></div>
+  <div class="table-wrap">
+    <table class="master">
+      <thead><tr><th>Topic</th><th>Section</th><th>Question &amp; Choices</th><th>Answer &amp; Rationale</th></tr></thead>
+      <tbody>
+    <tr data-topic="Reading Materials / Didactic Study Guide" data-section="2028A" data-search="reading materials / didactic study guide 2028a q15 &lt;p&gt;&lt;strong&gt;which of the following describes an “essential medicine”?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;effective treatment for a select group of people in the population&lt;/li&gt;&lt;li&gt;benefits the majority of the population&lt;/li&gt;&lt;li&gt;chosen based on the relevant medical needs of the population&lt;/li&gt;&lt;li&gt;procured to treat rare diseases for people in the community&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;essential medicines are not just for a select group; they are meant for broad, priority needs.&lt;/p&gt;
+&lt;p&gt;although essential medicines often benefit large groups, the who definition is not limited to the majority. some essential drugs may be used for less common but high-priority conditions, such as antituberculars, antimalarials, and antiretrovirals.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;correct answer:&lt;/strong&gt; selection is based on priority health needs, safety, efficacy, and cost-effectiveness.&lt;/p&gt;
+&lt;p&gt;choice d describes orphan drugs, not essential medicines.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Reading Materials / Didactic Study Guide</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 15</span></td>
+      <td class="question-cell"><p><strong>Which of the following describes an “essential medicine”?</strong></p>
+<ol type="a"><li>Effective treatment for a select group of people in the population</li><li>Benefits the majority of the population</li><li>Chosen based on the relevant medical needs of the population</li><li>Procured to treat rare diseases for people in the community</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Chosen based on the relevant medical needs of the population</div><div class="rationale-content"><p>Essential medicines are not just for a select group; they are meant for broad, priority needs.</p>
+<p>Although essential medicines often benefit large groups, the WHO definition is not limited to the majority. Some essential drugs may be used for less common but high-priority conditions, such as antituberculars, antimalarials, and antiretrovirals.</p>
+<p><strong>Correct answer:</strong> Selection is based on priority health needs, safety, efficacy, and cost-effectiveness.</p>
+<p>Choice D describes orphan drugs, not essential medicines.</p><div class='source-ref'>Source reference in quiz: Didactic Study Guide (2028)</div></div></td>
+    </tr>
+    
+    <tr data-topic="Reading Materials / Didactic Study Guide" data-section="2028C" data-search="reading materials / didactic study guide 2028c q15 &lt;p&gt;&lt;strong&gt;according to the generics act of 1988, the term “generic name” refers to:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;chemical component responsible for claimed therapeutic effect&lt;/li&gt;&lt;li&gt;scientifically and internationally recognized active ingredient&lt;/li&gt;&lt;li&gt;proprietary name&lt;/li&gt;&lt;li&gt;finished product form that contains the active ingredient&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;generic name:&lt;/strong&gt; the nonproprietary, scientifically recognized name of the active ingredient. the uploaded lectures distinguish this from the proprietary or brand name and emphasize prescribing by generic name under the generics act of 1988.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;choice a&lt;/strong&gt; describes the active ingredient’s pharmacologic role, &lt;strong&gt;choice c&lt;/strong&gt; is the proprietary or brand name, and &lt;strong&gt;choice d&lt;/strong&gt; describes the finished dosage form or drug product.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Reading Materials / Didactic Study Guide</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 15</span></td>
+      <td class="question-cell"><p><strong>According to the Generics Act of 1988, the term “generic name” refers to:</strong></p>
+<ol type="a"><li>Chemical component responsible for claimed therapeutic effect</li><li>Scientifically and internationally recognized active ingredient</li><li>Proprietary name</li><li>Finished product form that contains the active ingredient</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>B — Scientifically and internationally recognized active ingredient</div><div class="rationale-content"><p><strong>Generic name:</strong> The nonproprietary, scientifically recognized name of the active ingredient. The uploaded lectures distinguish this from the proprietary or brand name and emphasize prescribing by generic name under the Generics Act of 1988.</p>
+<p><strong>Choice A</strong> describes the active ingredient’s pharmacologic role, <strong>choice C</strong> is the proprietary or brand name, and <strong>choice D</strong> describes the finished dosage form or drug product.</p><div class='source-ref'>Source reference in quiz: Introduction to Basic Pharmacology V1; Nature and Sources of Drugs &amp; Dosage Forms V1</div></div></td>
+    </tr>
+    
+    <tr data-topic="Introductory Concepts" data-section="2028A" data-search="introductory concepts 2028a q1 &lt;p&gt;&lt;strong&gt;study of medicines taken from naturally occurring substances like fungi and plants that have been used traditionally by specific groups of people for medicinal purposes&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;ethnopharmacology&lt;/li&gt;&lt;li&gt;pharmacognosy&lt;/li&gt;&lt;li&gt;pharmacoepidemiology&lt;/li&gt;&lt;li&gt;pharmacogenetics&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;a. ethnopharmacology:&lt;/strong&gt; study of medicines taken from naturally occurring substances like fungi and plants that have been used traditionally by specific groups of people for medicinal purposes.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;b. pharmacognosy:&lt;/strong&gt; study of crude drugs, proper horticulture, harvesting, and uses of materials derived from nature.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;c. pharmacoepidemiology:&lt;/strong&gt; studies the response in a population at a given time and space to pharmacologic events, whether adverse or beneficial, using measures of epidemiology.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;d. pharmacogenetics:&lt;/strong&gt; studies the influence of heredity on the pharmacokinetic and pharmacodynamic response to a drug.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Introductory Concepts</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 1</span></td>
+      <td class="question-cell"><p><strong>Study of medicines taken from naturally occurring substances like fungi and plants that have been used traditionally by specific groups of people for medicinal purposes</strong></p>
+<ol type="a"><li>Ethnopharmacology</li><li>Pharmacognosy</li><li>Pharmacoepidemiology</li><li>Pharmacogenetics</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Ethnopharmacology</div><div class="rationale-content"><p><strong>A. Ethnopharmacology:</strong> Study of medicines taken from naturally occurring substances like fungi and plants that have been used traditionally by specific groups of people for medicinal purposes.</p>
+<p><strong>B. Pharmacognosy:</strong> Study of crude drugs, proper horticulture, harvesting, and uses of materials derived from nature.</p>
+<p><strong>C. Pharmacoepidemiology:</strong> Studies the response in a population at a given time and space to pharmacologic events, whether adverse or beneficial, using measures of epidemiology.</p>
+<p><strong>D. Pharmacogenetics:</strong> Studies the influence of heredity on the pharmacokinetic and pharmacodynamic response to a drug.</p><div class='source-ref'>Source reference in quiz: 2028 Trans</div></div></td>
+    </tr>
+    
+    <tr data-topic="Introductory Concepts" data-section="2028B" data-search="introductory concepts 2028b q1 &lt;p&gt;&lt;strong&gt;branch of pharmacology that deals with rational use of drugs&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;pharmacognosy&lt;/li&gt;&lt;li&gt;pharmacokinetics&lt;/li&gt;&lt;li&gt;posology&lt;/li&gt;&lt;li&gt;clinical pharmacology&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;pharmacognosy:&lt;/strong&gt; study of crude drugs, proper horticulture, harvesting, and uses of materials derived from nature.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pharmacokinetics:&lt;/strong&gt; movement of the drug in the body and how the body acts on the drug.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;posology:&lt;/strong&gt; deals with the dosage required to produce a therapeutic response.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;clinical pharmacology:&lt;/strong&gt; refers to the rational use of drugs or drug prescribing.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Introductory Concepts</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 1</span></td>
+      <td class="question-cell"><p><strong>Branch of pharmacology that deals with rational use of drugs</strong></p>
+<ol type="a"><li>Pharmacognosy</li><li>Pharmacokinetics</li><li>Posology</li><li>Clinical Pharmacology</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>D — Clinical Pharmacology</div><div class="rationale-content"><p><strong>Pharmacognosy:</strong> Study of crude drugs, proper horticulture, harvesting, and uses of materials derived from nature.</p>
+<p><strong>Pharmacokinetics:</strong> Movement of the drug in the body and how the body acts on the drug.</p>
+<p><strong>Posology:</strong> Deals with the dosage required to produce a therapeutic response.</p>
+<p><strong>Clinical Pharmacology:</strong> Refers to the rational use of drugs or drug prescribing.</p><div class='source-ref'>Source reference in quiz: [2028] Introduction to Basic Pharmacology</div></div></td>
+    </tr>
+    
+    <tr data-topic="Introductory Concepts" data-section="2028C" data-search="introductory concepts 2028c q1 &lt;p&gt;&lt;strong&gt;the branch of pharmacology that deals with crude drugs?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;pharmacokinetics&lt;/li&gt;&lt;li&gt;posology&lt;/li&gt;&lt;li&gt;pharmacognosy&lt;/li&gt;&lt;li&gt;pharmacoeconomics&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;pharmacokinetics:&lt;/strong&gt; movement of the drug in the body and how the body acts on it; includes absorption, distribution, metabolism (biotransformation), and excretion.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;posology:&lt;/strong&gt; deals with the dosage required to produce a therapeutic response.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pharmacognosy:&lt;/strong&gt; study of crude drugs, proper horticulture, harvesting, and uses of materials derived from nature. crude drugs are plant or animal drugs consisting of natural substances that have undergone only collection and drying.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pharmacoeconomics:&lt;/strong&gt; studies the cost-effectiveness of drug treatment and compares the costs and consequences of pharmaceutical products and services.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Introductory Concepts</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 1</span></td>
+      <td class="question-cell"><p><strong>The branch of pharmacology that deals with crude drugs?</strong></p>
+<ol type="a"><li>Pharmacokinetics</li><li>Posology</li><li>Pharmacognosy</li><li>Pharmacoeconomics</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Pharmacognosy</div><div class="rationale-content"><p><strong>Pharmacokinetics:</strong> Movement of the drug in the body and how the body acts on it; includes absorption, distribution, metabolism (biotransformation), and excretion.</p>
+<p><strong>Posology:</strong> Deals with the dosage required to produce a therapeutic response.</p>
+<p><strong>Pharmacognosy:</strong> Study of crude drugs, proper horticulture, harvesting, and uses of materials derived from nature. Crude drugs are plant or animal drugs consisting of natural substances that have undergone only collection and drying.</p>
+<p><strong>Pharmacoeconomics:</strong> Studies the cost-effectiveness of drug treatment and compares the costs and consequences of pharmaceutical products and services.</p><div class='source-ref'>Source reference in quiz: 2028 Introduction to Basic Pharmacology</div></div></td>
+    </tr>
+    
+    <tr data-topic="Nature &amp; Sources of Drugs / Dosage Forms" data-section="2028A" data-search="nature &amp; sources of drugs / dosage forms 2028a q2 &lt;p&gt;&lt;strong&gt;which among the following has the least bioavailability?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;rectal&lt;/li&gt;&lt;li&gt;intravenous&lt;/li&gt;&lt;li&gt;intramuscular&lt;/li&gt;&lt;li&gt;sublingual&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;the source provides the following route comparison:&lt;/p&gt;
+&lt;table class=&quot;mini&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;route&lt;/th&gt;&lt;th&gt;bioavailability&lt;/th&gt;&lt;th&gt;characteristics&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;intravenous (iv)&lt;/td&gt;&lt;td&gt;100% (by definition)&lt;/td&gt;&lt;td&gt;most rapid onset&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;intramuscular (im)&lt;/td&gt;&lt;td&gt;75 to ≤100%&lt;/td&gt;&lt;td&gt;large volumes; painful&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;subcutaneous (sc)&lt;/td&gt;&lt;td&gt;75 to ≤100%&lt;/td&gt;&lt;td&gt;smaller volumes than im; painful&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;oral&lt;/td&gt;&lt;td&gt;5 to &amp;lt;100%&lt;/td&gt;&lt;td&gt;most convenient; first-pass effect&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;rectal&lt;/td&gt;&lt;td&gt;30 to &amp;lt;100%&lt;/td&gt;&lt;td&gt;less first-pass effect than oral&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;inhalation&lt;/td&gt;&lt;td&gt;5 to &amp;lt;100%&lt;/td&gt;&lt;td&gt;often very rapid&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;transdermal&lt;/td&gt;&lt;td&gt;80 to ≤100%&lt;/td&gt;&lt;td&gt;slow absorption; prolonged duration of action&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;">
+      <td class="topic-cell"><span class="topic-pill">Nature &amp; Sources of Drugs / Dosage Forms</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 2</span></td>
+      <td class="question-cell"><p><strong>Which among the following has the least bioavailability?</strong></p>
+<ol type="a"><li>Rectal</li><li>Intravenous</li><li>Intramuscular</li><li>Sublingual</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Rectal</div><div class="rationale-content"><p>The source provides the following route comparison:</p>
+<table class="mini"><thead><tr><th>Route</th><th>Bioavailability</th><th>Characteristics</th></tr></thead><tbody>
+<tr><td>Intravenous (IV)</td><td>100% (by definition)</td><td>Most rapid onset</td></tr>
+<tr><td>Intramuscular (IM)</td><td>75 to ≤100%</td><td>Large volumes; painful</td></tr>
+<tr><td>Subcutaneous (SC)</td><td>75 to ≤100%</td><td>Smaller volumes than IM; painful</td></tr>
+<tr><td>Oral</td><td>5 to &lt;100%</td><td>Most convenient; first-pass effect</td></tr>
+<tr><td>Rectal</td><td>30 to &lt;100%</td><td>Less first-pass effect than oral</td></tr>
+<tr><td>Inhalation</td><td>5 to &lt;100%</td><td>Often very rapid</td></tr>
+<tr><td>Transdermal</td><td>80 to ≤100%</td><td>Slow absorption; prolonged duration of action</td></tr>
+</tbody></table><div class='source-ref'>Source reference in quiz: 2028 Trans</div></div></td>
+    </tr>
+    
+    <tr data-topic="Nature &amp; Sources of Drugs / Dosage Forms" data-section="2028A" data-search="nature &amp; sources of drugs / dosage forms 2028a q6 &lt;p&gt;&lt;strong&gt;what type of coating is in a tablet to protect the drug from degrading before it reaches its intended site of absorption?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;enteric coated&lt;/li&gt;&lt;li&gt;layered&lt;/li&gt;&lt;li&gt;chewable&lt;/li&gt;&lt;li&gt;film coated&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;film coating:&lt;/strong&gt; the uploaded dosage-forms lecture specifically lists film coating as protecting drugs against gastrointestinal acid and enzymes. this supports the quiz key.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;enteric coating:&lt;/strong&gt; also resists gastric conditions, but the provided lecture table identifies &lt;em&gt;film coating&lt;/em&gt; for the protection described in this item.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;layered tablets:&lt;/strong&gt; contain separate layers or ingredients.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;chewable tablets:&lt;/strong&gt; improve palatability and ease of administration.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Nature &amp; Sources of Drugs / Dosage Forms</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 6</span></td>
+      <td class="question-cell"><p><strong>What type of coating is in a tablet to protect the drug from degrading before it reaches its intended site of absorption?</strong></p>
+<ol type="a"><li>Enteric coated</li><li>Layered</li><li>Chewable</li><li>Film coated</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>D — Film coated</div><div class="rationale-content"><p><strong>Film coating:</strong> The uploaded dosage-forms lecture specifically lists film coating as protecting drugs against gastrointestinal acid and enzymes. This supports the quiz key.</p>
+<p><strong>Enteric coating:</strong> Also resists gastric conditions, but the provided lecture table identifies <em>film coating</em> for the protection described in this item.</p>
+<p><strong>Layered tablets:</strong> Contain separate layers or ingredients.</p>
+<p><strong>Chewable tablets:</strong> Improve palatability and ease of administration.</p><div class='source-ref'>Source reference in quiz: Nature Sources/Dosage Forms Trans (2027)</div></div></td>
+    </tr>
+    
+    <tr data-topic="Nature &amp; Sources of Drugs / Dosage Forms" data-section="2028A" data-search="nature &amp; sources of drugs / dosage forms 2028a q7 &lt;p&gt;&lt;strong&gt;which of the following can be administered to an unconscious patient?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;suppository&lt;/li&gt;&lt;li&gt;capsule&lt;/li&gt;&lt;li&gt;tablet&lt;/li&gt;&lt;li&gt;syrup&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;rectal route:&lt;/strong&gt; the dosage form is a suppository, which melts at body temperature. it may be administered to unconscious, vomiting, uncooperative, or non-compliant patients and is usually used for patients who cannot swallow.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Nature &amp; Sources of Drugs / Dosage Forms</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 7</span></td>
+      <td class="question-cell"><p><strong>Which of the following can be administered to an unconscious patient?</strong></p>
+<ol type="a"><li>Suppository</li><li>Capsule</li><li>Tablet</li><li>Syrup</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Suppository</div><div class="rationale-content"><p><strong>Rectal route:</strong> The dosage form is a suppository, which melts at body temperature. It may be administered to unconscious, vomiting, uncooperative, or non-compliant patients and is usually used for patients who cannot swallow.</p><div class='source-ref'>Source reference in quiz: Nature Sources/Dosage Forms Trans (2027)</div></div></td>
+    </tr>
+    
+    <tr data-topic="Nature &amp; Sources of Drugs / Dosage Forms" data-section="2028B" data-search="nature &amp; sources of drugs / dosage forms 2028b q6 &lt;p&gt;&lt;strong&gt;the ____ facilitates the dissolution of a drug once ingested.&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;binder&lt;/li&gt;&lt;li&gt;disintegrator&lt;/li&gt;&lt;li&gt;filler&lt;/li&gt;&lt;li&gt;preservative&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;binder:&lt;/strong&gt; holds the tablet together and prevents premature disintegration.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;disintegrator:&lt;/strong&gt; promotes breakup of the tablet mass into smaller particles, facilitating dissolution. this wording is verified in the uploaded dosage-forms lecture.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;filler:&lt;/strong&gt; likened to extenders.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;preservative:&lt;/strong&gt; extends drug shelf life.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Nature &amp; Sources of Drugs / Dosage Forms</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 6</span></td>
+      <td class="question-cell"><p><strong>The ____ facilitates the dissolution of a drug once ingested.</strong></p>
+<ol type="a"><li>Binder</li><li>Disintegrator</li><li>Filler</li><li>Preservative</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>B — Disintegrator</div><div class="rationale-content"><p><strong>Binder:</strong> Holds the tablet together and prevents premature disintegration.</p>
+<p><strong>Disintegrator:</strong> Promotes breakup of the tablet mass into smaller particles, facilitating dissolution. This wording is verified in the uploaded dosage-forms lecture.</p>
+<p><strong>Filler:</strong> Likened to extenders.</p>
+<p><strong>Preservative:</strong> Extends drug shelf life.</p><div class='source-ref'>Source reference in quiz: [2028] Nature and Sources of Drugs, &amp; Dosage Forms</div></div></td>
+    </tr>
+    
+    <tr data-topic="Nature &amp; Sources of Drugs / Dosage Forms" data-section="2028B" data-search="nature &amp; sources of drugs / dosage forms 2028b q7 &lt;p&gt;&lt;strong&gt;which among the following has the least systemic effects?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;ampule&lt;/li&gt;&lt;li&gt;capsule&lt;/li&gt;&lt;li&gt;ointment&lt;/li&gt;&lt;li&gt;suppository&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;intravenous:&lt;/strong&gt; injected directly into a blood vessel; most rapid onset, high toxicity, 100% bioavailability.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;oral:&lt;/strong&gt; safest and most convenient route; subject to first-pass effect.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;least to most systemic effect:&lt;/strong&gt; ointment &amp;lt; suppository &amp;lt; capsule &amp;lt; ampule.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;transdermal:&lt;/strong&gt; applied to the body surface for local effects on the skin; slow absorption and prolonged duration of action.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;rectal:&lt;/strong&gt; inserted into the rectum and absorbed by blood vessels; less first-pass effect than oral.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Nature &amp; Sources of Drugs / Dosage Forms</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 7</span></td>
+      <td class="question-cell"><p><strong>Which among the following has the least systemic effects?</strong></p>
+<ol type="a"><li>Ampule</li><li>Capsule</li><li>Ointment</li><li>Suppository</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Ointment</div><div class="rationale-content"><p><strong>Intravenous:</strong> Injected directly into a blood vessel; most rapid onset, high toxicity, 100% bioavailability.</p>
+<p><strong>Oral:</strong> Safest and most convenient route; subject to first-pass effect.</p>
+<p><strong>Least to most systemic effect:</strong> ointment &lt; suppository &lt; capsule &lt; ampule.</p>
+<p><strong>Transdermal:</strong> Applied to the body surface for local effects on the skin; slow absorption and prolonged duration of action.</p>
+<p><strong>Rectal:</strong> Inserted into the rectum and absorbed by blood vessels; less first-pass effect than oral.</p><div class='source-ref'>Source reference in quiz: [2027] Pharmacokinetics 1</div></div></td>
+    </tr>
+    
+    <tr data-topic="Nature &amp; Sources of Drugs / Dosage Forms" data-section="2028C" data-search="nature &amp; sources of drugs / dosage forms 2028c q6 &lt;p&gt;&lt;strong&gt;the first anti-infective agent was discovered from what source?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;plants&lt;/li&gt;&lt;li&gt;animals&lt;/li&gt;&lt;li&gt;microorganisms&lt;/li&gt;&lt;li&gt;minerals&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;the question asks specifically about anti-infective agents or antibiotics. the uploaded drug-sources lecture identifies microorganisms—including fungi and bacteria—as natural sources of anti-infective drugs.&lt;/p&gt;
+&lt;p&gt;certain hormones and substances were extracted from animal organs before advanced biotechnology and genetic engineering.&lt;/p&gt;
+&lt;p&gt;minerals are inorganic substances used for nutritional purposes, such as ferrous sulfate, calcium, and zinc sulfate, or for conditions such as constipation, where magnesium sulfate may be used as a laxative.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Nature &amp; Sources of Drugs / Dosage Forms</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 6</span></td>
+      <td class="question-cell"><p><strong>The first anti-infective agent was discovered from what source?</strong></p>
+<ol type="a"><li>Plants</li><li>Animals</li><li>Microorganisms</li><li>Minerals</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Microorganisms</div><div class="rationale-content"><p>The question asks specifically about anti-infective agents or antibiotics. The uploaded drug-sources lecture identifies microorganisms—including fungi and bacteria—as natural sources of anti-infective drugs.</p>
+<p>Certain hormones and substances were extracted from animal organs before advanced biotechnology and genetic engineering.</p>
+<p>Minerals are inorganic substances used for nutritional purposes, such as ferrous sulfate, calcium, and zinc sulfate, or for conditions such as constipation, where magnesium sulfate may be used as a laxative.</p><div class='source-ref'>Source reference in quiz: 2027 Nature and Sources of Drugs &amp; Dosage Forms</div></div></td>
+    </tr>
+    
+    <tr data-topic="Nature &amp; Sources of Drugs / Dosage Forms" data-section="2028C" data-search="nature &amp; sources of drugs / dosage forms 2028c q9 &lt;p&gt;&lt;strong&gt;which dosage form has the highest bioavailability?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;im solution&lt;/li&gt;&lt;li&gt;tablet&lt;/li&gt;&lt;li&gt;decoction&lt;/li&gt;&lt;li&gt;ointment&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;im solution:&lt;/strong&gt; intramuscular administration avoids gastrointestinal first-pass metabolism and has high, though not necessarily complete, bioavailability.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;tablet and decoction:&lt;/strong&gt; these are oral preparations and may have reduced bioavailability because of incomplete absorption and first-pass metabolism.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ointment:&lt;/strong&gt; intended mainly for local application to skin or mucous membranes. it should not be treated as equivalent to a transdermal patch, which is specifically designed for systemic delivery.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Nature &amp; Sources of Drugs / Dosage Forms</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 9</span></td>
+      <td class="question-cell"><p><strong>Which dosage form has the highest bioavailability?</strong></p>
+<ol type="a"><li>IM solution</li><li>Tablet</li><li>Decoction</li><li>Ointment</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — IM solution</div><div class="rationale-content"><p><strong>IM solution:</strong> Intramuscular administration avoids gastrointestinal first-pass metabolism and has high, though not necessarily complete, bioavailability.</p>
+<p><strong>Tablet and decoction:</strong> These are oral preparations and may have reduced bioavailability because of incomplete absorption and first-pass metabolism.</p>
+<p><strong>Ointment:</strong> Intended mainly for local application to skin or mucous membranes. It should not be treated as equivalent to a transdermal patch, which is specifically designed for systemic delivery.</p><div class='source-ref'>Source reference in quiz: Pharmacokinetics 1 V1; Nature and Sources of Drugs &amp; Dosage Forms V1</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacokinetics 1 &amp; 2" data-section="2028A" data-search="pharmacokinetics 1 &amp; 2 2028a q3 &lt;p&gt;&lt;strong&gt;distribution of drug in a compartment is determined by:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;route of administration&lt;/li&gt;&lt;li&gt;first pass effect&lt;/li&gt;&lt;li&gt;organ blood flow&lt;/li&gt;&lt;li&gt;gastric emptying time&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;a.&lt;/strong&gt; major factor influencing drug absorption.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;b.&lt;/strong&gt; affects bioavailability during absorption, especially for oral drugs, not distribution.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;c.&lt;/strong&gt; determines how quickly and extensively the drug reaches different tissues after entering the circulation. high-perfusion organs (liver, kidney, brain, heart) receive the drug faster than low-perfusion tissues (fat, muscles, skin).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;d.&lt;/strong&gt; factor that affects drug absorption.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacokinetics 1 &amp; 2</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 3</span></td>
+      <td class="question-cell"><p><strong>Distribution of drug in a compartment is determined by:</strong></p>
+<ol type="a"><li>Route of Administration</li><li>First pass effect</li><li>Organ blood flow</li><li>Gastric emptying time</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Organ blood flow</div><div class="rationale-content"><p><strong>A.</strong> Major factor influencing drug absorption.</p>
+<p><strong>B.</strong> Affects bioavailability during absorption, especially for oral drugs, not distribution.</p>
+<p><strong>C.</strong> Determines how quickly and extensively the drug reaches different tissues after entering the circulation. High-perfusion organs (liver, kidney, brain, heart) receive the drug faster than low-perfusion tissues (fat, muscles, skin).</p>
+<p><strong>D.</strong> Factor that affects drug absorption.</p><div class='source-ref'>Source reference in quiz: Pharmacokinetics 1 (2027)</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacokinetics 1 &amp; 2" data-section="2028B" data-search="pharmacokinetics 1 &amp; 2 2028b q2 &lt;p&gt;&lt;strong&gt;which of the following will the basic drug be best absorbed in git?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;polar&lt;/li&gt;&lt;li&gt;water soluble&lt;/li&gt;&lt;li&gt;ionized&lt;/li&gt;&lt;li&gt;non-protonated&lt;/li&gt;&lt;/ol&gt; &lt;div class=&quot;mnemonic&quot;&gt;&lt;strong&gt;luna (favors absorption)&lt;/strong&gt;: lipophilic, unionized, nonpolar, absorbed.&lt;br&gt;&lt;strong&gt;whipe (favors excretion)&lt;/strong&gt;: water-soluble/hydrophilic, ionized, polar, excreted.&lt;/div&gt;
+&lt;p&gt;to cross biological membranes, weak acids and weak bases should be in their lipid-soluble forms:&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;weak acid: protonated form.&lt;/li&gt;&lt;li&gt;weak base: unprotonated form.&lt;/li&gt;&lt;/ul&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacokinetics 1 &amp; 2</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 2</span></td>
+      <td class="question-cell"><p><strong>Which of the following will the basic drug be best absorbed in GIT?</strong></p>
+<ol type="a"><li>Polar</li><li>Water soluble</li><li>Ionized</li><li>Non-protonated</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>D — Non-protonated</div><div class="rationale-content"><div class="mnemonic"><strong>LUNA (favors absorption)</strong>: Lipophilic, Unionized, Nonpolar, Absorbed.<br><strong>WHIPE (favors excretion)</strong>: Water-soluble/hydrophilic, Ionized, Polar, Excreted.</div>
+<p>To cross biological membranes, weak acids and weak bases should be in their lipid-soluble forms:</p>
+<ul><li>Weak acid: protonated form.</li><li>Weak base: unprotonated form.</li></ul><div class='source-ref'>Source reference in quiz: [2028] Pharmacokinetics I</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacokinetics 1 &amp; 2" data-section="2028B" data-search="pharmacokinetics 1 &amp; 2 2028b q3 &lt;p&gt;&lt;strong&gt;which of the following will affect drug distribution?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;food&lt;/li&gt;&lt;li&gt;cardiac output&lt;/li&gt;&lt;li&gt;intestinal motility&lt;/li&gt;&lt;li&gt;route of administration&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;food:&lt;/strong&gt; affects bioavailability.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;cardiac output:&lt;/strong&gt; important in drug distribution. distribution is much more rapid than elimination and is influenced by regional blood flow.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;intestinal motility:&lt;/strong&gt; affects absorption and bioavailability.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;route of administration:&lt;/strong&gt; a major factor influencing drug absorption.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacokinetics 1 &amp; 2</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 3</span></td>
+      <td class="question-cell"><p><strong>Which of the following will affect drug distribution?</strong></p>
+<ol type="a"><li>Food</li><li>Cardiac Output</li><li>Intestinal Motility</li><li>Route of Administration</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>B — Cardiac Output</div><div class="rationale-content"><p><strong>Food:</strong> Affects bioavailability.</p>
+<p><strong>Cardiac output:</strong> Important in drug distribution. Distribution is much more rapid than elimination and is influenced by regional blood flow.</p>
+<p><strong>Intestinal motility:</strong> Affects absorption and bioavailability.</p>
+<p><strong>Route of administration:</strong> A major factor influencing drug absorption.</p><div class='source-ref'>Source reference in quiz: [2028] Pharmacokinetics I</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacokinetics 1 &amp; 2" data-section="2028C" data-search="pharmacokinetics 1 &amp; 2 2028c q2 &lt;p&gt;&lt;strong&gt;in which form is an acidic drug best absorbed in the gastrointestinal tract?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;polar&lt;/li&gt;&lt;li&gt;water soluble&lt;/li&gt;&lt;li&gt;protonated&lt;/li&gt;&lt;li&gt;ionized&lt;/li&gt;&lt;/ol&gt; &lt;table class=&quot;mini&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;form&lt;/th&gt;&lt;th&gt;weak acid&lt;/th&gt;&lt;th&gt;weak base&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;unprotonated&lt;/td&gt;&lt;td&gt;water soluble; excreted faster&lt;/td&gt;&lt;td&gt;lipid soluble; can cross biological membranes&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;protonated&lt;/td&gt;&lt;td&gt;lipid soluble; likely to cross biological membranes&lt;/td&gt;&lt;td&gt;water soluble&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;div class=&quot;mnemonic&quot;&gt;&lt;strong&gt;luna (favors absorption)&lt;/strong&gt;: lipophilic, unionized, nonpolar, absorbed.&lt;br&gt;&lt;strong&gt;whipe (favors excretion)&lt;/strong&gt;: water-soluble/hydrophilic, ionized, polar, excreted.&lt;/div&gt;
+&lt;p&gt;a weak acid is more lipid-soluble in its protonated form. the polar, water-soluble, and ionized forms of an acidic drug are favored for excretion.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacokinetics 1 &amp; 2</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 2</span></td>
+      <td class="question-cell"><p><strong>In which form is an acidic drug best absorbed in the gastrointestinal tract?</strong></p>
+<ol type="a"><li>Polar</li><li>Water Soluble</li><li>Protonated</li><li>Ionized</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Protonated</div><div class="rationale-content"><table class="mini"><thead><tr><th>Form</th><th>Weak acid</th><th>Weak base</th></tr></thead><tbody>
+<tr><td>Unprotonated</td><td>Water soluble; excreted faster</td><td>Lipid soluble; can cross biological membranes</td></tr>
+<tr><td>Protonated</td><td>Lipid soluble; likely to cross biological membranes</td><td>Water soluble</td></tr>
+</tbody></table>
+<div class="mnemonic"><strong>LUNA (favors absorption)</strong>: Lipophilic, Unionized, Nonpolar, Absorbed.<br><strong>WHIPE (favors excretion)</strong>: Water-soluble/hydrophilic, Ionized, Polar, Excreted.</div>
+<p>A weak acid is more lipid-soluble in its protonated form. The polar, water-soluble, and ionized forms of an acidic drug are favored for excretion.</p><div class='source-ref'>Source reference in quiz: 2028 Pharmacokinetics 1</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacokinetics 1 &amp; 2" data-section="2028C" data-search="pharmacokinetics 1 &amp; 2 2028c q3 &lt;p&gt;&lt;strong&gt;which of the following factors will affect drug distribution?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;protein binding&lt;/li&gt;&lt;li&gt;presence of food&lt;/li&gt;&lt;li&gt;intestinal motility&lt;/li&gt;&lt;li&gt;route of administration&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;protein binding:&lt;/strong&gt; drugs strongly bound to plasma proteins such as albumin remain in the vascular compartment and are not freely distributed to tissues.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;presence of food:&lt;/strong&gt; affects drug absorption.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;intestinal motility:&lt;/strong&gt; a physiological factor affecting drug absorption.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;route of administration:&lt;/strong&gt; a major factor influencing drug absorption and bioavailability.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacokinetics 1 &amp; 2</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 3</span></td>
+      <td class="question-cell"><p><strong>Which of the following factors will affect drug distribution?</strong></p>
+<ol type="a"><li>Protein binding</li><li>Presence of Food</li><li>Intestinal Motility</li><li>Route of Administration</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Protein binding</div><div class="rationale-content"><p><strong>Protein binding:</strong> Drugs strongly bound to plasma proteins such as albumin remain in the vascular compartment and are not freely distributed to tissues.</p>
+<p><strong>Presence of food:</strong> Affects drug absorption.</p>
+<p><strong>Intestinal motility:</strong> A physiological factor affecting drug absorption.</p>
+<p><strong>Route of administration:</strong> A major factor influencing drug absorption and bioavailability.</p><div class='source-ref'>Source reference in quiz: 2028 Trans Pharmacokinetics</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacokinetics 1 &amp; 2" data-section="2028C" data-search="pharmacokinetics 1 &amp; 2 2028c q7 &lt;p&gt;&lt;strong&gt;which of the following routes of administration has the highest bioavailability?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;iv&lt;/li&gt;&lt;li&gt;im&lt;/li&gt;&lt;li&gt;oral&lt;/li&gt;&lt;li&gt;rectal&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;intravenous administration has 100% bioavailability by definition because the full dose enters the systemic circulation directly.&lt;/p&gt;
+&lt;p&gt;the uploaded pharmacokinetics lecture lists inhalational bioavailability as variable rather than 100%; therefore, the quiz’s added statement that inhalation “does the same” is corrected here.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacokinetics 1 &amp; 2</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 7</span></td>
+      <td class="question-cell"><p><strong>Which of the following routes of administration has the highest bioavailability?</strong></p>
+<ol type="a"><li>IV</li><li>IM</li><li>Oral</li><li>Rectal</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — IV</div><div class="rationale-content"><p>Intravenous administration has 100% bioavailability by definition because the full dose enters the systemic circulation directly.</p>
+<p>The uploaded pharmacokinetics lecture lists inhalational bioavailability as variable rather than 100%; therefore, the quiz’s added statement that inhalation “does the same” is corrected here.</p><div class='source-ref'>Source reference in quiz: Pharmacokinetics 1 V1</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacodynamics &amp; Drug Receptors" data-section="2028A" data-search="pharmacodynamics &amp; drug receptors 2028a q4 &lt;p&gt;&lt;strong&gt;thyroid hormones will bind to this type of receptor family:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;g-protein coupled&lt;/li&gt;&lt;li&gt;ion channel&lt;/li&gt;&lt;li&gt;intracellular&lt;/li&gt;&lt;li&gt;enzyme-linked&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;g-protein coupled:&lt;/strong&gt; uses second messengers.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ion channel:&lt;/strong&gt; for acetylcholine.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;intracellular:&lt;/strong&gt; steroids, vitamin d, and thyroid hormones. these lipid-soluble ligands diffuse into the cell to bind intracellular receptors. albumin is a plasma carrier protein, not an intracellular-receptor ligand.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;enzyme-linked:&lt;/strong&gt; for insulin, epidermal growth factor, and atrial natriuretic peptide; have tyrosine kinase activity.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacodynamics &amp; Drug Receptors</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 4</span></td>
+      <td class="question-cell"><p><strong>Thyroid hormones will bind to this type of receptor family:</strong></p>
+<ol type="a"><li>G-protein coupled</li><li>Ion channel</li><li>Intracellular</li><li>Enzyme-linked</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Intracellular</div><div class="rationale-content"><p><strong>G-protein coupled:</strong> Uses second messengers.</p>
+<p><strong>Ion channel:</strong> For acetylcholine.</p>
+<p><strong>Intracellular:</strong> Steroids, vitamin D, and thyroid hormones. These lipid-soluble ligands diffuse into the cell to bind intracellular receptors. Albumin is a plasma carrier protein, not an intracellular-receptor ligand.</p>
+<p><strong>Enzyme-linked:</strong> For insulin, epidermal growth factor, and atrial natriuretic peptide; have tyrosine kinase activity.</p><div class='source-ref'>Source reference in quiz: Pharmacodynamics Trans (2027)</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacodynamics &amp; Drug Receptors" data-section="2028A" data-search="pharmacodynamics &amp; drug receptors 2028a q5 &lt;p&gt;&lt;strong&gt;the type of drug interaction where the effect is greater than the sum of individual effects&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;synergism&lt;/li&gt;&lt;li&gt;potentiation&lt;/li&gt;&lt;li&gt;additive/summation&lt;/li&gt;&lt;li&gt;antagonism&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;synergism:&lt;/strong&gt; total effect is greater than the sum of individual effects; e.g., beta-lactam drugs + aminoglycoside antibiotics (1 + 1 = 3).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;potentiation:&lt;/strong&gt; one drug has no direct effect but enhances the effect of the other; e.g., beta-lactam drugs + beta-lactamase inhibitors (1 + 0 = 3).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;additive/summation:&lt;/strong&gt; the resulting effect is the sum of the individual effects; e.g., paracetamol + ibuprofen for fever and body malaise (1 + 1 = 2).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;antagonism:&lt;/strong&gt; one drug has an opposing effect on another; no effect is produced (1 + 0 = 0).&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacodynamics &amp; Drug Receptors</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 5</span></td>
+      <td class="question-cell"><p><strong>The type of drug interaction where the effect is greater than the sum of individual effects</strong></p>
+<ol type="a"><li>Synergism</li><li>Potentiation</li><li>Additive/Summation</li><li>Antagonism</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Synergism</div><div class="rationale-content"><p><strong>Synergism:</strong> Total effect is greater than the sum of individual effects; e.g., beta-lactam drugs + aminoglycoside antibiotics (1 + 1 = 3).</p>
+<p><strong>Potentiation:</strong> One drug has no direct effect but enhances the effect of the other; e.g., beta-lactam drugs + beta-lactamase inhibitors (1 + 0 = 3).</p>
+<p><strong>Additive/Summation:</strong> The resulting effect is the sum of the individual effects; e.g., paracetamol + ibuprofen for fever and body malaise (1 + 1 = 2).</p>
+<p><strong>Antagonism:</strong> One drug has an opposing effect on another; no effect is produced (1 + 0 = 0).</p><div class='source-ref'>Source reference in quiz: Pharmacodynamics Trans (2028)</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacodynamics &amp; Drug Receptors" data-section="2028B" data-search="pharmacodynamics &amp; drug receptors 2028b q4 &lt;p&gt;&lt;strong&gt;steroids will bind to this receptor family:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;g-protein coupled receptor&lt;/li&gt;&lt;li&gt;ion channel&lt;/li&gt;&lt;li&gt;enzyme-linked&lt;/li&gt;&lt;li&gt;intracellular&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;g-protein coupled receptors:&lt;/strong&gt; signal through second messengers.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ion channel:&lt;/strong&gt; includes nicotinic acetylcholine and gaba receptors.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;enzyme-linked:&lt;/strong&gt; includes insulin and epidermal growth factor receptors.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;intracellular or cytosolic-nuclear receptors:&lt;/strong&gt; bind steroid hormones, thyroid hormones, and vitamin d; the lipid-soluble ligand diffuses into the cell before binding.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacodynamics &amp; Drug Receptors</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 4</span></td>
+      <td class="question-cell"><p><strong>Steroids will bind to this receptor family:</strong></p>
+<ol type="a"><li>G-protein coupled receptor</li><li>Ion channel</li><li>Enzyme-linked</li><li>Intracellular</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>D — Intracellular</div><div class="rationale-content"><p><strong>G-protein coupled receptors:</strong> Signal through second messengers.</p>
+<p><strong>Ion channel:</strong> Includes nicotinic acetylcholine and GABA receptors.</p>
+<p><strong>Enzyme-linked:</strong> Includes insulin and epidermal growth factor receptors.</p>
+<p><strong>Intracellular or cytosolic-nuclear receptors:</strong> Bind steroid hormones, thyroid hormones, and vitamin D; the lipid-soluble ligand diffuses into the cell before binding.</p><div class='source-ref'>Source reference in quiz: [2028] Pharmacodynamics and Drug Receptors</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacodynamics &amp; Drug Receptors" data-section="2028B" data-search="pharmacodynamics &amp; drug receptors 2028b q5 &lt;p&gt;&lt;strong&gt;what is the type of drug interaction where one drug that has no effect amplifies the entire drug reaction?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;addition&lt;/li&gt;&lt;li&gt;synergism&lt;/li&gt;&lt;li&gt;potentiation&lt;/li&gt;&lt;li&gt;antagonism&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;addition:&lt;/strong&gt; sum of individual effects (1 + 1 = 2).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;synergism:&lt;/strong&gt; greater than the sum of individual effects (1 + 1 = 3).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;potentiation:&lt;/strong&gt; more than the sum total of the individual effects when one drug has no effect (1 + 0 = 3).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;antagonism:&lt;/strong&gt; no effect is produced.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacodynamics &amp; Drug Receptors</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 5</span></td>
+      <td class="question-cell"><p><strong>What is the type of drug interaction where one drug that has no effect amplifies the entire drug reaction?</strong></p>
+<ol type="a"><li>Addition</li><li>Synergism</li><li>Potentiation</li><li>Antagonism</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Potentiation</div><div class="rationale-content"><p><strong>Addition:</strong> Sum of individual effects (1 + 1 = 2).</p>
+<p><strong>Synergism:</strong> Greater than the sum of individual effects (1 + 1 = 3).</p>
+<p><strong>Potentiation:</strong> More than the sum total of the individual effects when one drug has no effect (1 + 0 = 3).</p>
+<p><strong>Antagonism:</strong> No effect is produced.</p><div class='source-ref'>Source reference in quiz: [2028] Trans</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacodynamics &amp; Drug Receptors" data-section="2028C" data-search="pharmacodynamics &amp; drug receptors 2028c q4 &lt;p&gt;&lt;strong&gt;insulin binds to this type of receptor family&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;ligand-gated ion channels&lt;/li&gt;&lt;li&gt;gpcr&lt;/li&gt;&lt;li&gt;intracellular receptors&lt;/li&gt;&lt;li&gt;enzyme-linked receptors&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;ligand-gated ion channels:&lt;/strong&gt; examples include nicotinic acetylcholine and gaba receptors.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;gpcr:&lt;/strong&gt; signal through second-messenger systems.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;intracellular receptors:&lt;/strong&gt; bind steroid hormones, vitamin d, and thyroid hormones. albumin is a plasma carrier protein rather than an intracellular-receptor ligand.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;enzyme-linked receptors:&lt;/strong&gt; insulin binds an enzyme-linked receptor with intrinsic tyrosine-kinase activity. growth-factor receptors are also classic examples.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacodynamics &amp; Drug Receptors</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 4</span></td>
+      <td class="question-cell"><p><strong>Insulin binds to this type of receptor family</strong></p>
+<ol type="a"><li>Ligand-gated ion channels</li><li>GPCR</li><li>Intracellular receptors</li><li>Enzyme-linked receptors</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>D — Enzyme-linked receptors</div><div class="rationale-content"><p><strong>Ligand-gated ion channels:</strong> Examples include nicotinic acetylcholine and GABA receptors.</p>
+<p><strong>GPCR:</strong> Signal through second-messenger systems.</p>
+<p><strong>Intracellular receptors:</strong> Bind steroid hormones, vitamin D, and thyroid hormones. Albumin is a plasma carrier protein rather than an intracellular-receptor ligand.</p>
+<p><strong>Enzyme-linked receptors:</strong> Insulin binds an enzyme-linked receptor with intrinsic tyrosine-kinase activity. Growth-factor receptors are also classic examples.</p><div class='source-ref'>Source reference in quiz: Pharmacodynamics and Drug Receptors V1</div></div></td>
+    </tr>
+    
+    <tr data-topic="Pharmacodynamics &amp; Drug Receptors" data-section="2028C" data-search="pharmacodynamics &amp; drug receptors 2028c q5 &lt;p&gt;&lt;strong&gt;what is the type of drug interaction when the action of two drugs equals the sum of each individual effect?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;addition&lt;/li&gt;&lt;li&gt;synergism&lt;/li&gt;&lt;li&gt;antagonism&lt;/li&gt;&lt;li&gt;potentiation&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;addition:&lt;/strong&gt; sum of individual effects (1 + 1 = 2).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;synergism:&lt;/strong&gt; more than the sum of individual effects (1 + 1 = 3).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;antagonism:&lt;/strong&gt; depends on the type (1 + 0 = 0).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;potentiation:&lt;/strong&gt; one drug has no effect but amplifies the other (1 + 0 = 3).&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Pharmacodynamics &amp; Drug Receptors</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 5</span></td>
+      <td class="question-cell"><p><strong>What is the type of drug interaction when the action of two drugs equals the sum of each individual effect?</strong></p>
+<ol type="a"><li>Addition</li><li>Synergism</li><li>Antagonism</li><li>Potentiation</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Addition</div><div class="rationale-content"><p><strong>Addition:</strong> Sum of individual effects (1 + 1 = 2).</p>
+<p><strong>Synergism:</strong> More than the sum of individual effects (1 + 1 = 3).</p>
+<p><strong>Antagonism:</strong> Depends on the type (1 + 0 = 0).</p>
+<p><strong>Potentiation:</strong> One drug has no effect but amplifies the other (1 + 0 = 3).</p><div class='source-ref'>Source reference in quiz: Pharmacodynamics and Drug Receptors</div></div></td>
+    </tr>
+    
+    <tr data-topic="Rational Drug Use" data-section="2028A" data-search="rational drug use 2028a q8 &lt;p&gt;&lt;strong&gt;which of these is the least appropriate quality when deciding which drug is best for the patient?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;efficacy&lt;/li&gt;&lt;li&gt;popularity&lt;/li&gt;&lt;li&gt;safety&lt;/li&gt;&lt;li&gt;cost&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;efficacy, safety, and cost are part of the essc criteria. popularity is not part of the essc criteria and should have no bearing on decision-making.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Rational Drug Use</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 8</span></td>
+      <td class="question-cell"><p><strong>Which of these is the least appropriate quality when deciding which drug is best for the patient?</strong></p>
+<ol type="a"><li>Efficacy</li><li>Popularity</li><li>Safety</li><li>Cost</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>B — Popularity</div><div class="rationale-content"><p>Efficacy, safety, and cost are part of the ESSC criteria. Popularity is not part of the ESSC criteria and should have no bearing on decision-making.</p><div class='source-ref'>Source reference in quiz: Didactic Study Guide (2028)</div></div></td>
+    </tr>
+    
+    <tr data-topic="Rational Drug Use" data-section="2028A" data-search="rational drug use 2028a q9 &lt;p&gt;&lt;strong&gt;in the process of rational drug prescribing, what should the physician consider first?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;brand of the medication&lt;/li&gt;&lt;li&gt;presence of any drug interaction&lt;/li&gt;&lt;li&gt;identify the patient’s problem&lt;/li&gt;&lt;li&gt;most costly medication&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;correct sequence:&lt;/strong&gt; the physician first evaluates and defines the patient’s problem or diagnosis. the uploaded rational-drug-therapy lecture then proceeds to treatment goals, treatment selection, prescribing and counseling, and monitoring.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;drug interactions&lt;/strong&gt; are important when assessing suitability, but they are considered after the patient’s problem and therapeutic objective have been established.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;brand and cost:&lt;/strong&gt; prescriptions should use the generic name. cost is part of the essc criteria, but choosing the most costly medicine is not a rational-prescribing principle.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Rational Drug Use</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 9</span></td>
+      <td class="question-cell"><p><strong>In the process of rational drug prescribing, what should the physician consider first?</strong></p>
+<ol type="a"><li>Brand of the medication</li><li>Presence of any drug interaction</li><li>Identify the patient’s problem</li><li>Most costly medication</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Identify the patient’s problem</div><div class="rationale-content"><p><strong>Correct sequence:</strong> The physician first evaluates and defines the patient’s problem or diagnosis. The uploaded rational-drug-therapy lecture then proceeds to treatment goals, treatment selection, prescribing and counseling, and monitoring.</p>
+<p><strong>Drug interactions</strong> are important when assessing suitability, but they are considered after the patient’s problem and therapeutic objective have been established.</p>
+<p><strong>Brand and cost:</strong> Prescriptions should use the generic name. Cost is part of the ESSC criteria, but choosing the most costly medicine is not a rational-prescribing principle.</p><div class='source-ref'>Source reference in quiz: Didactic Study Guide (2028)</div></div></td>
+    </tr>
+    
+    <tr data-topic="Rational Drug Use" data-section="2028B" data-search="rational drug use 2028b q8 &lt;p&gt;&lt;strong&gt;in a child diagnosed with allergic rhinitis, what is the most appropriate therapeutic objective?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;cure the underlying disease&lt;/li&gt;&lt;li&gt;prevent spread of infection&lt;/li&gt;&lt;li&gt;alleviate the symptoms&lt;/li&gt;&lt;li&gt;eradicate the infection&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;because allergic rhinitis is chronic and non-infectious, treatment focuses on alleviating symptoms rather than cure or infection control.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Rational Drug Use</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 8</span></td>
+      <td class="question-cell"><p><strong>In a child diagnosed with allergic rhinitis, what is the most appropriate therapeutic objective?</strong></p>
+<ol type="a"><li>Cure the underlying disease</li><li>Prevent spread of infection</li><li>Alleviate the symptoms</li><li>Eradicate the infection</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Alleviate the symptoms</div><div class="rationale-content"><p>Because allergic rhinitis is chronic and non-infectious, treatment focuses on alleviating symptoms rather than cure or infection control.</p><div class='source-ref'>Source reference in quiz: Source reference line left blank in the quiz</div></div></td>
+    </tr>
+    
+    <tr data-topic="Rational Drug Use" data-section="2028B" data-search="rational drug use 2028b q9 &lt;p&gt;&lt;strong&gt;what is the next step after applying the essc criteria for a p-drug selection?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;educate the patient&lt;/li&gt;&lt;li&gt;monitor the patient&lt;/li&gt;&lt;li&gt;write a prescription&lt;/li&gt;&lt;li&gt;choose a drug&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;the source’s process diagram is: &lt;strong&gt;diagnosis → treatment goals → treatment selection → prescription &amp;amp; counsel → monitoring.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;a.&lt;/strong&gt; counseling or educating the patient is done after giving the prescription.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;b.&lt;/strong&gt; monitoring is the last step, after the drug has been prescribed and taken.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;c.&lt;/strong&gt; once the most appropriate drug has been selected using the essc criteria, the next step is to prescribe it.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;d.&lt;/strong&gt; the essc criteria are used in choosing the p-drug; drug selection is completed as part of the essc process.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Rational Drug Use</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 9</span></td>
+      <td class="question-cell"><p><strong>What is the next step after applying the ESSC criteria for a P-drug selection?</strong></p>
+<ol type="a"><li>Educate the patient</li><li>Monitor the patient</li><li>Write a prescription</li><li>Choose a drug</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Write a prescription</div><div class="rationale-content"><p>The source’s process diagram is: <strong>Diagnosis → Treatment Goals → Treatment Selection → Prescription &amp; Counsel → Monitoring.</strong></p>
+<p><strong>A.</strong> Counseling or educating the patient is done after giving the prescription.</p>
+<p><strong>B.</strong> Monitoring is the last step, after the drug has been prescribed and taken.</p>
+<p><strong>C.</strong> Once the most appropriate drug has been selected using the ESSC criteria, the next step is to prescribe it.</p>
+<p><strong>D.</strong> The ESSC criteria are used in choosing the P-drug; drug selection is completed as part of the ESSC process.</p><div class='source-ref'>Source reference in quiz: [2028] Rational Drug Therapy/Ethical Consideration in Drug Prescribing</div></div></td>
+    </tr>
+    
+    <tr data-topic="Rational Drug Use" data-section="2028B" data-search="rational drug use 2028b q15 &lt;p&gt;&lt;strong&gt;a drug not listed in the philippine national formulary:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;can be procured in both public and private hospitals.&lt;/li&gt;&lt;li&gt;is excluded in the essential drug list.&lt;/li&gt;&lt;li&gt;satisfies the escc criteria.&lt;/li&gt;&lt;li&gt;can be easily reimbursed.&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;the national formulary committee compiles the philippine national formulary to guide health practitioners in the proper use of essential drugs.&lt;/p&gt;
+&lt;p&gt;essential drugs “satisfy the priority health care needs of the majority of the population” (who). the philippine essential medicines list is in the philippine national formulary.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Rational Drug Use</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 15</span></td>
+      <td class="question-cell"><p><strong>A drug not listed in the Philippine National Formulary:</strong></p>
+<ol type="a"><li>Can be procured in both public and private hospitals.</li><li>Is excluded in the essential drug list.</li><li>Satisfies the ESCC Criteria.</li><li>Can be easily reimbursed.</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>B — Is excluded in the essential drug list</div><div class="rationale-content"><p>The National Formulary Committee compiles the Philippine National Formulary to guide health practitioners in the proper use of essential drugs.</p>
+<p>Essential drugs “satisfy the priority health care needs of the majority of the population” (WHO). The Philippine Essential Medicines List is in the Philippine National Formulary.</p><div class='source-ref'>Source reference in quiz: [2021] LE1 Samplex</div></div></td>
+    </tr>
+    
+    <tr data-topic="Rational Drug Use" data-section="2028C" data-search="rational drug use 2028c q8 &lt;p&gt;&lt;strong&gt;what is the main reason to monitor a patient after prescribing drugs?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;to reinforce the doctor’s understanding of the medicine&lt;/li&gt;&lt;li&gt;to collect patients’ data&lt;/li&gt;&lt;li&gt;to assess the effectiveness and adverse effects&lt;/li&gt;&lt;li&gt;for marketing purposes&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;rational prescribing is a logical approach that includes making a diagnosis, establishing therapy goals, selecting the most appropriate treatment, and counseling and monitoring the effects of the drug on the patient.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Rational Drug Use</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 8</span></td>
+      <td class="question-cell"><p><strong>What is the main reason to monitor a patient after prescribing drugs?</strong></p>
+<ol type="a"><li>To reinforce the doctor’s understanding of the medicine</li><li>To collect patients’ data</li><li>To assess the effectiveness and adverse effects</li><li>For marketing purposes</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — To assess the effectiveness and adverse effects</div><div class="rationale-content"><p>Rational prescribing is a logical approach that includes making a diagnosis, establishing therapy goals, selecting the most appropriate treatment, and counseling and monitoring the effects of the drug on the patient.</p><div class='source-ref'>Source reference in quiz: 2028 Rational Drug Therapy &amp; Ethical Consideration in Drug Prescribing</div></div></td>
+    </tr>
+    
+    <tr data-topic="Adverse Drug Reactions" data-section="2028A" data-search="adverse drug reactions 2028a q10 &lt;p&gt;&lt;strong&gt;patient x underwent tooth extraction and was given midazolam. a few hours after the procedure, the patient experienced drowsiness. what adverse effect of the drug does this indicate?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;augmented&lt;/li&gt;&lt;li&gt;bizarre&lt;/li&gt;&lt;li&gt;continuous&lt;/li&gt;&lt;li&gt;delayed&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;augmented:&lt;/strong&gt; dose-related, predictable, and linked to known pharmacologic actions of the drug. it may be an exaggeration of a normal therapeutic effect or relate to other pharmacological actions beyond the target tissues. high incidence but low mortality.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;bizarre:&lt;/strong&gt; not dose-related, unpredictable, often immune-mediated or genetic; caused by genetic, immunologic, or teratogenic factors. high mortality; best managed by drug withdrawal.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;continuous:&lt;/strong&gt; dose- and time-related; occurs with prolonged drug use that causes another illness or pathology.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;delayed:&lt;/strong&gt; time-related; occurs after prolonged latency and does not tend to accumulate.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Adverse Drug Reactions</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 10</span></td>
+      <td class="question-cell"><p><strong>Patient X underwent tooth extraction and was given Midazolam. A few hours after the procedure, the patient experienced drowsiness. What adverse effect of the drug does this indicate?</strong></p>
+<ol type="a"><li>Augmented</li><li>Bizarre</li><li>Continuous</li><li>Delayed</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Augmented</div><div class="rationale-content"><p><strong>Augmented:</strong> Dose-related, predictable, and linked to known pharmacologic actions of the drug. It may be an exaggeration of a normal therapeutic effect or relate to other pharmacological actions beyond the target tissues. High incidence but low mortality.</p>
+<p><strong>Bizarre:</strong> Not dose-related, unpredictable, often immune-mediated or genetic; caused by genetic, immunologic, or teratogenic factors. High mortality; best managed by drug withdrawal.</p>
+<p><strong>Continuous:</strong> Dose- and time-related; occurs with prolonged drug use that causes another illness or pathology.</p>
+<p><strong>Delayed:</strong> Time-related; occurs after prolonged latency and does not tend to accumulate.</p><div class='source-ref'>Source reference in quiz: 2027 Trans and Didactic Study Guide (2028)</div></div></td>
+    </tr>
+    
+    <tr data-topic="Adverse Drug Reactions" data-section="2028A" data-search="adverse drug reactions 2028a q11 &lt;p&gt;&lt;strong&gt;the patient received a chemotherapy drug several years ago for cancer and now develops a secondary malignancy. this type of adverse drug reaction is?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;augmented&lt;/li&gt;&lt;li&gt;bizarre&lt;/li&gt;&lt;li&gt;continuous&lt;/li&gt;&lt;li&gt;delayed&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;augmented:&lt;/strong&gt; dose-related, predictable, and linked to known pharmacologic actions of the drug. it may be an exaggeration of a normal therapeutic effect or relate to other pharmacological actions beyond the target tissues. high incidence but low mortality.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;bizarre:&lt;/strong&gt; not dose-related, unpredictable, often immune-mediated or genetic; caused by genetic, immunologic, or teratogenic factors. high mortality; best managed by drug withdrawal.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;continuous:&lt;/strong&gt; dose- and time-related; occurs with prolonged drug use that causes another illness or pathology.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;delayed:&lt;/strong&gt; time-related; occurs after prolonged latency and does not tend to accumulate.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Adverse Drug Reactions</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 11</span></td>
+      <td class="question-cell"><p><strong>The patient received a chemotherapy drug several years ago for cancer and now develops a secondary malignancy. This type of adverse drug reaction is?</strong></p>
+<ol type="a"><li>Augmented</li><li>Bizarre</li><li>Continuous</li><li>Delayed</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>D — Delayed</div><div class="rationale-content"><p><strong>Augmented:</strong> Dose-related, predictable, and linked to known pharmacologic actions of the drug. It may be an exaggeration of a normal therapeutic effect or relate to other pharmacological actions beyond the target tissues. High incidence but low mortality.</p>
+<p><strong>Bizarre:</strong> Not dose-related, unpredictable, often immune-mediated or genetic; caused by genetic, immunologic, or teratogenic factors. High mortality; best managed by drug withdrawal.</p>
+<p><strong>Continuous:</strong> Dose- and time-related; occurs with prolonged drug use that causes another illness or pathology.</p>
+<p><strong>Delayed:</strong> Time-related; occurs after prolonged latency and does not tend to accumulate.</p><div class='source-ref'>Source reference in quiz: 2027 Trans and Didactic Study Guide</div></div></td>
+    </tr>
+    
+    <tr data-topic="Adverse Drug Reactions" data-section="2028B" data-search="adverse drug reactions 2028b q10 &lt;p&gt;&lt;strong&gt;the type of adverse drug reaction characterized as dose-dependent and predictable due to the drug’s known pharmacological action is called&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;augmented&lt;/li&gt;&lt;li&gt;bizarre&lt;/li&gt;&lt;li&gt;continuous / chronic&lt;/li&gt;&lt;li&gt;delayed&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;type a:&lt;/strong&gt; dose-related and predictable from pharmacological actions.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type b:&lt;/strong&gt; non-dose-related and unpredictable; without connection to pharmacological action.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type c:&lt;/strong&gt; dose- and time-related; dose accumulation from prolonged use.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type d:&lt;/strong&gt; time-related only; prolonged use does not accumulate.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type e:&lt;/strong&gt; ending of use; withdrawal symptoms.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type f:&lt;/strong&gt; failure of efficacy; unexpected therapeutic failure; due to counterfeit and adulterated drugs.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Adverse Drug Reactions</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 10</span></td>
+      <td class="question-cell"><p><strong>The type of adverse drug reaction characterized as dose-dependent and predictable due to the drug’s known pharmacological action is called</strong></p>
+<ol type="a"><li>Augmented</li><li>Bizarre</li><li>Continuous / Chronic</li><li>Delayed</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Augmented</div><div class="rationale-content"><p><strong>Type A:</strong> Dose-related and predictable from pharmacological actions.</p>
+<p><strong>Type B:</strong> Non-dose-related and unpredictable; without connection to pharmacological action.</p>
+<p><strong>Type C:</strong> Dose- and time-related; dose accumulation from prolonged use.</p>
+<p><strong>Type D:</strong> Time-related only; prolonged use does not accumulate.</p>
+<p><strong>Type E:</strong> Ending of use; withdrawal symptoms.</p>
+<p><strong>Type F:</strong> Failure of efficacy; unexpected therapeutic failure; due to counterfeit and adulterated drugs.</p><div class='source-ref'>Source reference in quiz: [2028] Adverse Drug Reaction</div></div></td>
+    </tr>
+    
+    <tr data-topic="Adverse Drug Reactions" data-section="2028B" data-search="adverse drug reactions 2028b q11 &lt;p&gt;&lt;strong&gt;despite receiving the correct dose, symptoms still worsened because of the prevalence of antimicrobial resistance. this represents which bizarre adverse event? [non-verbatim]&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;failure of efficacy&lt;/li&gt;&lt;li&gt;augmented&lt;/li&gt;&lt;li&gt;ending of use&lt;/li&gt;&lt;li&gt;bizarre&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;type f:&lt;/strong&gt; unexpected therapeutic failure; undesirable decrease in efficacy.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type a:&lt;/strong&gt; dose-related and predictable; can be an exaggeration of the normal therapeutic effect.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type e:&lt;/strong&gt; undesired effect of ceasing or stopping the drug after prolonged use.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type b:&lt;/strong&gt; unpredictable and non-dose-related effects; may result from a genetic or immunological mechanism.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Adverse Drug Reactions</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 11</span></td>
+      <td class="question-cell"><p><strong>Despite receiving the correct dose, symptoms still worsened because of the prevalence of antimicrobial resistance. This represents which bizarre adverse event? [non-verbatim]</strong></p>
+<ol type="a"><li>Failure of efficacy</li><li>Augmented</li><li>Ending of use</li><li>Bizarre</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Failure of efficacy</div><div class="rationale-content"><p><strong>Type F:</strong> Unexpected therapeutic failure; undesirable decrease in efficacy.</p>
+<p><strong>Type A:</strong> Dose-related and predictable; can be an exaggeration of the normal therapeutic effect.</p>
+<p><strong>Type E:</strong> Undesired effect of ceasing or stopping the drug after prolonged use.</p>
+<p><strong>Type B:</strong> Unpredictable and non-dose-related effects; may result from a genetic or immunological mechanism.</p><div class='source-ref'>Source reference in quiz: [2028] Adverse Drug Reaction</div></div></td>
+    </tr>
+    
+    <tr data-topic="Adverse Drug Reactions" data-section="2028C" data-search="adverse drug reactions 2028c q10 &lt;p&gt;&lt;strong&gt;the patient had a severe rash (stevens-johnson syndrome) after taking a new antibiotic, which he was not expecting from the medication. what type of adr is seen in this case?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;f&lt;/li&gt;&lt;li&gt;b&lt;/li&gt;&lt;li&gt;c&lt;/li&gt;&lt;li&gt;a&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;type b (bizarre):&lt;/strong&gt; unpredictable and not dose-related. the uploaded adr lecture specifically lists stevens–johnson syndrome among type b reactions.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type a:&lt;/strong&gt; predictable and dose-related.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type c:&lt;/strong&gt; related to duration or cumulative exposure.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type f:&lt;/strong&gt; failure of therapy or efficacy.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Adverse Drug Reactions</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 10</span></td>
+      <td class="question-cell"><p><strong>The patient had a severe rash (Stevens-Johnson Syndrome) after taking a new antibiotic, which he was not expecting from the medication. What type of ADR is seen in this case?</strong></p>
+<ol type="a"><li>F</li><li>B</li><li>C</li><li>A</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>B — Type B (Bizarre)</div><div class="rationale-content"><p><strong>Type B (Bizarre):</strong> Unpredictable and not dose-related. The uploaded ADR lecture specifically lists Stevens–Johnson syndrome among Type B reactions.</p>
+<p><strong>Type A:</strong> Predictable and dose-related.</p>
+<p><strong>Type C:</strong> Related to duration or cumulative exposure.</p>
+<p><strong>Type F:</strong> Failure of therapy or efficacy.</p><div class='source-ref'>Source reference in quiz: Adverse Drug Reactions V1</div></div></td>
+    </tr>
+    
+    <tr data-topic="Adverse Drug Reactions" data-section="2028C" data-search="adverse drug reactions 2028c q11 &lt;p&gt;&lt;strong&gt;for years, a patient has been taking opioids for chronic pain. the patient developed constipation and dependence. which type of adverse reaction is seen in this case?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;bizarre&lt;/li&gt;&lt;li&gt;continuous/chronic&lt;/li&gt;&lt;li&gt;delayed&lt;/li&gt;&lt;li&gt;end of therapy&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;type c (continuous/chronic):&lt;/strong&gt; related to duration or cumulative exposure. long-term opioid use with persistent constipation and dependence fits this pattern.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type d:&lt;/strong&gt; delayed reactions appear after a latency period and are not defined simply by ongoing chronic use.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type e:&lt;/strong&gt; end-of-use reactions occur after withdrawal or discontinuation; the patient in the stem has not stopped the drug.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Adverse Drug Reactions</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 11</span></td>
+      <td class="question-cell"><p><strong>For years, a patient has been taking opioids for chronic pain. The patient developed constipation and dependence. Which type of adverse reaction is seen in this case?</strong></p>
+<ol type="a"><li>Bizarre</li><li>Continuous/Chronic</li><li>Delayed</li><li>End of Therapy</li></ol><p class='row-note'>This remains under Adverse Drug Reactions because the item tests ADR classification despite mentioning chronic opioid use.</p></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>B — Continuous/Chronic</div><div class="rationale-content"><p><strong>Type C (Continuous/Chronic):</strong> Related to duration or cumulative exposure. Long-term opioid use with persistent constipation and dependence fits this pattern.</p>
+<p><strong>Type D:</strong> Delayed reactions appear after a latency period and are not defined simply by ongoing chronic use.</p>
+<p><strong>Type E:</strong> End-of-use reactions occur after withdrawal or discontinuation; the patient in the stem has not stopped the drug.</p><div class='source-ref'>Source reference in quiz: Adverse Drug Reactions V1</div></div></td>
+    </tr>
+    
+    <tr data-topic="NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout" data-section="2028A" data-search="nsaids, paracetamol, dmards &amp; drugs for gout 2028a q12 &lt;p&gt;&lt;strong&gt;which medication does not inhibit platelet aggregation?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;ibuprofen&lt;/li&gt;&lt;li&gt;celecoxib&lt;/li&gt;&lt;li&gt;diclofenac&lt;/li&gt;&lt;li&gt;paracetamol&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;ibuprofen:&lt;/strong&gt; a non-selective cox inhibitor, so it may inhibit both cox-1 and cox-2.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;celecoxib:&lt;/strong&gt; does not inhibit platelet aggregation because it is a selective cox-2 inhibitor. it does not affect cox-1, which produces thromboxane, a platelet aggregator.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;diclofenac:&lt;/strong&gt; a newer non-selective cox inhibitor; may inhibit both cox-1 and cox-2.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;paracetamol:&lt;/strong&gt; used to treat mild to moderate pain when an anti-inflammatory effect is not necessary.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 12</span></td>
+      <td class="question-cell"><p><strong>Which medication does not inhibit platelet aggregation?</strong></p>
+<ol type="a"><li>Ibuprofen</li><li>Celecoxib</li><li>Diclofenac</li><li>Paracetamol</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>B — Celecoxib</div><div class="rationale-content"><p><strong>Ibuprofen:</strong> A non-selective COX inhibitor, so it may inhibit both COX-1 and COX-2.</p>
+<p><strong>Celecoxib:</strong> Does not inhibit platelet aggregation because it is a selective COX-2 inhibitor. It does not affect COX-1, which produces thromboxane, a platelet aggregator.</p>
+<p><strong>Diclofenac:</strong> A newer non-selective COX inhibitor; may inhibit both COX-1 and COX-2.</p>
+<p><strong>Paracetamol:</strong> Used to treat mild to moderate pain when an anti-inflammatory effect is not necessary.</p><div class='source-ref'>Source reference in quiz: NSAIDs, DMARDs, Non-Opioid Analgesics, Drugs for Gout Trans (2027)</div></div></td>
+    </tr>
+    
+    <tr data-topic="NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout" data-section="2028A" data-search="nsaids, paracetamol, dmards &amp; drugs for gout 2028a q13 &lt;p&gt;&lt;strong&gt;a 33-year-old woman was brought to the emergency room complaining of vomiting. her brother found an empty packet of paracetamol. what is the prescribed medication to reduce the said symptoms?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;acetaminophen&lt;/li&gt;&lt;li&gt;n-acetylcysteine&lt;/li&gt;&lt;li&gt;indomethacin&lt;/li&gt;&lt;li&gt;napqi&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;acetaminophen:&lt;/strong&gt; the us pharmacopoeial name for paracetamol; used to treat mild to moderate pain when an anti-inflammatory effect is not necessary.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;n-acetylcysteine:&lt;/strong&gt; increases glutathione and neutralizes napqi. it is used to treat paracetamol overdose.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;indomethacin:&lt;/strong&gt; can be given to close patent ductus arteriosus in preterm infants.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;napqi:&lt;/strong&gt; a highly reactive metabolite normally neutralized in the liver by glutathione conjugation. in paracetamol poisoning, it accumulates and damages the liver.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 13</span></td>
+      <td class="question-cell"><p><strong>A 33-year-old woman was brought to the emergency room complaining of vomiting. Her brother found an empty packet of paracetamol. What is the prescribed medication to reduce the said symptoms?</strong></p>
+<ol type="a"><li>Acetaminophen</li><li>N-acetylcysteine</li><li>Indomethacin</li><li>NAPQI</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>B — N-acetylcysteine</div><div class="rationale-content"><p><strong>Acetaminophen:</strong> The US pharmacopoeial name for paracetamol; used to treat mild to moderate pain when an anti-inflammatory effect is not necessary.</p>
+<p><strong>N-acetylcysteine:</strong> Increases glutathione and neutralizes NAPQI. It is used to treat paracetamol overdose.</p>
+<p><strong>Indomethacin:</strong> Can be given to close patent ductus arteriosus in preterm infants.</p>
+<p><strong>NAPQI:</strong> A highly reactive metabolite normally neutralized in the liver by glutathione conjugation. In paracetamol poisoning, it accumulates and damages the liver.</p><div class='source-ref'>Source reference in quiz: NSAIDs, DMARDs, Non-Opioid Analgesics, Drugs for Gout Trans (2027)</div></div></td>
+    </tr>
+    
+    <tr data-topic="NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout" data-section="2028A" data-search="nsaids, paracetamol, dmards &amp; drugs for gout 2028a q14 &lt;p&gt;&lt;strong&gt;a 40-year-old male taking methotrexate for rheumatoid arthritis presents after two weeks with mouth sores and nausea. what medication is prescribed to reduce the symptoms?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;azathioprine&lt;/li&gt;&lt;li&gt;leucovorin&lt;/li&gt;&lt;li&gt;mesna&lt;/li&gt;&lt;li&gt;n-acetylcysteine&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;azathioprine:&lt;/strong&gt; an immunosuppressant used for active rheumatoid arthritis and prevention of kidney transplant rejection.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;leucovorin (folinic acid):&lt;/strong&gt; reduces methotrexate adverse effects, though it may decrease methotrexate efficacy by 10–18%; especially useful when methotrexate causes mucositis, nausea, and bone marrow suppression.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;mesna:&lt;/strong&gt; neutralizes acrolein and prevents hemorrhagic cystitis from cyclophosphamide or ifosfamide; not related to methotrexate.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;n-acetylcysteine:&lt;/strong&gt; used for acetaminophen overdose/poisoning and as a mucolytic; not effective for methotrexate adverse or side effects.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 14</span></td>
+      <td class="question-cell"><p><strong>A 40-year-old male taking methotrexate for rheumatoid arthritis presents after two weeks with mouth sores and nausea. What medication is prescribed to reduce the symptoms?</strong></p>
+<ol type="a"><li>Azathioprine</li><li>Leucovorin</li><li>Mesna</li><li>N-Acetylcysteine</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>B — Leucovorin</div><div class="rationale-content"><p><strong>Azathioprine:</strong> An immunosuppressant used for active rheumatoid arthritis and prevention of kidney transplant rejection.</p>
+<p><strong>Leucovorin (Folinic Acid):</strong> Reduces methotrexate adverse effects, though it may decrease methotrexate efficacy by 10–18%; especially useful when methotrexate causes mucositis, nausea, and bone marrow suppression.</p>
+<p><strong>Mesna:</strong> Neutralizes acrolein and prevents hemorrhagic cystitis from cyclophosphamide or ifosfamide; not related to methotrexate.</p>
+<p><strong>N-Acetylcysteine:</strong> Used for acetaminophen overdose/poisoning and as a mucolytic; not effective for methotrexate adverse or side effects.</p><div class='source-ref'>Source reference in quiz: 2028 Trans</div></div></td>
+    </tr>
+    
+    <tr data-topic="NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout" data-section="2028B" data-search="nsaids, paracetamol, dmards &amp; drugs for gout 2028b q12 &lt;p&gt;&lt;strong&gt;which of the following statements about aspirin is correct?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;irreversibly binds to platelet cox-1&lt;/li&gt;&lt;li&gt;preferred nsaid for gouty arthritis&lt;/li&gt;&lt;li&gt;not cardioprotective due to cox-2 inhibition&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;a is correct:&lt;/strong&gt; aspirin inactivates cox-1 in platelets, blocks thromboxane a₂ formation, and reduces platelet aggregation, making it cardioprotective.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;b is incorrect:&lt;/strong&gt; aspirin decreases uric acid excretion and can worsen gout.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;c is incorrect:&lt;/strong&gt; aspirin’s cardioprotective effect comes from cox-1 inhibition, not cox-2. selective cox-2 inhibitors are associated with increased cardiovascular risk.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 12</span></td>
+      <td class="question-cell"><p><strong>Which of the following statements about aspirin is correct?</strong></p>
+<ol type="A"><li>Irreversibly binds to platelet COX-1</li><li>Preferred NSAID for gouty arthritis</li><li>Not cardioprotective due to COX-2 inhibition</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Irreversibly binds to platelet COX-1</div><div class="rationale-content"><p><strong>A is correct:</strong> Aspirin inactivates COX-1 in platelets, blocks thromboxane A₂ formation, and reduces platelet aggregation, making it cardioprotective.</p>
+<p><strong>B is incorrect:</strong> Aspirin decreases uric acid excretion and can worsen gout.</p>
+<p><strong>C is incorrect:</strong> Aspirin’s cardioprotective effect comes from COX-1 inhibition, not COX-2. Selective COX-2 inhibitors are associated with increased cardiovascular risk.</p><div class='source-ref'>Source reference in quiz: [2028] NSAIDs, Acetaminophen, DMARDs, Drugs for Gout</div></div></td>
+    </tr>
+    
+    <tr data-topic="NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout" data-section="2028B" data-search="nsaids, paracetamol, dmards &amp; drugs for gout 2028b q13 &lt;p&gt;&lt;strong&gt;which of the following is a para-aminophenol derivative?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;acetaminophen&lt;/li&gt;&lt;li&gt;allopurinol&lt;/li&gt;&lt;li&gt;mesalamine&lt;/li&gt;&lt;li&gt;mefenamic acid&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;acetaminophen:&lt;/strong&gt; also known as paracetamol; a para-aminophenol derivative.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;allopurinol:&lt;/strong&gt; important urate-lowering drug in chronic gout; a purine analogue and xanthine oxidase inhibitor.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;mesalamine:&lt;/strong&gt; an aminosalicylate (5-aminosalicylic acid) with topical anti-inflammatory effects on colonic epithelial cells for inflammatory bowel disease; decreases prostaglandin and leukotriene synthesis.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;mefenamic acid:&lt;/strong&gt; a mefenamic acid derivative used for dysmenorrhea, toothache, etc.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 13</span></td>
+      <td class="question-cell"><p><strong>Which of the following is a para-aminophenol derivative?</strong></p>
+<ol type="a"><li>Acetaminophen</li><li>Allopurinol</li><li>Mesalamine</li><li>Mefenamic acid</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Acetaminophen</div><div class="rationale-content"><p><strong>Acetaminophen:</strong> Also known as paracetamol; a para-aminophenol derivative.</p>
+<p><strong>Allopurinol:</strong> Important urate-lowering drug in chronic gout; a purine analogue and xanthine oxidase inhibitor.</p>
+<p><strong>Mesalamine:</strong> An aminosalicylate (5-aminosalicylic acid) with topical anti-inflammatory effects on colonic epithelial cells for inflammatory bowel disease; decreases prostaglandin and leukotriene synthesis.</p>
+<p><strong>Mefenamic acid:</strong> A mefenamic acid derivative used for dysmenorrhea, toothache, etc.</p><div class='source-ref'>Source reference in quiz: [2028] NSAIDs, Acetaminophen, DMARDs, Drugs for Gout</div></div></td>
+    </tr>
+    
+    <tr data-topic="NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout" data-section="2028B" data-search="nsaids, paracetamol, dmards &amp; drugs for gout 2028b q14 &lt;p&gt;&lt;strong&gt;anti-gout drug with a black box warning risk for cardiovascular health&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;allopurinol&lt;/li&gt;&lt;li&gt;colchicine&lt;/li&gt;&lt;li&gt;febuxostat&lt;/li&gt;&lt;li&gt;pegloticase&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;febuxostat vs. allopurinol:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;like allopurinol, febuxostat has a urate-lowering effect regardless of whether hyperuricemia is due to overproduction or underexcretion.&lt;/li&gt;&lt;li&gt;it has a renoprotective effect over long treatment periods.&lt;/li&gt;&lt;li&gt;unlike allopurinol, febuxostat appears safe in patients with moderate kidney disease.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;febuxostat has a black box warning: high risk for cardiovascular death.&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;details&gt;&lt;summary&gt;other source-provided visual notes&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;adverse effects of allopurinol:&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;may precipitate gout; use an nsaid or colchicine concomitantly.&lt;/li&gt;&lt;li&gt;if the patient is already taking allopurinol, it should not be stopped during a flare because stopping may worsen attack recovery.&lt;/li&gt;&lt;li&gt;gi intolerance: nausea, vomiting, diarrhea.&lt;/li&gt;&lt;li&gt;peripheral neuritis, necrotizing vasculitis, bone marrow suppression, and aplastic anemia may rarely occur.&lt;/li&gt;&lt;li&gt;hepatic toxicity and interstitial nephritis.&lt;/li&gt;&lt;li&gt;allergic skin reaction (pruritic lesions), exfoliative dermatitis in isolated cases, and very rare cataracts.&lt;/li&gt;&lt;li&gt;safety in children and pregnancy is not yet established.&lt;/li&gt;&lt;li&gt;caution in patients taking cyp3a4 inhibitors; these may inhibit colchicine metabolism and increase adverse effects.&lt;/li&gt;&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;adverse effects of pegloticase:&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;gout flare can occur during the first 3–6 months; give an nsaid or colchicine.&lt;/li&gt;&lt;li&gt;infusion reactions can be avoided by giving a glucocorticoid and an h1 receptor blocker before treatment.&lt;/li&gt;&lt;li&gt;combination with methotrexate may increase efficacy and decrease most allergic reactions.&lt;/li&gt;&lt;li&gt;other adverse effects: nephrolithiasis, arthralgia, muscle spasm, headache, anemia, and nausea.&lt;/li&gt;&lt;li&gt;less common: urti, uti, peripheral edema, and diarrhea.&lt;/li&gt;&lt;li&gt;avoid in g6pd deficiency because of potential hemolytic anemia from hydrogen peroxide formation by uricase.&lt;/li&gt;&lt;/ul&gt;&lt;/details&gt;">
+      <td class="topic-cell"><span class="topic-pill">NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 14</span></td>
+      <td class="question-cell"><p><strong>Anti-gout drug with a black box warning risk for cardiovascular health</strong></p>
+<ol type="a"><li>Allopurinol</li><li>Colchicine</li><li>Febuxostat</li><li>Pegloticase</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Febuxostat</div><div class="rationale-content"><p><strong>Febuxostat vs. allopurinol:</strong></p>
+<ul><li>Like allopurinol, febuxostat has a urate-lowering effect regardless of whether hyperuricemia is due to overproduction or underexcretion.</li><li>It has a renoprotective effect over long treatment periods.</li><li>Unlike allopurinol, febuxostat appears safe in patients with moderate kidney disease.</li><li><strong>Febuxostat has a black box warning: high risk for cardiovascular death.</strong></li></ul>
+<details><summary>Other source-provided visual notes</summary>
+<p><strong>Adverse effects of allopurinol:</strong></p><ul><li>May precipitate gout; use an NSAID or colchicine concomitantly.</li><li>If the patient is already taking allopurinol, it should not be stopped during a flare because stopping may worsen attack recovery.</li><li>GI intolerance: nausea, vomiting, diarrhea.</li><li>Peripheral neuritis, necrotizing vasculitis, bone marrow suppression, and aplastic anemia may rarely occur.</li><li>Hepatic toxicity and interstitial nephritis.</li><li>Allergic skin reaction (pruritic lesions), exfoliative dermatitis in isolated cases, and very rare cataracts.</li><li>Safety in children and pregnancy is not yet established.</li><li>Caution in patients taking CYP3A4 inhibitors; these may inhibit colchicine metabolism and increase adverse effects.</li></ul>
+<p><strong>Adverse effects of pegloticase:</strong></p><ul><li>Gout flare can occur during the first 3–6 months; give an NSAID or colchicine.</li><li>Infusion reactions can be avoided by giving a glucocorticoid and an H1 receptor blocker before treatment.</li><li>Combination with methotrexate may increase efficacy and decrease most allergic reactions.</li><li>Other adverse effects: nephrolithiasis, arthralgia, muscle spasm, headache, anemia, and nausea.</li><li>Less common: URTI, UTI, peripheral edema, and diarrhea.</li><li>Avoid in G6PD deficiency because of potential hemolytic anemia from hydrogen peroxide formation by uricase.</li></ul></details><div class='source-ref'>Source reference in quiz: [2028] NSAIDs, Acetaminophen, DMARDs, Drugs for Gout</div></div></td>
+    </tr>
+    
+    <tr data-topic="NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout" data-section="2028C" data-search="nsaids, paracetamol, dmards &amp; drugs for gout 2028c q12 &lt;p&gt;&lt;strong&gt;which of the following statements is true?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;ibuprofen is more toxic than indomethacin&lt;/li&gt;&lt;li&gt;nabumetone is the only acidic nsaid&lt;/li&gt;&lt;li&gt;selective cox-2 inhibitor is more efficacious than nonselective cox inhibitor&lt;/li&gt;&lt;li&gt;nsaids cannot alter the course of arthritic disorder&lt;/li&gt;&lt;/ol&gt; &lt;table class=&quot;mini&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;drug&lt;/th&gt;&lt;th&gt;indication&lt;/th&gt;&lt;th&gt;adverse effect&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;ibuprofen&lt;/td&gt;&lt;td rowspan=&quot;2&quot;&gt;closure of patent ductus arteriosus (pda) in preterm infants&lt;/td&gt;&lt;td&gt;higher bilirubin levels&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;indomethacin&lt;/td&gt;&lt;td&gt;lower urine input; more fluid retention&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;overall, indomethacin is more toxic than ibuprofen.&lt;/p&gt;
+&lt;p&gt;all but one nsaid are weak organic acids; the exception is nabumetone, a ketone prodrug metabolized to an acidic active drug.&lt;/p&gt;
+&lt;p&gt;cox-1 and cox-2 inhibitors are equally efficacious.&lt;/p&gt;
+&lt;p&gt;there is no evidence that nsaids alter the course of arthritic disorders.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 12</span></td>
+      <td class="question-cell"><p><strong>Which of the following statements is true?</strong></p>
+<ol type="a"><li>Ibuprofen is more toxic than Indomethacin</li><li>Nabumetone is the only acidic NSAID</li><li>Selective COX-2 inhibitor is more efficacious than Nonselective COX inhibitor</li><li>NSAIDs cannot alter the course of Arthritic disorder</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>D — NSAIDs cannot alter the course of Arthritic disorder</div><div class="rationale-content"><table class="mini"><thead><tr><th>Drug</th><th>Indication</th><th>Adverse effect</th></tr></thead><tbody>
+<tr><td>Ibuprofen</td><td rowspan="2">Closure of patent ductus arteriosus (PDA) in preterm infants</td><td>Higher bilirubin levels</td></tr>
+<tr><td>Indomethacin</td><td>Lower urine input; more fluid retention</td></tr>
+</tbody></table>
+<p>Overall, indomethacin is more toxic than ibuprofen.</p>
+<p>All but one NSAID are weak organic acids; the exception is nabumetone, a ketone prodrug metabolized to an acidic active drug.</p>
+<p>COX-1 and COX-2 inhibitors are equally efficacious.</p>
+<p>There is no evidence that NSAIDs alter the course of arthritic disorders.</p><div class='source-ref'>Source reference in quiz: Trans 8: NSAIDs, Acetaminophen, DMARDs, Drugs for Gout</div></div></td>
+    </tr>
+    
+    <tr data-topic="NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout" data-section="2028C" data-search="nsaids, paracetamol, dmards &amp; drugs for gout 2028c q13 &lt;p&gt;&lt;strong&gt;what is the first-line treatment in urate-lowering therapy for chronic gout?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;allopurinol&lt;/li&gt;&lt;li&gt;colchicine&lt;/li&gt;&lt;li&gt;probenecid&lt;/li&gt;&lt;li&gt;pegloticase&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;allopurinol:&lt;/strong&gt; first-line treatment of chronic gout between attacks. during initiation, use concurrently with an nsaid, except aspirin, or colchicine for 3–6 months to prevent flares.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;colchicine:&lt;/strong&gt; relieves pain and inflammation of gouty arthritis in 12–24 hours by inhibiting leukocyte migration and phagocytosis.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;probenecid:&lt;/strong&gt; for patients with underexcretion of uric acid when a xanthine oxidase inhibitor is contraindicated or when tophi are present.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pegloticase:&lt;/strong&gt; last resort for chronic refractory gout.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 13</span></td>
+      <td class="question-cell"><p><strong>What is the first-line treatment in urate-lowering therapy for chronic gout?</strong></p>
+<ol type="a"><li>Allopurinol</li><li>Colchicine</li><li>Probenecid</li><li>Pegloticase</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>A — Allopurinol</div><div class="rationale-content"><p><strong>Allopurinol:</strong> First-line treatment of chronic gout between attacks. During initiation, use concurrently with an NSAID, except aspirin, or colchicine for 3–6 months to prevent flares.</p>
+<p><strong>Colchicine:</strong> Relieves pain and inflammation of gouty arthritis in 12–24 hours by inhibiting leukocyte migration and phagocytosis.</p>
+<p><strong>Probenecid:</strong> For patients with underexcretion of uric acid when a xanthine oxidase inhibitor is contraindicated or when tophi are present.</p>
+<p><strong>Pegloticase:</strong> Last resort for chronic refractory gout.</p><div class='source-ref'>Source reference in quiz: 2028 NSAIDs, DMARDs, Non-Opioid Analgesics, Drugs for Gout; 2027 LE1 SB; 2027 Quiz 1 SB</div></div></td>
+    </tr>
+    
+    <tr data-topic="NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout" data-section="2028C" data-search="nsaids, paracetamol, dmards &amp; drugs for gout 2028c q14 &lt;p&gt;&lt;strong&gt;which of the following has the correct dmard drug–moa pair?&lt;/strong&gt;&lt;/p&gt;
+&lt;ol type=&quot;a&quot;&gt;&lt;li&gt;anakinra: interleukin-6 inhibitor&lt;/li&gt;&lt;li&gt;chloroquine: thymidylate synthetase inhibitor&lt;/li&gt;&lt;li&gt;golimumab: tumor necrosis factor α inhibitor&lt;/li&gt;&lt;li&gt;methotrexate: calcineurin inhibitor&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;&lt;strong&gt;anakinra:&lt;/strong&gt; an il-1 inhibitor. il-6 inhibitors include tocilizumab and sarilumab.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;chloroquine:&lt;/strong&gt; suppresses t-lymphocyte responses to mitogens.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;golimumab:&lt;/strong&gt; correct; a tnf-α inhibitor, together with adalimumab.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;methotrexate:&lt;/strong&gt; inhibits aicar transformylase and thymidylate synthetase. calcineurin inhibitors include cyclosporine, tacrolimus, and voclosporin.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">NSAIDs, Paracetamol, DMARDs &amp; Drugs for Gout</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item 14</span></td>
+      <td class="question-cell"><p><strong>Which of the following has the correct DMARD drug–MOA pair?</strong></p>
+<ol type="a"><li>Anakinra: interleukin-6 inhibitor</li><li>Chloroquine: thymidylate synthetase inhibitor</li><li>Golimumab: tumor necrosis factor α inhibitor</li><li>Methotrexate: calcineurin inhibitor</li></ol></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>C — Golimumab: tumor necrosis factor α inhibitor</div><div class="rationale-content"><p><strong>Anakinra:</strong> An IL-1 inhibitor. IL-6 inhibitors include tocilizumab and sarilumab.</p>
+<p><strong>Chloroquine:</strong> Suppresses T-lymphocyte responses to mitogens.</p>
+<p><strong>Golimumab:</strong> Correct; a TNF-α inhibitor, together with adalimumab.</p>
+<p><strong>Methotrexate:</strong> Inhibits AICAR transformylase and thymidylate synthetase. Calcineurin inhibitors include cyclosporine, tacrolimus, and voclosporin.</p><div class='source-ref'>Source reference in quiz: 2028 NSAIDs, Acetaminophen, DMARDs, Drugs for Gout</div></div></td>
+    </tr>
+    
+    <tr data-topic="Prescription Writing" data-section="2028A" data-search="prescription writing 2028a q16–20 &lt;p&gt;&lt;strong&gt;rx writing:&lt;/strong&gt; crising habagat, 52 years old, male, from pasig city. he was diagnosed with hypertension and dyslipidemia. he was prescribed telmisartan 80 mg tablet once a day in the morning and simvastatin 20 mg tablet once a day in the evening, for 3 months. write the prescription.&lt;/p&gt; &lt;div class=&quot;rx&quot;&gt;&lt;p&gt;&lt;strong&gt;name:&lt;/strong&gt; crising habagat &amp;nbsp; &lt;strong&gt;age/sex:&lt;/strong&gt; 52/m&lt;br&gt;&lt;strong&gt;address:&lt;/strong&gt; pasig city &amp;nbsp; &lt;strong&gt;date:&lt;/strong&gt; aug 12, 2025&lt;/p&gt;
+&lt;p class=&quot;rxmark&quot;&gt;rx&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1) telmisartan tablet — 80 mg&lt;/strong&gt;&lt;br&gt;dispense #90 tablets&lt;br&gt;&lt;strong&gt;label:&lt;/strong&gt; take 1 tablet once a day in the morning for 3 months.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2) simvastatin tablet — 20 mg&lt;/strong&gt;&lt;br&gt;dispense #90 tablets&lt;br&gt;&lt;strong&gt;label:&lt;/strong&gt; take 1 tablet once a day in the evening for 3 months.&lt;/p&gt;
+&lt;p class=&quot;sig&quot;&gt;signature&lt;br&gt;name, md&lt;br&gt;address&lt;br&gt;prc license no.:&lt;br&gt;ptr no.:&lt;/p&gt;&lt;/div&gt;">
+      <td class="topic-cell"><span class="topic-pill">Prescription Writing</span></td>
+      <td class="section-cell"><strong>2028A</strong><span>Item 16–20</span></td>
+      <td class="question-cell"><p><strong>Rx Writing:</strong> Crising Habagat, 52 years old, male, from Pasig City. He was diagnosed with hypertension and dyslipidemia. He was prescribed Telmisartan 80 mg tablet once a day in the morning and Simvastatin 20 mg tablet once a day in the evening, for 3 months. Write the prescription.</p></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>Model prescription</div><div class="rationale-content"><div class="rx"><p><strong>Name:</strong> Crising Habagat &nbsp; <strong>Age/Sex:</strong> 52/M<br><strong>Address:</strong> Pasig City &nbsp; <strong>Date:</strong> Aug 12, 2025</p>
+<p class="rxmark">Rx</p>
+<p><strong>1) Telmisartan tablet — 80 mg</strong><br>Dispense #90 tablets<br><strong>Label:</strong> Take 1 tablet once a day in the morning for 3 months.</p>
+<p><strong>2) Simvastatin tablet — 20 mg</strong><br>Dispense #90 tablets<br><strong>Label:</strong> Take 1 tablet once a day in the evening for 3 months.</p>
+<p class="sig">Signature<br>Name, MD<br>Address<br>PRC license no.:<br>PTR no.:</p></div><div class='source-ref'>Source reference in quiz: Section A, page 4</div></div></td>
+    </tr>
+    
+    <tr data-topic="Prescription Writing" data-section="2028B" data-search="prescription writing 2028b q16 &lt;p&gt;&lt;strong&gt;write a prescription for dante bagyo, 30/m, a professional athlete from san juan city, who developed acute otitis media.&lt;/strong&gt; ofloxacin otic drops are available as 3 mg/ml. instill 2–3 drops into the left ear every 6 hours around the clock for 1 week. the drops are available in a 7.5 ml bottle.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;computation:&lt;/strong&gt;&lt;br&gt;drops per day: 2–3 drops × 1 ear × 4/day × 7 days = 56–84 drops.&lt;br&gt;84 drops × (1 ml / 20 drops) = 4.2 ml.&lt;br&gt;&lt;em&gt;generally, 1 ml is about 20 drops.&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;rx&quot;&gt;&lt;p&gt;&lt;strong&gt;dante bagyo&lt;/strong&gt; &amp;nbsp; &lt;strong&gt;30/m&lt;/strong&gt; &amp;nbsp; &lt;strong&gt;august 6, 2025&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;san juan city&lt;/strong&gt;&lt;/p&gt;&lt;p class=&quot;rxmark&quot;&gt;rx&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ofloxacin otic solution — 3 mg/ml&lt;/strong&gt;&lt;br&gt;dispense no. 1 bottle (7.5 ml)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;label:&lt;/strong&gt; instill 2–3 drops into the left ear every 6 hours around the clock for 1 week.&lt;/p&gt;
+&lt;p class=&quot;sig&quot;&gt;[signature]&lt;br&gt;prescriber’s name, m.d.&lt;br&gt;prescriber’s address&lt;br&gt;license no.&lt;br&gt;ptr no.&lt;/p&gt;&lt;/div&gt;">
+      <td class="topic-cell"><span class="topic-pill">Prescription Writing</span></td>
+      <td class="section-cell"><strong>2028B</strong><span>Item 16</span></td>
+      <td class="question-cell"><p><strong>Write a prescription for Dante Bagyo, 30/M, a professional athlete from San Juan City, who developed acute otitis media.</strong> Ofloxacin otic drops are available as 3 mg/mL. Instill 2–3 drops into the left ear every 6 hours around the clock for 1 week. The drops are available in a 7.5 mL bottle.</p></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>Model prescription</div><div class="rationale-content"><p><strong>Computation:</strong><br>Drops per day: 2–3 drops × 1 ear × 4/day × 7 days = 56–84 drops.<br>84 drops × (1 mL / 20 drops) = 4.2 mL.<br><em>Generally, 1 mL is about 20 drops.</em></p>
+<div class="rx"><p><strong>Dante Bagyo</strong> &nbsp; <strong>30/M</strong> &nbsp; <strong>August 6, 2025</strong><br><strong>San Juan City</strong></p><p class="rxmark">Rx</p>
+<p><strong>Ofloxacin otic solution — 3 mg/mL</strong><br>Dispense no. 1 bottle (7.5 mL)</p>
+<p><strong>Label:</strong> Instill 2–3 drops into the left ear every 6 hours around the clock for 1 week.</p>
+<p class="sig">[Signature]<br>Prescriber’s name, M.D.<br>Prescriber’s address<br>License No.<br>PTR No.</p></div><div class='source-ref'>Source reference in quiz: Section B, page 5</div></div></td>
+    </tr>
+    
+    <tr data-topic="Prescription Writing" data-section="2028C" data-search="prescription writing 2028c qprescription writing &lt;p&gt;&lt;strong&gt;edong binaha, 24/m, from makati city, was diagnosed with asthma and was prescribed budesonide-formoterol dry powder inhaler (80 mcg/4.5 mcg/dose), to be taken once a day at the same time each day (120 actuations per puff).&lt;/strong&gt;&lt;/p&gt; &lt;div class=&quot;rx&quot;&gt;&lt;p&gt;&lt;strong&gt;name:&lt;/strong&gt; edong binaha &amp;nbsp; &lt;strong&gt;age/sex:&lt;/strong&gt; 24/m &amp;nbsp; &lt;strong&gt;date:&lt;/strong&gt; august 11, 2025&lt;br&gt;&lt;strong&gt;address:&lt;/strong&gt; makati city&lt;/p&gt;&lt;p class=&quot;rxmark&quot;&gt;rx&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;budesonide-formoterol dry powder inhaler — 80 mcg/4.5 mcg/dose&lt;/strong&gt;&lt;br&gt;dispense no. 1 inhaler&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;label:&lt;/strong&gt; take 1 puff once a day, at the same time each day.&lt;/p&gt;
+&lt;p class=&quot;sig&quot;&gt;mcsantos&lt;br&gt;maria clara a. santos, m.d.&lt;br&gt;quezon city, metro manila&lt;br&gt;license no. 1234-5678&lt;br&gt;ptr no. 1234&lt;/p&gt;&lt;/div&gt;
+&lt;p class=&quot;source-gap&quot;&gt;&lt;strong&gt;corrected source typo:&lt;/strong&gt; the model answer spells the drug “budenoside-formoterol.” the table uses the correct spelling, &lt;em&gt;budesonide-formoterol&lt;/em&gt;. the stem’s phrase “120 actuations per puff” is internally inconsistent; the prescription follows the stated instruction of one puff once daily and dispenses one inhaler.&lt;/p&gt;">
+      <td class="topic-cell"><span class="topic-pill">Prescription Writing</span></td>
+      <td class="section-cell"><strong>2028C</strong><span>Item Prescription Writing</span></td>
+      <td class="question-cell"><p><strong>Edong Binaha, 24/M, from Makati City, was diagnosed with asthma and was prescribed budesonide-formoterol dry powder inhaler (80 mcg/4.5 mcg/dose), to be taken once a day at the same time each day (120 actuations per puff).</strong></p></td>
+      <td class="answer-cell"><div class='answer-line'><span>Answer</span>Model prescription</div><div class="rationale-content"><div class="rx"><p><strong>Name:</strong> Edong Binaha &nbsp; <strong>Age/Sex:</strong> 24/M &nbsp; <strong>Date:</strong> August 11, 2025<br><strong>Address:</strong> Makati City</p><p class="rxmark">Rx</p>
+<p><strong>Budesonide-formoterol dry powder inhaler — 80 mcg/4.5 mcg/dose</strong><br>Dispense No. 1 inhaler</p>
+<p><strong>Label:</strong> Take 1 puff once a day, at the same time each day.</p>
+<p class="sig">MCSantos<br>Maria Clara A. Santos, M.D.<br>Quezon City, Metro Manila<br>License No. 1234-5678<br>PTR No. 1234</p></div>
+<p class="source-gap"><strong>Corrected source typo:</strong> The model answer spells the drug “Budenoside-formoterol.” The table uses the correct spelling, <em>budesonide-formoterol</em>. The stem’s phrase “120 actuations per puff” is internally inconsistent; the prescription follows the stated instruction of one puff once daily and dispenses one inhaler.</p><div class='source-ref'>Source reference in quiz: Section C, page 4</div></div></td>
+    </tr>
+    </tbody>
+    </table>
+  </div>
+</main>
+<footer>48 entries from Quiz 1 Sections 2028A, 2028B, and 2028C, organized by topic.</footer>
+<script>
+const rows=[...document.querySelectorAll('tbody tr')];
+const search=document.getElementById('search');
+const topic=document.getElementById('topic');
+const section=document.getElementById('section');
+const count=document.getElementById('visibleCount');
+function filterRows(){
+  const q=search.value.trim().toLowerCase();
+  let n=0;
+  rows.forEach(r=>{
+    const ok=(!q||r.dataset.search.includes(q))&&(!topic.value||r.dataset.topic===topic.value)&&(!section.value||r.dataset.section===section.value);
+    r.classList.toggle('hidden-row',!ok); if(ok)n++;
+  }); count.textContent=n;
+}
+[search,topic,section].forEach(el=>el.addEventListener('input',filterRows));
+document.getElementById('study').addEventListener('click',e=>{
+  document.body.classList.toggle('study-mode');
+  e.target.textContent=document.body.classList.contains('study-mode')?'Show answers':'Hide answers';
+});
+</script>
+</body>
+</html>
