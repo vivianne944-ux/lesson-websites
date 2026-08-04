@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-yield cramming reviewer for Rational Drug Therapy and Ethical Consideration in Drug Prescribing">
+  <title>Rational Drug Therapy — Cramming Mode Reviewer</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5b6474;
+      --paper: #f7f8fb;
+      --card: #ffffff;
+      --line: #dfe4ec;
+      --navy: #163d67;
+      --blue: #377bb5;
+      --blue-soft: #eaf4fc;
+      --must: #b83b4b;
+      --must-soft: #fff0f2;
+      --should: #9a6a12;
+      --should-soft: #fff7df;
+      --nice: #386f55;
+      --nice-soft: #edf8f2;
+      --trap: #8b2f2f;
+      --trap-soft: #fff2ed;
+      --shadow: 0 8px 24px rgba(24, 39, 75, 0.08);
+      --radius: 14px;
+      --mono: "Space Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --head: "Syne", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --body: "DM Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--body);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    button, input { font: inherit; }
+    a { color: var(--navy); }
+    strong { font-weight: 800; }
+    code, .mono { font-family: var(--mono); }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 12px 18px 10px;
+    }
+    .title-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+    }
+    h1 {
+      font-family: var(--head);
+      font-size: clamp(1.25rem, 2vw, 1.8rem);
+      line-height: 1.15;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+    .kicker {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-family: var(--mono);
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge.cram { background: var(--navy); color: white; }
+    .badge.must { background: var(--must-soft); color: var(--must); border: 1px solid #f1c8ce; }
+    .badge.should { background: var(--should-soft); color: var(--should); border: 1px solid #edd99a; }
+    .badge.nice { background: var(--nice-soft); color: var(--nice); border: 1px solid #bddfcf; }
+    .badge.page { background: #f0f2f6; color: #4c5668; border: 1px solid var(--line); }
+    .scope { color: var(--muted); font-size: 0.82rem; }
+
+    .progress-box {
+      min-width: 195px;
+      text-align: right;
+    }
+    .progress-label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .progress-track {
+      width: 195px;
+      height: 9px;
+      background: #e8ebf0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-left: auto;
+    }
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--navy));
+      transition: width 180ms ease;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 10px;
+      align-items: center;
+    }
+    .tool-btn {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      border-radius: 9px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 750;
+    }
+    .tool-btn:hover { border-color: #aeb8c7; background: #f8fafc; }
+    .tool-btn.active { background: var(--must); color: white; border-color: var(--must); }
+    .search-wrap { flex: 1 1 260px; min-width: 200px; }
+    #searchInput {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fbfcfe;
+      border-radius: 9px;
+      padding: 8px 11px;
+      outline: none;
+    }
+    #searchInput:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(55,123,181,.12); }
+
+    .mini-nav {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 0 18px 9px;
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .mini-nav a {
+      flex: 0 0 auto;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: #fff;
+      color: #435069;
+    }
+
+    main {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+    section { scroll-margin-top: 175px; }
+    .section-title {
+      font-family: var(--head);
+      font-size: 1.4rem;
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+    }
+    .subtle { color: var(--muted); }
+
+    .survival {
+      background: linear-gradient(140deg, #ffffff, #f0f7fd);
+      border: 1px solid #cfe3f4;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+    .survival-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 18px;
+      counter-reset: survival;
+    }
+    .survival-item {
+      position: relative;
+      padding: 8px 10px 8px 35px;
+      border-radius: 9px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(207,227,244,.8);
+    }
+    .survival-item::before {
+      counter-increment: survival;
+      content: counter(survival);
+      position: absolute;
+      left: 9px;
+      top: 8px;
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--navy);
+      color: white;
+      font-family: var(--mono);
+      font-size: .67rem;
+      font-weight: 800;
+    }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(120px, 1fr));
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 16px;
+    }
+    .road-step {
+      min-width: 120px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      font-weight: 800;
+      position: relative;
+    }
+    .road-step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--blue);
+      font-size: 1.1rem;
+      z-index: 2;
+    }
+    .road-step small { display: block; color: var(--muted); font-weight: 500; margin-top: 3px; }
+
+    details.topic {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin: 10px 0;
+      box-shadow: 0 3px 14px rgba(24, 39, 75, 0.045);
+      overflow: clip;
+    }
+    details.topic[open] { box-shadow: var(--shadow); }
+    details.topic > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fcfdff;
+      border-bottom: 1px solid transparent;
+      font-family: var(--head);
+      font-weight: 850;
+      font-size: 1.02rem;
+    }
+    details.topic[open] > summary { border-bottom-color: var(--line); }
+    details.topic > summary::-webkit-details-marker { display: none; }
+    details.topic > summary::before {
+      content: "+";
+      flex: 0 0 24px;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      background: var(--blue-soft);
+      color: var(--navy);
+      font-family: var(--mono);
+      font-size: .95rem;
+    }
+    details.topic[open] > summary::before { content: "−"; }
+    .topic-body { padding: 15px 16px 17px; }
+    .topic-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 11px;
+      flex-wrap: wrap;
+    }
+    .complete-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: .74rem;
+    }
+    .complete-label input { width: 17px; height: 17px; accent-color: var(--navy); }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 12px;
+      background: #fff;
+    }
+    .card h3, .card h4 { margin: 0 0 7px; font-family: var(--head); }
+    .card h3 { font-size: 1rem; }
+    .card h4 { font-size: .92rem; }
+    .priority-must { border-left: 4px solid var(--must); background: linear-gradient(90deg, var(--must-soft), #fff 24%); }
+    .priority-should { border-left: 4px solid var(--should); background: linear-gradient(90deg, var(--should-soft), #fff 24%); }
+    .priority-nice { border-left: 4px solid var(--nice); background: linear-gradient(90deg, var(--nice-soft), #fff 24%); }
+
+    ul, ol { margin: 7px 0 7px 21px; padding: 0; }
+    li { margin: 4px 0; }
+    .compact li { margin: 2px 0; }
+    .no-bullets { list-style: none; margin-left: 0; }
+
+    .flow {
+      display: flex;
+      align-items: stretch;
+      gap: 7px;
+      overflow-x: auto;
+      padding: 4px 0 8px;
+    }
+    .flow-step {
+      min-width: 145px;
+      flex: 1 0 145px;
+      border: 1px solid #cdd9e7;
+      border-radius: 10px;
+      padding: 10px;
+      background: #f9fcff;
+      text-align: center;
+      font-weight: 780;
+      position: relative;
+    }
+    .flow-step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--blue);
+      font-weight: 900;
+      z-index: 3;
+    }
+    .branch {
+      border-left: 3px solid var(--blue);
+      padding: 7px 0 7px 15px;
+      margin: 8px 0;
+      font-family: var(--mono);
+      font-size: .84rem;
+      white-space: pre-line;
+    }
+
+    .table-wrap { overflow-x: auto; margin: 9px 0; border-radius: 10px; border: 1px solid var(--line); }
+    table { width: 100%; border-collapse: collapse; min-width: 680px; background: white; }
+    th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+    th { background: #eaf4fc; color: var(--navy); font-family: var(--head); font-size: .82rem; }
+    tr:last-child td { border-bottom: 0; }
+    td:first-child { font-weight: 750; }
+    .score { font-family: var(--mono); letter-spacing: .04em; font-weight: 850; color: var(--navy); white-space: nowrap; }
+    .winner { background: #eef9f3; }
+    .loser { background: #fff7f3; }
+    .center { text-align: center; }
+
+    .callout {
+      border-radius: 11px;
+      padding: 11px 12px;
+      margin: 10px 0;
+      border: 1px solid var(--line);
+    }
+    .callout strong.label {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: .74rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .callout.trap { background: var(--trap-soft); border-color: #edc3b7; }
+    .callout.trap .label { color: var(--trap); }
+    .callout.confusion { background: #f3f0fb; border-color: #d5c9ef; }
+    .callout.confusion .label { color: #67459c; }
+    .callout.mechanism { background: #eef7ff; border-color: #c6def1; }
+    .callout.mechanism .label { color: var(--navy); }
+    .callout.source-note { background: #f7f7f9; color: #4e5666; }
+
+    .recall-block {
+      background: #fbfcfe;
+      border: 1px dashed #aeb9c9;
+      border-radius: 11px;
+      padding: 11px;
+      margin-top: 12px;
+    }
+    .recall-title {
+      font-family: var(--mono);
+      font-size: .76rem;
+      font-weight: 850;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 7px;
+    }
+    details.answer, details.flash-card {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: white;
+      margin: 6px 0;
+    }
+    details.answer > summary, details.flash-card > summary {
+      cursor: pointer;
+      padding: 8px 10px;
+      font-weight: 720;
+    }
+    details.answer > div, details.flash-card > div { padding: 0 10px 10px; color: #344055; }
+
+    .prescription {
+      max-width: 520px;
+      margin: 10px auto;
+      background: #fff;
+      border: 1px solid #3d4654;
+      padding: 18px 22px;
+      min-height: 280px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+    .rx { font-size: 3.2rem; line-height: 1; margin: 20px 0 20px; }
+    .prescription .sig { margin-top: 17px; }
+    .prescription .sign { text-align: right; margin-top: 45px; }
+
+    .confused-grid, .flash-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 9px;
+    }
+    .trap-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; }
+
+    .cram-sheet {
+      background: #102f50;
+      color: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .cram-sheet h2, .cram-sheet h3 { font-family: var(--head); margin-top: 0; }
+    .cram-sheet .card { color: var(--ink); }
+    .cram-sheet .page-ref { color: #d8e8f6; }
+
+    .page-ref { font-family: var(--mono); font-size: .73rem; color: var(--muted); white-space: nowrap; }
+    .hidden-by-filter, .hidden-by-search { display: none !important; }
+    .search-empty {
+      display: none;
+      text-align: center;
+      color: var(--muted);
+      padding: 20px;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      background: white;
+      margin: 12px 0;
+    }
+
+    footer {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 18px 18px 70px;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+    #backToTop {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--navy);
+      color: white;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: none;
+      font-weight: 900;
+    }
+    #backToTop.show { display: block; }
+
+    @media (max-width: 900px) {
+      .title-row { grid-template-columns: 1fr; }
+      .progress-box { text-align: left; }
+      .progress-track { margin-left: 0; width: 100%; }
+      .survival-grid, .grid-2, .grid-3, .confused-grid, .flash-grid, .trap-list { grid-template-columns: 1fr; }
+      .roadmap { grid-template-columns: repeat(7, 150px); }
+      .header-inner { padding-top: 10px; }
+    }
+    @media (max-width: 580px) {
+      body { font-size: 14px; }
+      main { padding: 12px; }
+      .header-inner, .mini-nav { padding-left: 12px; padding-right: 12px; }
+      .tool-btn { padding: 7px 9px; }
+      details.topic > summary { padding: 12px; }
+      .topic-body { padding: 12px; }
+      .survival { padding: 12px; }
+    }
+
+    @media print {
+      body { background: white; font-size: 10.5pt; }
+      .topbar, .mini-nav, #backToTop, .complete-label, .search-empty, noscript { display: none !important; }
+      main { max-width: none; padding: 0; }
+      details.topic { box-shadow: none; break-inside: avoid; border-color: #bbb; }
+      details.topic > summary { background: white; }
+      details.topic > summary::before { display: none; }
+      details.topic:not([open]) > *:not(summary) { display: block !important; }
+      .survival, .cram-sheet { box-shadow: none; }
+      .cram-sheet { background: white; color: black; border: 2px solid #102f50; }
+      .roadmap { overflow: visible; grid-template-columns: repeat(4,1fr); }
+      .road-step::after { display: none; }
+      a { text-decoration: none; color: black; }
+      .hidden-by-filter, .hidden-by-search { display: block !important; }
+      details.answer > div, details.flash-card > div { display: block !important; }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; font-size: 9pt; }
+      th, td { padding: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="header-inner">
+      <div class="title-row">
+        <div>
+          <div class="kicker">
+            <span class="badge cram">Cramming Mode</span>
+            <span class="scope">8-page lesson • 7 major topics • 3 worked cases • 1 mini case</span>
+          </div>
+          <h1>Rational Drug Therapy & Ethical Consideration in Drug Prescribing</h1>
+        </div>
+        <div class="progress-box" aria-live="polite">
+          <div class="progress-label"><span id="progressText">0%</span> complete</div>
+          <div class="progress-track" aria-hidden="true"><div id="progressFill" class="progress-fill"></div></div>
+        </div>
+      </div>
+      <div class="toolbar" aria-label="Reviewer controls">
+        <div class="search-wrap"><input id="searchInput" type="search" placeholder="Search this reviewer, e.g. ESSC, adherence, counseling" aria-label="Search reviewer"></div>
+        <button class="tool-btn" id="expandAll" type="button">Expand all</button>
+        <button class="tool-btn" id="collapseAll" type="button">Collapse all</button>
+        <button class="tool-btn" id="mustOnly" type="button" aria-pressed="false">Must-know only</button>
+        <button class="tool-btn" id="resetProgress" type="button">Reset progress</button>
+        <button class="tool-btn" id="printReviewer" type="button">Print reviewer</button>
+      </div>
+    </div>
+    <nav class="mini-nav" aria-label="Section navigation">
+      <a href="#survival">Survival summary</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#topics">Core topics</a>
+      <a href="#confusions">Confusions</a>
+      <a href="#traps">Exam traps</a>
+      <a href="#rapid">Rapid recall</a>
+      <a href="#cram-sheet">5-minute sheet</a>
+    </nav>
+  </header>
+
+  <main>
+    <noscript><div class="callout source-note">The reviewer remains readable without JavaScript. Search, filters, saved progress, and control buttons need JavaScript.</div></noscript>
+
+    <section id="survival" class="survival searchable">
+      <h2 class="section-title">If You Only Remember These</h2>
+      <div class="survival-grid">
+        <div class="survival-item"><strong>Rational drug therapy</strong> means the right drug, adequate dose, sufficient duration, appropriate clinical need, and lowest cost.</div>
+        <div class="survival-item">Ethical prescribing must <strong>maximize effectiveness, minimize harm, avoid waste, and respect patient choice</strong>.</div>
+        <div class="survival-item">The rational prescribing sequence is <strong>diagnosis → goals → treatment selection → prescribe and counsel → monitor</strong>.</div>
+        <div class="survival-item"><strong>Not every health problem needs a drug.</strong> Treatment can be advice, non-drug care, a P-drug, or referral.</div>
+        <div class="survival-item"><strong>ESSC</strong> stands for Efficacy, Safety, Suitability, and Cost.</div>
+        <div class="survival-item">Do not mix criteria when scoring. <strong>Adverse effects belong under Safety. Patient contraindications belong under Suitability.</strong></div>
+        <div class="survival-item">Choose the <strong>best drug group first</strong>, then compare specific drugs within the winning group.</div>
+        <div class="survival-item">Cost means the <strong>total treatment cost</strong>, not merely the price of one tablet or vial.</div>
+        <div class="survival-item">All prescription orders should be <strong>legible, unambiguous, dated, timed when needed, and clearly signed</strong>.</div>
+        <div class="survival-item">Major adherence failures include not obtaining the drug, taking it incorrectly, stopping early, and using it inappropriately.</div>
+        <div class="survival-item">The lecture states that physicians must prescribe the <strong>generic name</strong>. “No substitution” instructions are treated as violative under the cited issuances.</div>
+        <div class="survival-item">Patient counseling must cover <strong>effects, side effects, instructions, warnings, follow-up, and confirmation of understanding</strong>.</div>
+        <div class="survival-item">A well-chosen P-drug depends on both <strong>correct patient assessment</strong> and knowledge of the drugs’ pharmacologic properties.</div>
+        <div class="survival-item">Once-daily dosing, acceptable taste and form, local availability, age, pregnancy, comorbidities, and current medicines all affect <strong>Suitability</strong>.</div>
+        <div class="survival-item">In the urticaria mini case, the lecture’s ESSC process selects <strong>second-generation antihistamines</strong>, then <strong>cetirizine</strong>.</div>
+        <div class="survival-item">Before ending the consultation, ask the patient to <strong>repeat the most important information</strong>.</div>
+      </div>
+      <div class="page-ref" style="margin-top:9px">Pages 1–8</div>
+    </section>
+
+    <section id="roadmap" class="searchable">
+      <h2 class="section-title">Lesson Roadmap</h2>
+      <div class="roadmap" aria-label="Lecture flow">
+        <div class="road-step">Rational therapy<small>Why and definition</small></div>
+        <div class="road-step">Ethical prescribing<small>Principles and errors</small></div>
+        <div class="road-step">P-drug process<small>Diagnosis to monitoring</small></div>
+        <div class="road-step">ESSC selection<small>Group then drug</small></div>
+        <div class="road-step">Worked cases<small>Cough, diarrhea, angina</small></div>
+        <div class="road-step">Counseling<small>Minimum information</small></div>
+        <div class="road-step">Mini case<small>Urticaria and cetirizine</small></div>
+      </div>
+    </section>
+
+    <div id="searchEmpty" class="search-empty">No matching content. Try a broader term.</div>
+
+    <section id="topics">
+      <h2 class="section-title">High-Yield Topic Sections</h2>
+
+      <details class="topic searchable" open data-topic="rational-therapy">
+        <summary>1. Rational Drug Therapy</summary>
+        <div class="topic-body">
+          <div class="topic-meta">
+            <div><span class="badge must">Must know</span> <span class="badge page">Page 1</span></div>
+            <label class="complete-label"><input class="progress-check" type="checkbox" data-progress-id="rational-therapy"> Mark topic complete</label>
+          </div>
+          <div class="grid-2">
+            <div class="card priority-must">
+              <h3>Core definition</h3>
+              <p>Rational use means giving medication appropriate to the patient’s clinical needs, in a dose that meets individual requirements, for an adequate period, at the lowest cost to the patient and community.</p>
+              <p><strong>1985 revision:</strong> right drug + adequate dose + sufficient duration + appropriate clinical need + lowest cost.</p>
+            </div>
+            <div class="card priority-must">
+              <h3>Why prescribing is an art</h3>
+              <ul class="compact">
+                <li>Diagnostic skills</li>
+                <li>Knowledge of medicines</li>
+                <li>Clinical pharmacology principles</li>
+                <li>Communication skills</li>
+                <li>Appreciation of risks and benefits for the specific patient</li>
+              </ul>
+            </div>
+            <div class="card priority-should">
+              <h3>Why it matters</h3>
+              <ul>
+                <li>More than 50% of medicines are prescribed, dispensed, or sold inappropriately.</li>
+                <li>50% of patients fail to take medicines correctly.</li>
+                <li>About one-third of the world’s population lacks access to essential medicines.</li>
+              </ul>
+            </div>
+            <div class="card priority-must">
+              <h3>Fast recall cue</h3>
+              <p><strong>5 Rights of rational therapy:</strong> right clinical need, right drug, right dose, right duration, right total cost.</p>
+            </div>
+          </div>
+          <div class="recall-block">
+            <div class="recall-title">Recall check</div>
+            <details class="answer"><summary>What five elements appear in the revised definition?</summary><div>Right drug, adequate dose, sufficient duration, appropriateness to clinical need, and lowest cost.</div></details>
+            <details class="answer"><summary>Why is drug knowledge alone insufficient for good prescribing?</summary><div>The lecture also requires diagnostic skills, clinical pharmacology, communication, and risk–benefit appreciation for the particular patient.</div></details>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic searchable" open data-topic="ethical-prescribing">
+        <summary>2. Rational or Ethical Prescribing</summary>
+        <div class="topic-body">
+          <div class="topic-meta">
+            <div><span class="badge must">Must know</span> <span class="badge page">Pages 1–2</span></div>
+            <label class="complete-label"><input class="progress-check" type="checkbox" data-progress-id="ethical-prescribing"> Mark topic complete</label>
+          </div>
+
+          <div class="card priority-must">
+            <h3>Four ethical aims</h3>
+            <div class="flow">
+              <div class="flow-step">Maximize clinical effectiveness</div>
+              <div class="flow-step">Minimize harms</div>
+              <div class="flow-step">Avoid wasting scarce resources</div>
+              <div class="flow-step">Respect patient choice</div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card priority-must">
+              <h3>Ethical prescribing workflow</h3>
+              <ol>
+                <li>Evaluate and define the patient’s problem.</li>
+                <li>Determine therapeutic objectives.</li>
+                <li>Select an appropriate medication with cost in mind.</li>
+                <li>Give information, warnings, and instructions.</li>
+                <li>Monitor regularly.</li>
+              </ol>
+            </div>
+            <div class="card priority-must">
+              <h3>Prescription order standards</h3>
+              <ul>
+                <li><strong>Legible</strong></li>
+                <li><strong>Unambiguous</strong></li>
+                <li><strong>Dated</strong></li>
+                <li><strong>Timed</strong> for chart orders</li>
+                <li><strong>Clearly signed</strong></li>
+              </ul>
+              <p class="subtle">Purpose: optimal communication among prescriber, pharmacist, and nurse.</p>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-top:12px">
+            <div class="card priority-must">
+              <h3>Prescribing errors</h3>
+              <ul class="compact">
+                <li>Omitted information</li>
+                <li>Illegible writing</li>
+                <li>Ambiguous decimal points</li>
+                <li>Missed contraindications</li>
+                <li>Incomplete drug history</li>
+                <li>Unrecognized incompatibilities</li>
+              </ul>
+            </div>
+            <div class="card priority-must">
+              <h3>Four adherence failures</h3>
+              <ol class="compact">
+                <li>Fails to obtain the medicine</li>
+                <li>Takes it incorrectly</li>
+                <li>Stops prematurely</li>
+                <li>Uses it inappropriately, such as sharing</li>
+              </ol>
+            </div>
+            <div class="card priority-should">
+              <h3>Examples to remember</h3>
+              <ul class="compact">
+                <li>“Continue present IVF” omits the exact fluid.</li>
+                <li>“Resume preoperative meds” assumes a complete record.</li>
+                <li><span class="mono">0.1</span> may be misread as <span class="mono">1</span>.</li>
+                <li><span class="mono">1.0</span> may be misread as <span class="mono">10</span>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout trap priority-must">
+            <strong class="label">Exam trap</strong><br>
+            A medication error can arise before the drug reaches the patient. Missing information and poor communication are prescribing problems, not merely patient adherence problems.
+          </div>
+
+          <div class="recall-block">
+            <div class="recall-title">Recall check</div>
+            <details class="answer"><summary>List the four ethical aims without looking.</summary><div>Maximize effectiveness, minimize harms, avoid waste, respect patient choice.</div></details>
+            <details class="answer"><summary>Name the four major forms of noncompliance.</summary><div>Failure to obtain, failure to take as prescribed, premature discontinuation, and inappropriate use.</div></details>
+            <details class="answer"><summary>Which prescription feature is especially relevant to chart orders?</summary><div>Timing the order.</div></details>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic searchable" data-topic="legal-generic">
+        <summary>3. Legal and Socioeconomic Considerations</summary>
+        <div class="topic-body">
+          <div class="topic-meta">
+            <div><span class="badge should">Should know</span> <span class="badge page">Pages 1–2</span></div>
+            <label class="complete-label"><input class="progress-check" type="checkbox" data-progress-id="legal-generic"> Mark topic complete</label>
+          </div>
+          <div class="grid-2">
+            <div class="card priority-should">
+              <h3>Drug classes and control</h3>
+              <ul>
+                <li><strong>OTC drugs:</strong> may be used by laypersons for self-limiting conditions.</li>
+                <li><strong>Prescription drugs:</strong> require a licensed prescriber.</li>
+                <li>Controlled substances listed include opioids, hallucinogens, stimulants, depressants, and anabolic steroids.</li>
+                <li>The lecture states that an <strong>S-2 license</strong> is required before prescribing regulated or controlled drugs.</li>
+              </ul>
+            </div>
+            <div class="card priority-should">
+              <h3>Drug safety surveillance</h3>
+              <ul>
+                <li>Government controls labeling and distribution.</li>
+                <li>Licensing boards control who may prescribe.</li>
+                <li>The FDA monitors drug safety through mandatory company reports and voluntary healthcare-practitioner reports.</li>
+                <li>The Philippine National Formulary is linked in the lecture to government hospital purchasing and PhilHealth reimbursement.</li>
+              </ul>
+            </div>
+            <div class="card priority-must">
+              <h3>Generic prescribing</h3>
+              <ul>
+                <li><strong>Physicians must prescribe the generic name.</strong></li>
+                <li>This allows the pharmacist to supply a generically equivalent and less costly product.</li>
+                <li>The prescriber may include a particular brand, but the lecture’s cited issuances prohibit obstructing proper generic substitution.</li>
+              </ul>
+            </div>
+            <div class="card priority-should">
+              <h3>RA 6675 and cited issuances</h3>
+              <ul>
+                <li>The lecture states doctors are not allowed to instruct the pharmacist not to substitute a brand.</li>
+                <li>DOH AO 169, s. 2004 is presented as requiring generic names in DOH transactions.</li>
+                <li>DOH AO 62, s. 1989 treats “No Substitution” wording that obstructs generic dispensing as violative.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout source-note priority-nice">
+            <strong class="label">Source note</strong><br>
+            The PDF says that the boxed legal material on page 2 was not discussed during the lecture and was corrected or supplemented by the transcribing team from previous versions.
+          </div>
+          <div class="grid-2">
+            <div class="card priority-nice">
+              <h3>Product and cost considerations</h3>
+              <ul class="compact">
+                <li>Possible generic-product concerns listed: high inert-to-active ratio, poor solubility, low therapeutic index.</li>
+                <li>Bioequivalence and price information should be available from the FDA.</li>
+                <li>Other costs include prescription fees, refills, and quantity dispensed.</li>
+              </ul>
+            </div>
+            <div class="card priority-should">
+              <h3>Labeled vs off-label</h3>
+              <p>The lecture defines <strong>off-label use</strong> as use for an unapproved disease or condition, dosage form, or dose.</p>
+            </div>
+          </div>
+          <div class="recall-block">
+            <div class="recall-title">Recall check</div>
+            <details class="answer"><summary>What name must physicians place on prescriptions according to the lecture?</summary><div>The generic name.</div></details>
+            <details class="answer"><summary>What is “off-label use” in the lecture?</summary><div>Use for a disease or condition, dosage form, or dose not approved in the product labeling.</div></details>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic searchable" open data-topic="p-drug-process">
+        <summary>4. Choosing the P-Drug</summary>
+        <div class="topic-body">
+          <div class="topic-meta">
+            <div><span class="badge must">Must know</span> <span class="badge page">Pages 2–3</span></div>
+            <label class="complete-label"><input class="progress-check" type="checkbox" data-progress-id="p-drug-process"> Mark topic complete</label>
+          </div>
+
+          <div class="callout mechanism priority-must">
+            <strong class="label">Mechanism / process</strong>
+            <div class="flow" style="margin-top:7px">
+              <div class="flow-step">Determine diagnosis</div>
+              <div class="flow-step">Identify treatment goals</div>
+              <div class="flow-step">Select treatment</div>
+              <div class="flow-step">Prescribe and counsel</div>
+              <div class="flow-step">Monitor patient</div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card priority-must">
+              <h3>Expanded P-drug outline</h3>
+              <ol>
+                <li>Diagnosis</li>
+                <li>Therapeutic objectives</li>
+                <li>Non-drug measures</li>
+                <li>Inventory of effective drug groups</li>
+                <li>Choose specific drugs from the winning group</li>
+                <li>Write the prescription</li>
+                <li>Counsel the patient</li>
+              </ol>
+            </div>
+            <div class="card priority-must">
+              <h3>Treatment options</h3>
+              <div class="branch">Treatment selection
+├── Advice and information
+├── Non-drug treatment
+├── Drug treatment with a P-drug
+└── Referral</div>
+              <p><strong>Key point:</strong> not all health problems need drug therapy.</p>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-top:12px">
+            <div class="card priority-should">
+              <h3>Diagnosis</h3>
+              <p>Base prescribing decisions on the <strong>primary diagnosis</strong> and relevant <strong>secondary diagnoses</strong>.</p>
+              <p class="subtle">Lecture example: pneumonia as primary diagnosis, type 2 diabetes as secondary diagnosis.</p>
+            </div>
+            <div class="card priority-should">
+              <h3>Treatment goals</h3>
+              <p>Goals may be <strong>cure, relief, or prevention</strong>.</p>
+              <p class="subtle">Pneumonia example: cure infection, ease cough, prevent complications or recurrence.</p>
+            </div>
+            <div class="card priority-must">
+              <h3>What makes a good P-drug?</h3>
+              <p>Proper assessment of the patient’s problem plus knowledge of pharmacologic properties.</p>
+            </div>
+          </div>
+
+          <div class="recall-block">
+            <div class="recall-title">Recall check</div>
+            <details class="answer"><summary>What comes immediately after identifying treatment goals?</summary><div>Select the treatment.</div></details>
+            <details class="answer"><summary>What should be inventoried before selecting a specific P-drug?</summary><div>Effective drug groups.</div></details>
+            <details class="answer"><summary>What are the three broad therapeutic goals given by the lecture?</summary><div>Cure, relief, and prevention.</div></details>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic searchable" open data-topic="essc">
+        <summary>5. ESSC Criteria and Scoring</summary>
+        <div class="topic-body">
+          <div class="topic-meta">
+            <div><span class="badge must">Must know</span> <span class="badge page">Pages 2–3</span></div>
+            <label class="complete-label"><input class="progress-check" type="checkbox" data-progress-id="essc"> Mark topic complete</label>
+          </div>
+
+          <div class="grid-2">
+            <div class="card priority-must">
+              <h3>E — Efficacy</h3>
+              <ul>
+                <li>Mechanism of action</li>
+                <li>PK: onset, duration, bioavailability, distribution, metabolism, excretion</li>
+                <li>PD: specificity, selectivity, dose response, therapeutic index</li>
+                <li>Spectrum of activity for antibiotics</li>
+                <li>Supporting journal reports, when available</li>
+              </ul>
+            </div>
+            <div class="card priority-must">
+              <h3>S — Safety</h3>
+              <ul>
+                <li>Adverse effects</li>
+                <li>Frequency</li>
+                <li>Seriousness</li>
+                <li>Predictability</li>
+                <li>Potential toxicity</li>
+              </ul>
+            </div>
+            <div class="card priority-must">
+              <h3>S — Suitability</h3>
+              <ul>
+                <li>Previous ADRs</li>
+                <li>Age, pregnancy, vulnerability, comorbidities</li>
+                <li>Current therapy and interactions</li>
+                <li>Likely adherence</li>
+                <li>Dose, frequency, dosage form, taste</li>
+                <li>Local availability and practicality</li>
+              </ul>
+            </div>
+            <div class="card priority-must">
+              <h3>C — Cost</h3>
+              <ul>
+                <li><strong>Total treatment cost</strong></li>
+                <li>Compute across the whole treatment duration.</li>
+                <li>Lower total price receives a higher rating.</li>
+                <li>Consider alternatives with similar efficacy.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout trap priority-must">
+            <strong class="label">Scoring rule that changes answers</strong><br>
+            Scores must stay inside their own criterion. Do not lower Efficacy because a drug has adverse effects. Do not lower Safety because the drug is contraindicated in pregnancy. Put population constraints and contraindications under Suitability.
+          </div>
+
+          <div class="card priority-must">
+            <h3>Two-stage selection</h3>
+            <div class="flow">
+              <div class="flow-step">List drug groups</div>
+              <div class="flow-step">Score each group from + to ++++</div>
+              <div class="flow-step">Choose highest group total</div>
+              <div class="flow-step">List drugs in that group</div>
+              <div class="flow-step">Score again</div>
+              <div class="flow-step">Choose highest drug total</div>
+            </div>
+            <p class="subtle">For SGDs, the lecture recommends presenting data column-by-column, comparing all drugs under one criterion before moving to the next.</p>
+          </div>
+
+          <div class="table-wrap priority-should">
+            <table>
+              <thead><tr><th>Generic practice row</th><th>E</th><th>Safety</th><th>Suitability</th><th>Cost</th><th>Total</th></tr></thead>
+              <tbody>
+                <tr><td>Drug group 1</td><td class="score">+++</td><td class="score">++</td><td class="score">++</td><td class="score">+</td><td>8</td></tr>
+                <tr class="winner"><td>Drug group 2</td><td class="score">+++</td><td class="score">+</td><td class="score">+++</td><td class="score">++</td><td><strong>9</strong></td></tr>
+                <tr><td>Drug group 3</td><td class="score">++</td><td class="score">++</td><td class="score">++</td><td class="score">+</td><td>7</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="recall-block">
+            <div class="recall-title">Recall check</div>
+            <details class="answer"><summary>Where should a contraindication in the patient be scored?</summary><div>Suitability.</div></details>
+            <details class="answer"><summary>Where should the frequency and seriousness of adverse effects be scored?</summary><div>Safety.</div></details>
+            <details class="answer"><summary>Does cost mean the unit price?</summary><div>No. It means the cost of the complete treatment course.</div></details>
+            <details class="answer"><summary>Why are drug groups scored before specific drugs?</summary><div>The process first identifies the best therapeutic group, then identifies the best specific P-drug within that group.</div></details>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic searchable" data-topic="worked-cases">
+        <summary>6. Worked Cases from the Lecture</summary>
+        <div class="topic-body">
+          <div class="topic-meta">
+            <div><span class="badge should">Should know</span> <span class="badge page">Pages 3–5</span></div>
+            <label class="complete-label"><input class="progress-check" type="checkbox" data-progress-id="worked-cases"> Mark topic complete</label>
+          </div>
+
+          <div class="card priority-should">
+            <h3>Case 1 — Post-inflammatory cough</h3>
+            <div class="grid-3">
+              <div><strong>Patient</strong><br>52-year-old taxi driver, cough after a cold, worse at night, heavy smoker.</div>
+              <div><strong>Diagnosis and goal</strong><br>Post-inflammatory cough. Suppress the cough.</div>
+              <div><strong>Non-drug and groups</strong><br>Stop smoking. Consider opioid agonists and antihistamines.</div>
+            </div>
+            <p class="subtle">The lecture does not provide an ESSC table for this case.</p>
+          </div>
+
+          <div class="card priority-must" style="margin-top:12px">
+            <h3>Case 2 — Acute gastroenteritis with mild dehydration</h3>
+            <p><strong>Patient:</strong> 1-year-old boy, seven watery stools, active but thirsty, dry lips, slightly sunken eyes, full pulses.</p>
+            <p><strong>Diagnosis:</strong> acute gastroenteritis, mild dehydration, probably viral.</p>
+            <p><strong>Goal:</strong> rehydrate and prevent further dehydration. <strong>Non-drug:</strong> continue breastfeeding.</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Drug group</th><th>E</th><th>Safety</th><th>Suitability</th><th>Cost</th><th>Total</th><th>Key reason</th></tr></thead>
+                <tbody>
+                  <tr class="winner"><td>ORS</td><td class="score">+++</td><td class="score">++++</td><td class="score">++++</td><td class="score">++</td><td><strong>13</strong></td><td>Replacement fluid with Na, K, Cl, and glucose. Indicated for the patient.</td></tr>
+                  <tr class="loser"><td>Opioid agonist</td><td class="score">+++</td><td class="score">+</td><td class="score">−</td><td class="score">+</td><td>5</td><td>Not indicated. Listed harms include respiratory depression, drowsiness, dry mouth, nausea, vomiting, urinary retention, and constipation.</td></tr>
+                  <tr><td>Zinc sulfate</td><td class="score">+++</td><td class="score">+++</td><td class="score">+++</td><td class="score">++</td><td>11</td><td>Adjunctive therapy. Restores mucosal barrier integrity and enterocyte brush-border enzyme activity.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Specific ORS</th><th>E</th><th>Safety</th><th>Suitability</th><th>Cost</th><th>Total</th></tr></thead>
+                <tbody>
+                  <tr><td>Pedialyte 45</td><td class="score">+++</td><td class="score">+++</td><td class="score">+++</td><td class="score">+</td><td>10</td></tr>
+                  <tr class="winner"><td>Glucolyte Plus</td><td class="score">+++</td><td class="score">+++</td><td class="score">++</td><td class="score">+++</td><td><strong>11</strong></td></tr>
+                  <tr><td>Hydrite tablets</td><td class="score">+++</td><td class="score">+++</td><td class="score">++</td><td class="score">++</td><td>10</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p><strong>Lecture winner:</strong> ORS group → Glucolyte Plus.</p>
+          </div>
+
+          <div class="card priority-should" style="margin-top:12px">
+            <h3>Case 3 — Stable angina pectoris</h3>
+            <p><strong>Patient:</strong> 60-year-old man with exertional suffocating chest pain that resolves with rest, family history of heart attack, BP 130/85, pulse 78/min, right carotid murmur.</p>
+            <p><strong>Goal:</strong> stop the attack as soon as it starts by decreasing preload, contractility, and afterload.</p>
+            <p><strong>Drug groups:</strong> nitrates, beta blockers, calcium channel blockers.</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Decision level</th><th>Lecture selection</th><th>Reason shown in the lecture</th></tr></thead>
+                <tbody>
+                  <tr><td>Drug group</td><td><strong>Nitrates</strong></td><td>Highest stated group score. The table highlights peripheral vasodilation, rapid dosage forms, and angina suitability.</td></tr>
+                  <tr><td>Specific P-drug</td><td><strong>Isosorbide dinitrate</strong></td><td>Highest stated specific-drug total among glyceryl trinitrate, isosorbide dinitrate, and isosorbide mononitrate.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout source-note">
+              <strong class="label">Source note</strong><br>
+              Some visible plus marks and printed totals in the page 4 ESSC tables do not appear to add consistently. This reviewer preserves the lecturer’s stated winners rather than silently recalculating them.
+            </div>
+            <div class="prescription" aria-label="Lecture prescription example for stable angina">
+              <div>Mr. Paul Smith, 60 y/o <span style="float:right">July 15, 2011</span></div>
+              <div class="rx">℞</div>
+              <div><strong>Isosorbide dinitrate</strong> 5 mg sublingual tablet</div>
+              <div>Dispense No. 10</div>
+              <div class="sig"><strong>Label:</strong> Take 1 tablet sublingually as needed for chest pain. May take a second tablet if pain persists after 20 minutes.</div>
+              <div class="sign">MAMG, MD<br>License and PTR numbers</div>
+            </div>
+            <p class="subtle center">Lecture example from page 5. It is reproduced for course review, not as independent prescribing advice.</p>
+          </div>
+
+          <div class="recall-block">
+            <div class="recall-title">Recall check</div>
+            <details class="answer"><summary>What wins at the group level in the dehydration case?</summary><div>Oral rehydration solution.</div></details>
+            <details class="answer"><summary>What specific product wins in the dehydration case?</summary><div>Glucolyte Plus.</div></details>
+            <details class="answer"><summary>What non-drug measure appears in the cough case?</summary><div>Stop smoking.</div></details>
+            <details class="answer"><summary>What drug group wins in the stable angina case?</summary><div>Nitrates.</div></details>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic searchable" open data-topic="counseling">
+        <summary>7. Counseling the Patient</summary>
+        <div class="topic-body">
+          <div class="topic-meta">
+            <div><span class="badge must">Must know</span> <span class="badge page">Page 5</span></div>
+            <label class="complete-label"><input class="progress-check" type="checkbox" data-progress-id="counseling"> Mark topic complete</label>
+          </div>
+          <div class="grid-3">
+            <div class="card priority-must"><h3>Effects</h3><ul class="compact"><li>Why the drug is needed</li><li>Which symptoms will and will not disappear</li><li>When the effect should start</li><li>What happens if taken incorrectly or not at all</li></ul></div>
+            <div class="card priority-must"><h3>Side effects</h3><ul class="compact"><li>Which may occur</li><li>How to recognize them</li><li>How long they may continue</li><li>How serious they are</li><li>What action to take</li></ul></div>
+            <div class="card priority-must"><h3>Instructions</h3><ul class="compact"><li>How and when to take it</li><li>How long to continue</li><li>How to store it</li><li>What to do with leftovers</li></ul></div>
+            <div class="card priority-must"><h3>Warnings</h3><ul class="compact"><li>When not to take it</li><li>Maximum dose</li><li>Why the full course must be completed</li></ul></div>
+            <div class="card priority-must"><h3>Future consultations</h3><ul class="compact"><li>When to return</li><li>When to return earlier</li><li>What information to bring next time</li></ul></div>
+            <div class="card priority-must"><h3>Confirm understanding</h3><ul class="compact"><li>Ask whether everything is clear</li><li>Ask the patient to repeat the key points</li><li>Ask whether there are more questions</li></ul></div>
+          </div>
+          <div class="callout confusion priority-must">
+            <strong class="label">Fast distinction</strong><br>
+            Counseling is not finished when information has been delivered. The final step is to verify that the patient understood it.
+          </div>
+          <div class="recall-block">
+            <div class="recall-title">Recall check</div>
+            <details class="answer"><summary>What are the six counseling domains?</summary><div>Effects, side effects, instructions, warnings, future consultations, and confirmation that everything is clear.</div></details>
+            <details class="answer"><summary>What teach-back method does the lecture recommend?</summary><div>Ask the patient to repeat the most important information.</div></details>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic searchable" data-topic="updates-keypoints">
+        <summary>8. Key Points and Keeping Drug Knowledge Current</summary>
+        <div class="topic-body">
+          <div class="topic-meta">
+            <div><span class="badge nice">Nice to know</span> <span class="badge page">Page 5</span></div>
+            <label class="complete-label"><input class="progress-check" type="checkbox" data-progress-id="updates-keypoints"> Mark topic complete</label>
+          </div>
+          <div class="grid-2">
+            <div class="card priority-should">
+              <h3>Lecture summary</h3>
+              <ul>
+                <li>Prescribing is complex and requires clinical pharmacology knowledge.</li>
+                <li>Rational prescribing is a logical sequence from diagnosis through monitoring.</li>
+                <li>Best-drug selection requires diagnosis, goals, ESSC, correct prescription writing, counseling, and monitoring.</li>
+              </ul>
+            </div>
+            <div class="card priority-nice">
+              <h3>Information sources listed</h3>
+              <ul class="compact">
+                <li>Reference books and drug compendia</li>
+                <li>Essential-drug lists and treatment guidelines</li>
+                <li>Formularies and drug bulletins</li>
+                <li>Medical journals and drug information centers</li>
+                <li>Computerized information and industry sources</li>
+                <li>Apps listed: Medi Lexicon, Lexi-Comp, Epocrates, Micromedex, WebMD, Pocket Pharmacist</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout source-note priority-nice"><strong class="label">Review-question note</strong><br>The PDF states that no synchronous or asynchronous review questions were provided by the lecturer or reference materials.</div>
+        </div>
+      </details>
+
+      <details class="topic searchable" open data-topic="mini-case">
+        <summary>9. Appendix Mini Case — “Thirdy So” and Urticaria</summary>
+        <div class="topic-body">
+          <div class="topic-meta">
+            <div><span class="badge must">Must know</span> <span class="badge page">Pages 6–8</span></div>
+            <label class="complete-label"><input class="progress-check" type="checkbox" data-progress-id="mini-case"> Mark topic complete</label>
+          </div>
+          <div class="card priority-should">
+            <h3>Case snapshot</h3>
+            <p>Thirdy is a 10-year-old boy, 30 kg, with itchy maculopapular rashes after outdoor play. He has similar episodes with climate changes and travel, plus a family history of atopic dermatitis. The physician’s impression is urticaria.</p>
+          </div>
+          <div class="grid-2" style="margin-top:12px">
+            <div class="card priority-should">
+              <h3>Diagnosis explanation in the appendix</h3>
+              <div class="branch">Trigger / antigen
+↓
+Cutaneous mast-cell degranulation
+↓
+Histamine release
+↓
+Histamine receptors on post-capillary venules and nerve endings
+↓
+Itch + erythema + vasodilation + increased permeability
+↓
+Edema and wheals</div>
+              <p>The appendix classifies his pattern as <strong>physical urticaria, a chronic inducible urticaria</strong>, based on recurrent climate-related episodes.</p>
+            </div>
+            <div class="card priority-must">
+              <h3>Therapeutic objectives</h3>
+              <ul>
+                <li>Relieve itchiness</li>
+                <li>Clear rashes and wheals</li>
+                <li>Maintain skin integrity and prevent infection</li>
+                <li>Identify triggers</li>
+                <li>Educate the patient and family</li>
+              </ul>
+              <h3 style="margin-top:12px">Non-drug measures</h3>
+              <ul>
+                <li>Wear sunscreen daily</li>
+                <li>Avoid tight clothing</li>
+                <li>Do not scratch</li>
+                <li>Keep nails short and clean</li>
+                <li>Limit high temperatures and excessive sweating</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="table-wrap priority-must">
+            <table>
+              <thead><tr><th>Drug group</th><th>E</th><th>Safety</th><th>Suitability</th><th>Cost</th><th>Total</th><th>High-yield distinction</th></tr></thead>
+              <tbody>
+                <tr><td>First-generation antihistamines</td><td class="score">+++</td><td class="score">+</td><td class="score">+++</td><td class="score">+++</td><td>10</td><td>More drowsiness and anticholinergic-type effects. Given three times daily in the table.</td></tr>
+                <tr class="winner"><td>Second-generation antihistamines</td><td class="score">++++</td><td class="score">+++</td><td class="score">++++</td><td class="score">++++</td><td><strong>15</strong></td><td>Rapid onset, minimally sedating, long-lasting, tablet and syrup options, suitable for an active child.</td></tr>
+                <tr class="loser"><td>Oral glucocorticoids</td><td class="score">+</td><td class="score">+</td><td class="score">+</td><td class="score">+</td><td>4</td><td>Excessive for uncomplicated acute urticaria without angioedema or airway compromise.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-wrap priority-must">
+            <table>
+              <thead><tr><th>Specific drug</th><th>E</th><th>Safety</th><th>Suitability</th><th>Cost</th><th>Total</th><th>Lecture conclusion</th></tr></thead>
+              <tbody>
+                <tr class="winner"><td>Cetirizine</td><td class="score">++++</td><td class="score">++++</td><td class="score">++++</td><td class="score">++++</td><td><strong>16</strong></td><td>Chosen P-drug. Rapid onset, 24-hour relief, once-daily option, minimal sedation, lower stated cost.</td></tr>
+                <tr><td>Loratadine</td><td class="score">++++</td><td class="score">++++</td><td class="score">++++</td><td class="score">++</td><td>14</td><td>Similar E, Safety, and Suitability, but higher stated cost.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="prescription" aria-label="Lecture prescription example for Thirdy">
+            <div>Patient: Thirdy <span style="float:right">Age: 10/M</span></div>
+            <div>Date: July 14, 2026</div>
+            <div class="rx">℞</div>
+            <div><strong>Cetirizine tablet</strong> 10 mg</div>
+            <div>Dispense No. 7</div>
+            <div class="sig"><strong>Label:</strong> Take 1 tablet orally once daily for 7 days.</div>
+            <div class="sign">Doctor’s Name, MD<br>License and PTR numbers</div>
+          </div>
+          <p class="subtle center">Recreated from the prescription figure on page 8.</p>
+
+          <div class="recall-block">
+            <div class="recall-title">Recall check</div>
+            <details class="answer"><summary>Which group wins for Thirdy?</summary><div>Second-generation antihistamines.</div></details>
+            <details class="answer"><summary>Which specific P-drug wins?</summary><div>Cetirizine.</div></details>
+            <details class="answer"><summary>Why does cetirizine beat loratadine in the appendix table?</summary><div>They receive the same efficacy, safety, and suitability scores. Cetirizine receives the higher cost score.</div></details>
+            <details class="answer"><summary>What is the prescribed dose and duration in the figure?</summary><div>Cetirizine 10 mg orally once daily for 7 days.</div></details>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section id="confusions" class="searchable" style="margin-top:18px">
+      <h2 class="section-title">Commonly Confused Concepts</h2>
+      <div class="confused-grid">
+        <div class="callout confusion priority-must">
+          <strong class="label">Do not confuse: Efficacy vs Safety</strong><br>
+          <strong>Efficacy</strong> asks whether and how well the drug works. <strong>Safety</strong> asks about adverse effects, their frequency, seriousness, predictability, and toxicity.
+        </div>
+        <div class="callout confusion priority-must">
+          <strong class="label">Do not confuse: Safety vs Suitability</strong><br>
+          <strong>Safety</strong> is the drug’s harm profile. <strong>Suitability</strong> is whether that drug fits this patient, considering contraindications, comorbidities, interactions, age, dosage form, adherence, and availability.
+        </div>
+        <div class="callout confusion priority-must">
+          <strong class="label">Do not confuse: Unit price vs treatment cost</strong><br>
+          The ESSC Cost score is based on the total cost for the complete course, not the cost of a single tablet, vial, or bottle.
+        </div>
+        <div class="callout confusion priority-must">
+          <strong class="label">Do not confuse: P-drug group vs P-drug</strong><br>
+          First choose the winning <strong>drug group</strong>. Then score the specific drugs inside that group to select the final <strong>P-drug</strong>.
+        </div>
+        <div class="callout confusion priority-should">
+          <strong class="label">Do not confuse: Drug therapy vs treatment</strong><br>
+          Treatment may be advice, information, non-drug measures, a P-drug, or referral. A treatment plan does not automatically require medication.
+        </div>
+        <div class="callout confusion priority-should">
+          <strong class="label">Do not confuse: Labeled vs off-label</strong><br>
+          Labeled use follows approved labeling. The lecture uses “off-label” for an unapproved disease or condition, dosage form, or dose.
+        </div>
+      </div>
+    </section>
+
+    <section id="traps" class="searchable" style="margin-top:18px">
+      <h2 class="section-title">Exam Traps</h2>
+      <div class="trap-list">
+        <div class="callout trap priority-must"><strong class="label">Trap 1</strong><br>A highly effective drug can still score poorly overall because Safety, Suitability, or Cost is weak.</div>
+        <div class="callout trap priority-must"><strong class="label">Trap 2</strong><br>Do not penalize Efficacy for adverse effects. Put adverse effects under Safety.</div>
+        <div class="callout trap priority-must"><strong class="label">Trap 3</strong><br>Pregnancy, age restriction, comorbidity, and contraindications are Suitability issues in the lecture’s scoring method.</div>
+        <div class="callout trap priority-must"><strong class="label">Trap 4</strong><br>The cheapest single tablet does not automatically have the best Cost score. Calculate the entire treatment course.</div>
+        <div class="callout trap priority-must"><strong class="label">Trap 5</strong><br>Choosing a drug is not the last step. Prescription writing, counseling, and monitoring remain part of rational prescribing.</div>
+        <div class="callout trap priority-must"><strong class="label">Trap 6</strong><br>Once-daily dosing may improve adherence, so frequency belongs under Suitability.</div>
+        <div class="callout trap priority-should"><strong class="label">Trap 7</strong><br>OTC status does not mean a drug is appropriate for every patient. The lecture’s rational process still applies.</div>
+        <div class="callout trap priority-should"><strong class="label">Trap 8</strong><br>The page 4 example contains visible score-total inconsistencies. Follow the stated lecture conclusions for this source-based review.</div>
+      </div>
+    </section>
+
+    <section id="rapid" class="searchable" style="margin-top:18px">
+      <h2 class="section-title">Rapid-Fire Final Recall</h2>
+      <p class="subtle">Answer in a few words, then open the card.</p>
+      <div class="flash-grid">
+        <details class="flash-card"><summary>1. Rational prescribing in five elements?</summary><div>Right drug, adequate dose, sufficient duration, appropriate clinical need, lowest cost.</div></details>
+        <details class="flash-card"><summary>2. Four ethical aims?</summary><div>Maximize effectiveness, minimize harms, avoid waste, respect patient choice.</div></details>
+        <details class="flash-card"><summary>3. First step in rational prescribing?</summary><div>Determine the diagnosis.</div></details>
+        <details class="flash-card"><summary>4. Step after treatment selection?</summary><div>Prescribe and counsel.</div></details>
+        <details class="flash-card"><summary>5. Final process step?</summary><div>Monitor the patient.</div></details>
+        <details class="flash-card"><summary>6. ESSC?</summary><div>Efficacy, Safety, Suitability, Cost.</div></details>
+        <details class="flash-card"><summary>7. MOA belongs under?</summary><div>Efficacy.</div></details>
+        <details class="flash-card"><summary>8. Therapeutic index belongs under?</summary><div>Efficacy in the lecture’s table guidelines.</div></details>
+        <details class="flash-card"><summary>9. Adverse-effect seriousness belongs under?</summary><div>Safety.</div></details>
+        <details class="flash-card"><summary>10. Previous ADR belongs under?</summary><div>Suitability.</div></details>
+        <details class="flash-card"><summary>11. Current drug therapy belongs under?</summary><div>Suitability.</div></details>
+        <details class="flash-card"><summary>12. Once-daily dosing belongs under?</summary><div>Suitability.</div></details>
+        <details class="flash-card"><summary>13. Local availability belongs under?</summary><div>Suitability.</div></details>
+        <details class="flash-card"><summary>14. Cost means?</summary><div>Total treatment cost.</div></details>
+        <details class="flash-card"><summary>15. Score range?</summary><div>+ through ++++.</div></details>
+        <details class="flash-card"><summary>16. First scoring level?</summary><div>Drug groups.</div></details>
+        <details class="flash-card"><summary>17. Second scoring level?</summary><div>Specific drugs within the winning group.</div></details>
+        <details class="flash-card"><summary>18. Four adherence failures?</summary><div>Not obtaining, taking incorrectly, stopping early, inappropriate use.</div></details>
+        <details class="flash-card"><summary>19. Five prescription-order qualities?</summary><div>Legible, unambiguous, dated, timed when needed, clearly signed.</div></details>
+        <details class="flash-card"><summary>20. Required prescription name?</summary><div>Generic name.</div></details>
+        <details class="flash-card"><summary>21. License cited for controlled drugs?</summary><div>S-2 license.</div></details>
+        <details class="flash-card"><summary>22. Three treatment goals?</summary><div>Cure, relief, prevention.</div></details>
+        <details class="flash-card"><summary>23. Four treatment-strategy options?</summary><div>Advice and information, non-drug care, P-drug, referral.</div></details>
+        <details class="flash-card"><summary>24. Dehydration case winning group?</summary><div>ORS.</div></details>
+        <details class="flash-card"><summary>25. Dehydration case winning product?</summary><div>Glucolyte Plus.</div></details>
+        <details class="flash-card"><summary>26. Stable angina winning group?</summary><div>Nitrates.</div></details>
+        <details class="flash-card"><summary>27. Stable angina P-drug?</summary><div>Isosorbide dinitrate.</div></details>
+        <details class="flash-card"><summary>28. Urticaria winning group?</summary><div>Second-generation antihistamines.</div></details>
+        <details class="flash-card"><summary>29. Urticaria P-drug?</summary><div>Cetirizine.</div></details>
+        <details class="flash-card"><summary>30. Cetirizine figure dose?</summary><div>10 mg orally once daily for 7 days.</div></details>
+        <details class="flash-card"><summary>31. Six counseling domains?</summary><div>Effects, side effects, instructions, warnings, future consultation, confirmation of understanding.</div></details>
+        <details class="flash-card"><summary>32. Best final counseling check?</summary><div>Ask the patient to repeat the key information.</div></details>
+      </div>
+    </section>
+
+    <section id="cram-sheet" class="searchable" style="margin-top:18px">
+      <div class="cram-sheet">
+        <h2>Last-Minute 5-Minute Cram Sheet</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Core sequence</h3>
+            <p><strong>Diagnosis → goals → treatment selection → prescribe and counsel → monitor</strong></p>
+            <p>Treatment can be advice, non-drug care, P-drug, or referral.</p>
+          </div>
+          <div class="card">
+            <h3>ESSC in one line</h3>
+            <p><strong>E:</strong> Does it work?</p>
+            <p><strong>S:</strong> What harm can it cause?</p>
+            <p><strong>S:</strong> Does it fit this patient?</p>
+            <p><strong>C:</strong> What is the whole-course cost?</p>
+          </div>
+          <div class="card">
+            <h3>Scoring law</h3>
+            <p>Keep each fact in its own column.</p>
+            <p>Score <strong>groups first</strong>, then <strong>specific drugs</strong>.</p>
+            <p>Highest total wins.</p>
+          </div>
+          <div class="card">
+            <h3>Prescription safety</h3>
+            <p>Legible, unambiguous, dated, timed when needed, clearly signed.</p>
+            <p>Use the generic name.</p>
+          </div>
+          <div class="card">
+            <h3>Counseling checklist</h3>
+            <p>Effects, side effects, instructions, warnings, follow-up, teach-back.</p>
+          </div>
+          <div class="card">
+            <h3>Case winners</h3>
+            <p>Diarrhea: <strong>ORS → Glucolyte Plus</strong></p>
+            <p>Stable angina: <strong>Nitrates → Isosorbide dinitrate</strong></p>
+            <p>Urticaria: <strong>2nd-gen antihistamine → Cetirizine</strong></p>
+          </div>
+        </div>
+        <div class="callout" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);margin-bottom:0">
+          <strong>Ultimate exam cue:</strong> Rational prescribing is not “pick a drug.” It is a patient-specific, evidence-based sequence that ends with counseling and monitoring.
+        </div>
+        <div class="page-ref" style="margin-top:9px">Condensed from pages 1–8. No new information introduced.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>Source basis:</strong> Rational Drug Therapy / Ethical Consideration in Drug Prescribing V1, Dr. Ma. Angeles Marbella, July 14, 2026. This reviewer follows the lecture’s terminology and examples. Prescription examples are reproduced only for course review.
+  </footer>
+
+  <button id="backToTop" type="button" aria-label="Back to top">↑</button>
+
+  <script>
+    (() => {
+      const storageKey = 'rationalDrugTherapyCramProgressV1';
+      const topics = [...document.querySelectorAll('details.topic')];
+      const checks = [...document.querySelectorAll('.progress-check')];
+      const progressText = document.getElementById('progressText');
+      const progressFill = document.getElementById('progressFill');
+      const mustButton = document.getElementById('mustOnly');
+      const searchInput = document.getElementById('searchInput');
+      const searchEmpty = document.getElementById('searchEmpty');
+      let mustOnly = false;
+
+      function loadProgress() {
+        let saved = {};
+        try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (error) { saved = {}; }
+        checks.forEach(check => { check.checked = Boolean(saved[check.dataset.progressId]); });
+        updateProgress();
+      }
+
+      function saveProgress() {
+        const saved = {};
+        checks.forEach(check => { saved[check.dataset.progressId] = check.checked; });
+        try { localStorage.setItem(storageKey, JSON.stringify(saved)); } catch (error) {}
+        updateProgress();
+      }
+
+      function updateProgress() {
+        const done = checks.filter(check => check.checked).length;
+        const pct = checks.length ? Math.round((done / checks.length) * 100) : 0;
+        progressText.textContent = pct + '%';
+        progressFill.style.width = pct + '%';
+      }
+
+      function applyFilters() {
+        document.querySelectorAll('.priority-should, .priority-nice').forEach(el => {
+          el.classList.toggle('hidden-by-filter', mustOnly);
+        });
+
+        const query = searchInput.value.trim().toLowerCase();
+        let visibleCount = 0;
+        document.querySelectorAll('.searchable').forEach(el => {
+          const matches = !query || el.textContent.toLowerCase().includes(query);
+          el.classList.toggle('hidden-by-search', !matches);
+          if (matches) visibleCount += 1;
+        });
+        if (query) {
+          topics.forEach(topic => {
+            if (!topic.classList.contains('hidden-by-search')) topic.open = true;
+          });
+        }
+        searchEmpty.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+
+      checks.forEach(check => check.addEventListener('change', saveProgress));
+
+      document.getElementById('expandAll').addEventListener('click', () => {
+        topics.forEach(topic => { if (!topic.classList.contains('hidden-by-search')) topic.open = true; });
+      });
+
+      document.getElementById('collapseAll').addEventListener('click', () => {
+        topics.forEach(topic => { topic.open = false; });
+      });
+
+      mustButton.addEventListener('click', () => {
+        mustOnly = !mustOnly;
+        mustButton.classList.toggle('active', mustOnly);
+        mustButton.setAttribute('aria-pressed', String(mustOnly));
+        mustButton.textContent = mustOnly ? 'Showing must-know' : 'Must-know only';
+        applyFilters();
+      });
+
+      searchInput.addEventListener('input', applyFilters);
+
+      document.getElementById('resetProgress').addEventListener('click', () => {
+        checks.forEach(check => { check.checked = false; });
+        try { localStorage.removeItem(storageKey); } catch (error) {}
+        updateProgress();
+      });
+
+      document.getElementById('printReviewer').addEventListener('click', () => {
+        topics.forEach(topic => { topic.open = true; });
+        window.print();
+      });
+
+      const backToTop = document.getElementById('backToTop');
+      window.addEventListener('scroll', () => {
+        backToTop.classList.toggle('show', window.scrollY > 650);
+      }, { passive: true });
+      backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      loadProgress();
+      applyFilters();
+    })();
+  </script>
+</body>
+</html>

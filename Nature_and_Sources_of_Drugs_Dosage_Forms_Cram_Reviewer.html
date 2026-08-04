@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="High-yield cramming reviewer for Nature and Sources of Drugs and Dosage Forms">
+<title>Nature and Sources of Drugs & Dosage Forms — Cram Reviewer</title>
+<style>
+  :root {
+    --ink: #172433;
+    --muted: #5d6b78;
+    --line: #d8e0e7;
+    --paper: #f7f9fb;
+    --card: #ffffff;
+    --navy: #164d70;
+    --blue: #dceef8;
+    --blue-strong: #8dc4e5;
+    --must: #ffe4a8;
+    --must-ink: #734d00;
+    --should: #dff1e7;
+    --should-ink: #245e3c;
+    --nice: #ece8fa;
+    --nice-ink: #514083;
+    --trap: #fff0ee;
+    --trap-ink: #8b2f24;
+    --confuse: #fff7d9;
+    --focus: #0c6e9e;
+    --shadow: 0 5px 18px rgba(20, 47, 68, .08);
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--paper);
+    font-family: "DM Sans", "Aptos", "Segoe UI", Arial, sans-serif;
+    line-height: 1.52;
+  }
+  a { color: var(--navy); }
+  button, input { font: inherit; }
+  button { cursor: pointer; }
+  strong { color: #0d2738; }
+
+  .mono, .badge, .page-ref, .progress-label, .eyebrow, .tiny {
+    font-family: "Space Mono", "Cascadia Mono", Consolas, monospace;
+  }
+  h1, h2, h3, h4, summary {
+    font-family: "Syne", "Arial Black", "Segoe UI", sans-serif;
+    letter-spacing: -.02em;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: rgba(255,255,255,.97);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(12px);
+  }
+  .header-inner {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) auto;
+    gap: 18px;
+    align-items: center;
+  }
+  .eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: center;
+    color: var(--navy);
+    font-weight: 800;
+    font-size: .76rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  h1 {
+    margin: 2px 0 0;
+    font-size: clamp(1.15rem, 2.3vw, 1.9rem);
+    line-height: 1.12;
+  }
+  .header-actions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .btn {
+    border: 1px solid #bdcad4;
+    background: white;
+    color: var(--ink);
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-weight: 750;
+    font-size: .84rem;
+  }
+  .btn:hover, .btn:focus-visible { border-color: var(--focus); box-shadow: 0 0 0 3px rgba(12,110,158,.12); }
+  .btn.primary { background: var(--navy); color: white; border-color: var(--navy); }
+  .btn.active { background: #fff1be; border-color: #b48000; color: #684800; }
+
+  .layout {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 18px 20px 70px;
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 20px;
+  }
+  .sidebar {
+    position: sticky;
+    top: 85px;
+    align-self: start;
+    max-height: calc(100vh - 105px);
+    overflow: auto;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    box-shadow: var(--shadow);
+  }
+  .sidebar h2 { font-size: .95rem; margin: 0 0 9px; }
+  .search-wrap { position: relative; }
+  #search {
+    width: 100%;
+    border: 1px solid #bdcad4;
+    border-radius: 10px;
+    padding: 9px 10px 9px 34px;
+    background: #fbfdff;
+  }
+  .search-icon { position: absolute; left: 10px; top: 8px; color: var(--muted); }
+  .search-note { min-height: 1.2em; margin: 5px 1px 10px; color: var(--muted); font-size: .74rem; }
+  .progress-box {
+    background: #eef6fa;
+    border: 1px solid #cce1ed;
+    border-radius: 11px;
+    padding: 10px;
+    margin: 10px 0;
+  }
+  .progress-row { display: flex; justify-content: space-between; gap: 8px; font-weight: 800; }
+  .progress-track { height: 8px; background: #d7e7ef; border-radius: 999px; overflow: hidden; margin-top: 8px; }
+  .progress-bar { width: 0; height: 100%; background: var(--navy); transition: width .2s ease; }
+  nav a {
+    display: block;
+    padding: 7px 8px;
+    margin: 2px 0;
+    border-radius: 8px;
+    color: #334653;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: .84rem;
+  }
+  nav a:hover { background: var(--blue); color: var(--navy); }
+  .legend { border-top: 1px solid var(--line); margin-top: 11px; padding-top: 10px; display: grid; gap: 6px; }
+
+  main { min-width: 0; }
+  .section {
+    scroll-margin-top: 88px;
+    margin-bottom: 18px;
+  }
+  .section-title {
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(1.3rem, 2vw, 1.75rem);
+  }
+  .section-number {
+    width: 35px;
+    height: 35px;
+    display: inline-grid;
+    place-items: center;
+    background: var(--navy);
+    color: white;
+    border-radius: 10px;
+    font-family: "Space Mono", monospace;
+    font-size: .86rem;
+  }
+  .scope {
+    color: var(--muted);
+    font-size: .88rem;
+    margin: 0 0 12px;
+  }
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .survival-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    counter-reset: facts;
+  }
+  .survival-item {
+    counter-increment: facts;
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 8px;
+    align-items: start;
+    border: 1px solid #dce5ec;
+    border-radius: 11px;
+    padding: 10px;
+    background: #fcfeff;
+  }
+  .survival-item::before {
+    content: counter(facts);
+    width: 25px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: var(--must);
+    color: var(--must-ink);
+    font-family: "Space Mono", monospace;
+    font-weight: 900;
+    font-size: .78rem;
+  }
+
+  .roadmap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 7px;
+  }
+  .road-step {
+    flex: 1 1 135px;
+    min-width: 125px;
+    background: #f5fbfe;
+    border: 1px solid #cce2ee;
+    border-radius: 11px;
+    padding: 10px;
+    text-align: center;
+    font-weight: 800;
+  }
+  .road-arrow { align-self: center; color: var(--navy); font-weight: 900; }
+
+  details.topic-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    overflow: clip;
+    scroll-margin-top: 90px;
+  }
+  details.topic-card > summary {
+    list-style: none;
+    padding: 13px 15px;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    background: #fbfdff;
+    cursor: pointer;
+  }
+  details.topic-card > summary::-webkit-details-marker { display: none; }
+  details.topic-card > summary::after { content: "＋"; font-size: 1.2rem; color: var(--navy); }
+  details.topic-card[open] > summary::after { content: "−"; }
+  .topic-title { font-size: 1.04rem; font-weight: 900; }
+  .topic-body { padding: 0 15px 16px; border-top: 1px solid var(--line); }
+  .topic-body h3 { font-size: 1rem; margin: 17px 0 7px; color: var(--navy); }
+  .topic-body h4 { font-size: .94rem; margin: 13px 0 5px; }
+  .topic-body p { margin: 7px 0; }
+  ul, ol { padding-left: 1.25rem; }
+  li { margin: 4px 0; }
+  .done-wrap { display: inline-flex; align-items: center; gap: 5px; font-family: "Space Mono", monospace; font-size: .72rem; color: var(--muted); }
+  .done-check { width: 17px; height: 17px; accent-color: var(--navy); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    border-radius: 999px;
+    padding: 3px 7px;
+    font-weight: 900;
+    font-size: .65rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .must { background: var(--must); color: var(--must-ink); }
+  .should { background: var(--should); color: var(--should-ink); }
+  .nice { background: var(--nice); color: var(--nice-ink); }
+  .trap { background: #ffd8d3; color: var(--trap-ink); }
+  .mechanism { background: var(--blue); color: var(--navy); }
+  .confusion { background: #fff0ad; color: #725300; }
+  .page-ref { font-size: .7rem; color: var(--muted); white-space: nowrap; }
+
+  .priority-block {
+    border-left: 4px solid transparent;
+    padding: 10px 11px;
+    margin: 9px 0;
+    border-radius: 0 10px 10px 0;
+  }
+  .priority-must { border-left-color: #d59900; background: #fffbef; }
+  .priority-should { border-left-color: #3d9160; background: #f4fbf7; }
+  .priority-nice { border-left-color: #7866ad; background: #faf8ff; }
+
+  .callout {
+    border: 1px solid #d6e2e9;
+    border-radius: 11px;
+    padding: 11px 12px;
+    margin: 10px 0;
+    background: #f8fcfe;
+  }
+  .callout.trap-box { background: var(--trap); border-color: #f0c8c3; }
+  .callout.confuse-box { background: var(--confuse); border-color: #ead996; }
+  .callout.note-box { background: #f5f2ff; border-color: #dcd3f2; }
+  .callout-title { font-family: "Space Mono", monospace; font-weight: 900; font-size: .76rem; text-transform: uppercase; margin-bottom: 4px; }
+
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: stretch;
+    max-width: 760px;
+    margin: 10px auto;
+  }
+  .flow-box {
+    border: 1px solid #bdd8e6;
+    background: #f6fcff;
+    border-radius: 10px;
+    padding: 9px 11px;
+    text-align: center;
+    font-weight: 800;
+  }
+  .flow-arrow { text-align: center; color: var(--navy); font-size: 1.25rem; line-height: 1; }
+  .branch-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin: 10px 0; }
+  .branch { border: 1px solid #cadbe4; border-radius: 10px; padding: 10px; background: #fbfdff; }
+  .branch h4 { margin: 0 0 5px; color: var(--navy); }
+
+  .table-wrap { overflow-x: auto; margin: 9px 0 14px; border: 1px solid var(--line); border-radius: 11px; }
+  table { width: 100%; border-collapse: collapse; min-width: 650px; background: white; }
+  th { background: #dceef8; color: #123e57; text-align: left; font-size: .8rem; }
+  th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td { font-size: .87rem; }
+  td ul { margin: 0; }
+  .compact td, .compact th { padding: 7px 8px; }
+  .two-col { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+  .three-col { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+
+  .recall {
+    background: #f8fbfd;
+    border: 1px dashed #9dbccd;
+    border-radius: 11px;
+    padding: 11px;
+    margin-top: 13px;
+  }
+  .recall > h3 { margin-top: 0; }
+  .qa { border-top: 1px solid #dce5eb; padding: 8px 0; }
+  .qa:first-of-type { border-top: 0; }
+  .qa > summary { cursor: pointer; font-family: inherit; font-weight: 800; color: #193e53; }
+  .answer { margin: 7px 0 0; padding: 8px 10px; background: white; border-radius: 8px; border-left: 3px solid var(--navy); }
+
+  .rapid-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .rapid-grid .qa { border: 1px solid var(--line); border-radius: 10px; padding: 9px; background: white; }
+  .cram-sheet { border: 2px solid var(--navy); background: #fff; }
+  .cram-sheet h3 { color: var(--navy); }
+  .cram-columns { columns: 2 340px; column-gap: 24px; }
+  .cram-block { break-inside: avoid; margin: 0 0 13px; }
+
+  .back-top {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--navy);
+    color: white;
+    box-shadow: var(--shadow);
+    font-size: 1.2rem;
+    display: none;
+  }
+  .back-top.show { display: block; }
+  .hidden-by-search { display: none !important; }
+  body.must-only .priority-should,
+  body.must-only .priority-nice,
+  body.must-only .badge.should,
+  body.must-only .badge.nice { display: none !important; }
+  body.must-only [data-priority="should"],
+  body.must-only [data-priority="nice"] { display: none !important; }
+  .no-results { display: none; padding: 18px; text-align: center; color: var(--muted); }
+
+  @media (max-width: 1000px) {
+    .header-inner { grid-template-columns: 1fr; }
+    .header-actions { justify-content: flex-start; }
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; max-height: none; }
+    nav { display: flex; overflow-x: auto; gap: 4px; padding-bottom: 4px; }
+    nav a { white-space: nowrap; border: 1px solid var(--line); }
+    .branch-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+  @media (max-width: 700px) {
+    .header-inner, .layout { padding-left: 11px; padding-right: 11px; }
+    .header-actions { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .btn { width: 100%; }
+    .survival-grid, .two-col, .three-col, .rapid-grid { grid-template-columns: 1fr; }
+    .branch-grid { grid-template-columns: 1fr; }
+    details.topic-card > summary { grid-template-columns: auto 1fr auto; }
+    details.topic-card > summary .page-ref { grid-column: 2; }
+    .cram-columns { columns: 1; }
+  }
+
+  @media print {
+    @page { margin: 12mm; }
+    body { background: white; font-size: 10.2pt; }
+    .topbar { position: static; border: 0; }
+    .header-actions, .sidebar, .back-top, .done-wrap { display: none !important; }
+    .layout { display: block; padding: 0; }
+    .header-inner { padding: 0 0 10px; }
+    details.topic-card { break-inside: avoid; box-shadow: none; }
+    details.topic-card:not([open]) > .topic-body { display: block; }
+    details.topic-card > summary::after { display: none; }
+    .panel, details.topic-card { box-shadow: none; }
+    .section { break-inside: auto; }
+    .table-wrap { overflow: visible; }
+    table { min-width: 0; }
+    .qa .answer { display: block; }
+  }
+</style>
+</head>
+<body>
+<a id="top"></a>
+<header class="topbar">
+  <div class="header-inner">
+    <div>
+      <div class="eyebrow"><span class="badge must">Cramming Mode</span><span>6-page lesson</span><span>Overview → nature → sources → dosage forms → route trade-offs</span></div>
+      <h1>Nature and Sources of Drugs &amp; Dosage Forms</h1>
+    </div>
+    <div class="header-actions" aria-label="Reviewer controls">
+      <button class="btn" id="expandAll">Expand all</button>
+      <button class="btn" id="collapseAll">Collapse all</button>
+      <button class="btn" id="mustOnly">Show only must-know</button>
+      <button class="btn" id="resetProgress">Reset progress</button>
+      <button class="btn primary" id="printReviewer">Print reviewer</button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h2>Find a fact fast</h2>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input id="search" type="search" placeholder="Search terms, examples, routes…" aria-label="Search reviewer">
+    </div>
+    <div class="search-note" id="searchNote">Search filters major cards and tables.</div>
+    <div class="progress-box">
+      <div class="progress-row"><span class="progress-label">TOPIC PROGRESS</span><span id="progressText">0%</span></div>
+      <div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+    </div>
+    <nav aria-label="Lesson navigation">
+      <a href="#survival">If You Only Remember These</a>
+      <a href="#roadmap">Lesson Roadmap</a>
+      <a href="#overview">1. Overview</a>
+      <a href="#nature">2. Nature of Drugs</a>
+      <a href="#sources">3. Sources of Drugs</a>
+      <a href="#natural-vs-synthetic">4. Natural vs Synthetic</a>
+      <a href="#selection-routes">5. Selection &amp; Routes</a>
+      <a href="#solid-forms">6. Solid Forms</a>
+      <a href="#semi-liquid">7. Semi-solid &amp; Liquid</a>
+      <a href="#route-tradeoffs">8. Route Trade-offs</a>
+      <a href="#confusions">Common Confusions</a>
+      <a href="#traps">Exam Traps</a>
+      <a href="#rapid">Rapid-Fire Recall</a>
+      <a href="#cram-sheet">5-Minute Cram Sheet</a>
+    </nav>
+    <div class="legend">
+      <span class="badge must">Must know</span>
+      <span class="badge should">Should know</span>
+      <span class="badge nice">Nice to know</span>
+    </div>
+  </aside>
+
+  <main id="content">
+    <section class="section searchable" id="survival">
+      <h2 class="section-title"><span class="section-number">★</span>If You Only Remember These</h2>
+      <div class="panel survival-grid">
+        <div class="survival-item"><div><strong>Drug</strong> means a substance that produces a biological change through chemical action. Uses in this lecture are <strong>prevention, diagnosis, and cure</strong>. <span class="page-ref">Page 1</span></div></div>
+        <div class="survival-item"><div><strong>Medicine</strong> is a chemical preparation intended to produce a therapeutic effect. It may contain an active drug plus excipients, stabilizers, and solvents. <span class="page-ref">Page 1</span></div></div>
+        <div class="survival-item"><div><strong>Active principle</strong> is the biologically active constituent in a crude animal or vegetable preparation. <span class="page-ref">Page 1</span></div></div>
+        <div class="survival-item"><div><strong>Active ingredient</strong> is the substance in a finished product that directly supplies pharmacologic activity. Generic labeling identifies it. <span class="page-ref">Page 1</span></div></div>
+        <div class="survival-item"><div><strong>Excipients are inactive</strong> but may add bulk, aid manufacturing, protect the drug, improve absorption, or support sustained release. <span class="page-ref">Page 2</span></div></div>
+        <div class="survival-item"><div>Most drugs in the lecture have molecular weights between <strong>100 and 1000</strong>. Very large drugs may need carriers or direct delivery into the compartment of action. <span class="page-ref">Page 2</span></div></div>
+        <div class="survival-item"><div>Selective binding depends on a drug’s <strong>shape, charge, and other unique properties</strong>. The lecture’s review question says merely being organic does not enable selective binding. <span class="page-ref">Pages 2, 6</span></div></div>
+        <div class="survival-item"><div>More than half of useful drugs are described as <strong>chiral</strong>. One enantiomer may fit the receptor better and be more potent. <span class="page-ref">Page 2</span></div></div>
+        <div class="survival-item"><div>Natural sources are <strong>plants, animals, microorganisms, and minerals</strong>. Plants are identified as the most prevalent natural source. <span class="page-ref">Pages 2–3</span></div></div>
+        <div class="survival-item"><div><strong>Synthetic</strong> drugs begin from materials not found in nature. <strong>Semi-synthetic</strong> drugs chemically modify a natural starting material. <span class="page-ref">Page 3</span></div></div>
+        <div class="survival-item"><div><strong>Radiopharmaceuticals</strong> are radioactive substances used for diagnosis or treatment, such as radioactive iodine, technetium, and iridium-192. <span class="page-ref">Page 3</span></div></div>
+        <div class="survival-item"><div>Dosage-form selection considers <strong>pharmacokinetics, pharmacodynamics, age, sex, disease severity, duration, response, and comorbidities</strong>. <span class="page-ref">Page 3</span></div></div>
+        <div class="survival-item"><div><strong>IV is the gold standard</strong> in the lecture because it has <strong>100% bioavailability</strong>. It is rapid but invasive and hard to reverse after an overdose. <span class="page-ref">Pages 3, 5</span></div></div>
+        <div class="survival-item"><div><strong>Oral</strong> is safest, most convenient, and most economical, but first-pass metabolism and variable absorption matter. It is too slow for emergencies. <span class="page-ref">Pages 3, 5–6</span></div></div>
+        <div class="survival-item"><div><strong>Infusion</strong> uses hot or cold water. <strong>Decoction</strong> boils the plant or herb in water. <span class="page-ref">Pages 5–6</span></div></div>
+        <div class="survival-item"><div><strong>Suspension</strong> has solid particles dispersed in water and must be shaken. <strong>Emulsion</strong> disperses minute liquid droplets in another fluid. <span class="page-ref">Pages 4–5</span></div></div>
+      </div>
+    </section>
+
+    <section class="section searchable" id="roadmap">
+      <h2 class="section-title"><span class="section-number">→</span>Lesson Roadmap</h2>
+      <div class="panel roadmap" aria-label="Lesson sequence">
+        <div class="road-step">What is a drug or medicine?</div><div class="road-arrow">→</div>
+        <div class="road-step">What makes it active?</div><div class="road-arrow">→</div>
+        <div class="road-step">What are drugs made like?</div><div class="road-arrow">→</div>
+        <div class="road-step">Where do drugs come from?</div><div class="road-arrow">→</div>
+        <div class="road-step">Natural vs synthetic</div><div class="road-arrow">→</div>
+        <div class="road-step">Which dosage form and route?</div><div class="road-arrow">→</div>
+        <div class="road-step">Advantages and disadvantages</div>
+      </div>
+    </section>
+
+    <section class="section" id="overview">
+      <h2 class="section-title"><span class="section-number">1</span>Overview: Drug, Medicine, Active Components</h2>
+
+      <details class="topic-card searchable" open data-topic="overview-definitions">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Core definitions and the drug–medicine distinction</span>
+          <span class="page-ref">Page 1</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="overview-definitions">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="table-wrap">
+            <table class="compact">
+              <thead><tr><th>Term</th><th>Lecture meaning</th><th>Fast exam clue</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Drug</strong></td><td>A substance of known structure that produces a biological effect when administered. It changes biological function through chemical action.</td><td>Think <strong>biological effect</strong>.</td></tr>
+                <tr><td><strong>Medicine</strong></td><td>A chemical preparation administered with the intention of producing a therapeutic effect. It usually, but not necessarily, contains one or more drugs.</td><td>Think <strong>finished preparation for therapy</strong>.</td></tr>
+                <tr><td><strong>Active principle</strong></td><td>The specific chemical constituent in a crude animal or vegetable preparation that causes its biological activity.</td><td>Think <strong>active part of the crude source</strong>.</td></tr>
+                <tr><td><strong>Active ingredient</strong></td><td>The substance or combination in a finished pharmaceutical product that directly produces pharmacologic activity in diagnosis, cure, mitigation, treatment, prevention, or modification of physiological function.</td><td>Think <strong>active part of the finished product</strong>.</td></tr>
+                <tr><td><strong>Excipient</strong></td><td>An inactive substance formulated alongside the active ingredient for bulk, manufacturing, protection, delivery, or convenience.</td><td>Think <strong>inactive but useful</strong>.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="priority-block priority-must">
+            <span class="badge must">Must know</span>
+            <ul>
+              <li>Drug uses in this lecture are <strong>prevention</strong> (vaccines), <strong>diagnosis</strong> (contrast materials and radiopharmaceutical contrast), and <strong>cure</strong> (antibiotics that eliminate a causative agent).</li>
+              <li>An endogenous substance such as <strong>insulin or thyroxine</strong> becomes a drug when it is administered intentionally or exogenously.</li>
+              <li>A drug can be useful outside clinical treatment. The lecture uses <strong>methicillin</strong> as a research or diagnostic tool for determining microbial sensitivity or resistance.</li>
+            </ul>
+          </div>
+
+          <div class="callout confuse-box">
+            <div class="callout-title">Common confusion</div>
+            <strong>Active principle</strong> belongs to the crude natural preparation. <strong>Active ingredient</strong> belongs to the finished pharmaceutical product. The product label example on page 1 separates active and inactive ingredients.
+          </div>
+
+          <div class="recall">
+            <h3><span class="badge mechanism">Recall check</span> Definitions</h3>
+            <details class="qa"><summary>What makes insulin count as a drug in this lecture?</summary><div class="answer">It counts as a drug when it is intentionally administered exogenously rather than released by normal physiology.</div></details>
+            <details class="qa"><summary>What is the quickest distinction between an active principle and an active ingredient?</summary><div class="answer">Active principle is the biologically active constituent of a crude preparation. Active ingredient is the active substance in the finished product.</div></details>
+            <details class="qa"><summary>What three uses of drugs are listed?</summary><div class="answer">Prevention, diagnosis, and cure.</div></details>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic-card searchable" open data-topic="active-principle-process">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">How an active principle becomes a drug or medicine</span>
+          <span class="page-ref">Page 1</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="active-principle-process">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="flow" aria-label="Active principle development sequence">
+            <div class="flow-box">Identify the active ingredient or ingredients</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Analyze biological effects (pharmacodynamics) and fate in the body (pharmacokinetics)</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Establish a precise and constant dose for the chemically pure constituent</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Enable chemical synthesis and structure–activity analysis</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">Create derivatives with optimized pharmacologic properties or improved therapeutic usefulness</div>
+          </div>
+          <div class="callout note-box"><div class="callout-title">Lecture example</div>A natural form effective at 10 mg and a synthesized derivative effective at 2 mg illustrates greater potency of the derivative.</div>
+        </div>
+      </details>
+
+      <details class="topic-card searchable" data-topic="excipients">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Excipients master table</span>
+          <span class="page-ref">Page 2</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="excipients">done</label>
+        </summary>
+        <div class="topic-body">
+          <p><strong>Core idea:</strong> Excipients are pharmacologically inactive in the lecture, but they can influence manufacture, product uniformity, absorption, release, stability, identification, and ease of use.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Excipient type</th><th>Main function in the lecture</th><th>Examples given</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Antiadherents</strong></td><td>Prevent ingredients from adhering to punches and dies during manufacture.</td><td>Magnesium stearate</td></tr>
+                <tr><td><strong>Binders</strong></td><td>Allow tablet granulation to bind or hold together.</td><td>Saccharides, sorbitol, gelatin, PEG</td></tr>
+                <tr><td><strong>Coatings</strong></td><td>Protect drugs against gastric acid, enzymes, and similar threats.</td><td>Sugar coating</td></tr>
+                <tr><td><strong>Disintegrants</strong></td><td>Promote breakdown into smaller particles to facilitate dissolution.</td><td>CMC, sodium starch glycolate</td></tr>
+                <tr><td><strong>Fillers</strong></td><td>Increase bulk to an appropriate size.</td><td>Lactose, sucrose, glucose, mannitol, sorbitol, calcium carbonate, magnesium stearate</td></tr>
+                <tr><td><strong>Coloring agents</strong></td><td>Aid identification and improve attractiveness, especially with flavors or sweeteners for children.</td><td>The lecture gives the use rather than a named chemical.</td></tr>
+                <tr><td><strong>Lubricants</strong></td><td>Reduce friction during tablet production.</td><td>Talc, silica, fats, stearic acid</td></tr>
+                <tr><td><strong>Preservatives</strong></td><td>Prolong product quality and protect against contamination.</td><td>Vitamins A, C, E, selenium, citric acid, sodium citrate</td></tr>
+                <tr><td><strong>Flavor or sweeteners</strong></td><td>Make oral preparations easier to administer, especially in children.</td><td>Used in chewable tablets and syrup</td></tr>
+                <tr><td><strong>Sorbents</strong></td><td colspan="2">The table lists this category but does not supply a function or example.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout trap-box"><div class="callout-title">Exam trap</div>An excipient can have <strong>more than one function</strong>. The lecture uses magnesium stearate as an example that can serve in more than one excipient role.</div>
+          <div class="recall">
+            <h3><span class="badge mechanism">Recall check</span> Excipients</h3>
+            <details class="qa"><summary>Which excipient promotes tablet breakup and dissolution?</summary><div class="answer">A disintegrant.</div></details>
+            <details class="qa"><summary>Which excipient reduces friction during tablet production?</summary><div class="answer">A lubricant.</div></details>
+            <details class="qa"><summary>Why are potent active ingredients commonly mixed with fillers?</summary><div class="answer">To add bulk and produce a practical dosage size.</div></details>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="nature">
+      <h2 class="section-title"><span class="section-number">2</span>Nature of Drugs: Composition, Size, Shape, Chirality</h2>
+
+      <details class="topic-card searchable" open data-topic="nature-size-shape">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Two groups, drug size, and selective binding</span>
+          <span class="page-ref">Page 2</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="nature-size-shape">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="two-col">
+            <div class="priority-block priority-must">
+              <span class="badge must">Must know</span>
+              <h3>Two general groups</h3>
+              <ul>
+                <li><strong>Organic compounds:</strong> carbohydrates, proteins, lipids, and smaller molecules.</li>
+                <li><strong>Inorganic elements:</strong> lithium, iron, and heavy metals.</li>
+              </ul>
+            </div>
+            <div class="priority-block priority-must">
+              <span class="badge must">Must know</span>
+              <h3>Selective receptor binding</h3>
+              <ul>
+                <li>The molecule must be sufficiently unique in <strong>shape, charge, and other properties</strong>.</li>
+                <li>Drug shape should be <strong>complementary to the receptor site</strong>.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="compact">
+              <thead><tr><th>Size category</th><th>Lecture example</th><th>Implication</th></tr></thead>
+              <tbody>
+                <tr><td>Very small</td><td>Lithium ion, MW 7</td><td>At the low end of the size range.</td></tr>
+                <tr><td>Typical</td><td>Most drugs, MW 100–1000</td><td>The main range emphasized in the lecture.</td></tr>
+                <tr><td>Large</td><td>Above MW 1000</td><td>Do not diffuse readily between body compartments. May need carriers, transporters, or additional formulations and excipients.</td></tr>
+                <tr><td>Very large, protein-based</td><td>Alteplase t-PA, MW 50,050</td><td>Often delivered directly into the compartment of action, such as IV or intra-arterial delivery into the vascular compartment.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout trap-box"><div class="callout-title">Exam trap from the lecture review</div><strong>Presence of organic compounds</strong> is not the property that enables selective receptor binding. The tested properties are molecular weight, chirality, and charge.</div>
+        </div>
+      </details>
+
+      <details class="topic-card searchable" data-topic="chirality" data-priority="should">
+        <summary>
+          <span class="badge should">Should know</span>
+          <span class="topic-title">Chirality and potency</span>
+          <span class="page-ref">Page 2</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="chirality">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="priority-block priority-should">
+            <ul>
+              <li>More than half of useful drugs are described as <strong>chiral molecules</strong>.</li>
+              <li>Chiral molecules may exist as <strong>enantiomeric pairs</strong>.</li>
+              <li>A drug with two asymmetric centers can have four <strong>diastereomers</strong>. The lecture figure uses ephedrine.</li>
+              <li>One enantiomer may be much more potent because it fits the receptor better.</li>
+              <li>The lecture uses <strong>dextroamphetamine</strong> as an example and states a 10-fold potency difference.</li>
+              <li><strong>Dextro = right</strong>. <strong>Levo = left</strong>.</li>
+            </ul>
+          </div>
+          <div class="callout note-box"><div class="callout-title">What to notice in the figures</div>Page 2 pairs mirror-image hands with molecular structures to show that mirror-image forms are not superimposable and may interact differently with a receptor.</div>
+          <div class="recall">
+            <h3><span class="badge mechanism">Recall check</span> Chirality</h3>
+            <details class="qa"><summary>Why can one enantiomer be more potent than its mirror image?</summary><div class="answer">It may fit the receptor molecule better.</div></details>
+            <details class="qa"><summary>What do dextro and levo indicate?</summary><div class="answer">Dextro indicates right. Levo indicates left.</div></details>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="sources">
+      <h2 class="section-title"><span class="section-number">3</span>Sources of Drugs</h2>
+
+      <details class="topic-card searchable" open data-topic="natural-sources">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Natural sources: plants, animals, microorganisms, minerals</span>
+          <span class="page-ref">Pages 2–3</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="natural-sources">done</label>
+        </summary>
+        <div class="topic-body">
+          <p>Natural products can serve as <strong>patterns or templates</strong> for synthetic versions.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Natural source</th><th>Core idea</th><th>Examples in the lecture</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Plants</strong></td><td>Most prevalent natural drug source. Plants or plant parts may have therapeutic or toxic effects.</td><td>
+                  <ul>
+                    <li>Alkaloids: atropine, vinblastine, vincristine, quinine, colchicine, morphine</li>
+                    <li>Morphine from <em>Papaver somniferum</em></li>
+                    <li>Atropine from <em>Atropa belladonna</em></li>
+                    <li>Quinine from <em>Cinchona</em> bark</li>
+                    <li>Glycosides: digoxin, ouabain</li>
+                    <li>Digoxin from <em>Digitalis purpurea</em></li>
+                    <li>Salicin from willow tree</li>
+                    <li>Oils: castor, olive, peppermint, spearmint</li>
+                    <li>Gums and resins: latex</li>
+                  </ul>
+                </td></tr>
+                <tr><td><strong>Animals</strong></td><td>Hormones and substances were extracted from organs before biotechnology and genetic engineering became available.</td><td>
+                  <ul>
+                    <li>Lanolin from sebaceous glands of wool-bearing animals</li>
+                    <li>Insulin from pancreatic β-cells</li>
+                    <li>Oxytocin and vasopressin associated with the supraoptic and paraventricular nuclei</li>
+                    <li>Heparin as a liver extract</li>
+                    <li>Cyanocobalamin from animal liver</li>
+                  </ul>
+                </td></tr>
+                <tr><td><strong>Microorganisms</strong></td><td>Major source of antimicrobials and a platform for biotechnology.</td><td>
+                  <ul>
+                    <li>Penicillin from <em>Penicillium chrysogenum</em></li>
+                    <li>Streptomycin from <em>Streptomyces griseus</em></li>
+                    <li>Chloramphenicol from <em>Streptomyces venezuelae</em></li>
+                    <li>Erythromycin, formerly called Ilotycin before patenting, linked to its discovery in Iloilo</li>
+                    <li>Genetically modified <em>E. coli</em> to produce insulin</li>
+                  </ul>
+                </td></tr>
+                <tr><td><strong>Minerals</strong></td><td>Inorganic substances used mainly for nutritional purposes or selected pathologic conditions.</td><td>
+                  <ul>
+                    <li>Ferrous sulfate for iron deficiency anemia</li>
+                    <li>Calcium for treatment and prevention of osteoporosis</li>
+                    <li>Magnesium sulfate as a laxative</li>
+                    <li>Magnesium trisilicate as an antacid</li>
+                    <li>Zinc sulfate</li>
+                  </ul>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="priority-block priority-nice" data-priority="nice">
+            <span class="badge nice">Nice to know</span>
+            <p>The lecture states that there are 500,000 natural products, 160,000 products in worldwide use, and that half of 100,000 newly studied metabolites are from plants.</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic-card searchable" open data-topic="synthetic-semisynthetic-radio">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Synthetic, semi-synthetic, and radiopharmaceutical sources</span>
+          <span class="page-ref">Page 3</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="synthetic-semisynthetic-radio">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="three-col">
+            <div class="priority-block priority-must">
+              <span class="badge must">Synthetic</span>
+              <p>Made from starting materials <strong>not found in nature</strong>. The lecture says they can be inexpensive and mass-produced.</p>
+              <p><strong>Examples:</strong> aspirin, sulfonamide, pethidine, procaine, methotrexate.</p>
+            </div>
+            <div class="priority-block priority-must">
+              <span class="badge must">Semi-synthetic</span>
+              <p>Natural starting material is <strong>chemically modified</strong> to change structure, effects, or actions.</p>
+              <p><strong>Example:</strong> ampicillin is described as a modified natural penicillin with broader coverage or spectrum.</p>
+            </div>
+            <div class="priority-block priority-must">
+              <span class="badge must">Radiopharmaceutical</span>
+              <p>Radioactive substance used for <strong>diagnosis or treatment</strong>.</p>
+              <p><strong>Examples:</strong> radioactive iodine, technetium, iridium-192.</p>
+            </div>
+          </div>
+          <div class="flow">
+            <div class="flow-box">Natural starting material</div><div class="flow-arrow">↓ chemical modification</div><div class="flow-box">Semi-synthetic drug with enhanced effect or different action</div>
+          </div>
+          <div class="recall">
+            <h3><span class="badge mechanism">Recall check</span> Drug sources</h3>
+            <details class="qa"><summary>Ampicillin belongs to which source category in the lecture?</summary><div class="answer">Semi-synthetic.</div></details>
+            <details class="qa"><summary>What is the key starting-material distinction between synthetic and semi-synthetic drugs?</summary><div class="answer">Synthetic drugs start from materials not found in nature. Semi-synthetic drugs chemically modify a natural starting material.</div></details>
+            <details class="qa"><summary>Which radiopharmaceutical is placed inside or near a tumor?</summary><div class="answer">Iridium-192.</div></details>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="natural-vs-synthetic">
+      <h2 class="section-title"><span class="section-number">4</span>Natural vs Synthetic Drugs</h2>
+      <details class="topic-card searchable" open data-topic="natural-synthetic-compare">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Advantages and disadvantages</span>
+          <span class="page-ref">Page 3</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="natural-synthetic-compare">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Feature</th><th>Natural drugs</th><th>Synthetic drugs</th><th>Exam clue</th></tr></thead>
+              <tbody>
+                <tr><td>Structural character</td><td>More structural diversity, novelty, and complexity. May interact with proteins and other biological molecules.</td><td>Lecture states fewer therapeutic effects compared with natural drugs.</td><td><strong>Natural = more diverse and complex</strong></td></tr>
+                <tr><td>Production</td><td>More time-consuming. May depend on seasonal plant growth.</td><td>Less time-consuming, less costly, and mass-producible with less equipment.</td><td><strong>Synthetic = easier mass production</strong></td></tr>
+                <tr><td>Cost</td><td>More costly.</td><td>Less costly.</td><td><strong>Synthetic = cheaper in this table</strong></td></tr>
+                <tr><td>Sustainability</td><td>May be less sustainable, especially when an endangered animal is the source.</td><td>May be more sustainable.</td><td><strong>Synthetic = sustainability advantage</strong></td></tr>
+                <tr><td>Behavior or effects</td><td>May act differently when isolated from the source.</td><td>Many synthetic drugs may cause unacceptable side or adverse effects.</td><td>Know the lecture’s stated trade-off.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout trap-box"><div class="callout-title">Exam wording from the lecture</div>The review question asks which feature distinguishes synthetic drugs. The keyed answer is <strong>fewer therapeutic effects</strong>.</div>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="selection-routes">
+      <h2 class="section-title"><span class="section-number">5</span>Dosage-Form Selection and Routes of Administration</h2>
+
+      <details class="topic-card searchable" open data-topic="dosage-selection">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">What determines the dosage form?</span>
+          <span class="page-ref">Page 3</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="dosage-selection">done</label>
+        </summary>
+        <div class="topic-body">
+          <p><strong>Dosage form:</strong> the marketed form of a pharmaceutical product, usually combining active drug components with nondrug components such as excipients and other material such as a capsule shell.</p>
+          <div class="branch-grid">
+            <div class="branch"><h4>Pharmacokinetics</h4><p>Liberation → absorption → distribution → metabolism → excretion</p></div>
+            <div class="branch"><h4>Pharmacodynamics</h4><p>Effects in the body, mechanism of action, and concentration–effect relationship</p></div>
+            <div class="branch"><h4>Patient factors</h4><p>Age and sex</p></div>
+            <div class="branch"><h4>Disease factors</h4><p>Severity, duration, response, and comorbid conditions, including allergies to excipients</p></div>
+          </div>
+          <div class="callout note-box"><div class="callout-title">Clinical selection cue</div>The dosage form should match how aggressively the patient needs to be managed. The lecture’s review explicitly identifies comorbidity as a factor in dosage-form selection.</div>
+        </div>
+      </details>
+
+      <details class="topic-card searchable" open data-topic="routes-bioavailability">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Route classification and bioavailability chart</span>
+          <span class="page-ref">Page 3</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="routes-bioavailability">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="three-col">
+            <div class="priority-block priority-must"><h3>Enteral</h3><p>Oral, enteral nutrition through gastric or duodenal tubes, and rectal. <strong>PO = per orem = by mouth.</strong></p></div>
+            <div class="priority-block priority-must"><h3>Parenteral</h3><p>IV, IO, IM, intracerebral, intrathecal, SQ, intradermal, intra-articular, intravitreal, intraperitoneal. The lecture summarizes this as invasive.</p></div>
+            <div class="priority-block priority-must"><h3>Topical</h3><p>Dermal, transmucosal, and inhalational. Inhalational is classed as topical because it acts on respiratory mucosa.</p></div>
+          </div>
+          <div class="table-wrap">
+            <table class="compact">
+              <thead><tr><th>Route</th><th>Bioavailability in the chart</th><th>General characteristic</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Intravenous</strong></td><td>100% by definition</td><td>Most rapid onset</td></tr>
+                <tr><td><strong>Intramuscular</strong></td><td>75 to ≤100%</td><td>Large volumes often feasible. May be painful.</td></tr>
+                <tr><td><strong>Subcutaneous</strong></td><td>75 to ≤100%</td><td>Smaller volumes than IM. May be painful.</td></tr>
+                <tr><td><strong>Oral</strong></td><td>5 to &lt;100%</td><td>Most convenient. First-pass effect may be important.</td></tr>
+                <tr><td><strong>Rectal</strong></td><td>30 to &lt;100%</td><td>Less first-pass effect than oral.</td></tr>
+                <tr><td><strong>Inhalation</strong></td><td>5 to &lt;100%</td><td>Often very rapid onset.</td></tr>
+                <tr><td><strong>Transdermal</strong></td><td>80 to &lt;100%</td><td>Usually very slow absorption. Used to reduce first-pass effect and prolong duration.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout trap-box"><div class="callout-title">Exam traps</div><strong>IV</strong> is the lecture’s gold standard and has 100% bioavailability. <strong>PO</strong> is the route where first-pass metabolism is most significant in the review question.</div>
+          <div class="recall">
+            <h3><span class="badge mechanism">Recall check</span> Routes</h3>
+            <details class="qa"><summary>Which route has 100% bioavailability by definition?</summary><div class="answer">Intravenous.</div></details>
+            <details class="qa"><summary>Why does the lecture classify inhalational administration as topical?</summary><div class="answer">Because it acts on the mucosal layer of the respiratory tract.</div></details>
+            <details class="qa"><summary>Which route has the most important first-pass effect in the lecture review?</summary><div class="answer">Oral, PO.</div></details>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="solid-forms">
+      <h2 class="section-title"><span class="section-number">6</span>Solid Dosage Forms</h2>
+
+      <details class="topic-card searchable" open data-topic="tablets">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Tablets and tablet types</span>
+          <span class="page-ref">Page 4</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="tablets">done</label>
+        </summary>
+        <div class="topic-body">
+          <p>Tablets are disk-like solid forms made by mechanical compression. They may contain <strong>fillers, binders, disintegrants, and lubricants</strong>.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Tablet type</th><th>Defining feature</th><th>Fast recall</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Coated</strong></td><td>Drug core covered by a shell. Protects perishable drugs, masks taste or odor, facilitates swallowing, and permits color coding.</td><td>Core + protective shell</td></tr>
+                <tr><td><strong>Buccal</strong></td><td>Placed between the cheek and oral mucosa until dissolved.</td><td>Cheek</td></tr>
+                <tr><td><strong>Sublingual</strong></td><td>Placed under the tongue. Faster absorption than traditional oral forms. Lecture example: clonidine.</td><td>Under tongue, faster</td></tr>
+                <tr><td><strong>Scored</strong></td><td>Has a partition or groove for cutting, such as when half a tablet is prescribed.</td><td>Groove</td></tr>
+                <tr><td><strong>Multilayered</strong></td><td>Colors or stripes denote multiple ingredients. Some analgesic and cold combinations use this form.</td><td>Multiple ingredients</td></tr>
+                <tr><td><strong>Lozenge or pastille</strong></td><td>Taken like candy and allowed to dissolve in the mouth. Not swallowed whole.</td><td>Dissolve in mouth</td></tr>
+                <tr><td><strong>Effervescent</strong></td><td>Dissolved in a glass of water and produces a fizzing sound.</td><td>Fizz in water</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic-card searchable" data-topic="capsules-suppositories" data-priority="should">
+        <summary>
+          <span class="badge should">Should know</span>
+          <span class="topic-title">Capsules, spansules, and suppositories</span>
+          <span class="page-ref">Page 4</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="capsules-suppositories">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="two-col">
+            <div class="priority-block priority-should">
+              <h3>Capsules</h3>
+              <ul>
+                <li>Oblong casing, usually gelatin.</li>
+                <li>Contains a powdered or liquid medicinal form.</li>
+                <li><strong>Spansules</strong> use variably coated particles to allow gradual release in the gastrointestinal tract.</li>
+              </ul>
+            </div>
+            <div class="priority-block priority-should">
+              <h3>Suppositories</h3>
+              <ul>
+                <li>Firm-base mixture for insertion into body cavities.</li>
+                <li>Melts or dissolves at body temperature.</li>
+                <li>Routes listed: rectal, vaginal, urethral.</li>
+                <li>Example: vaginal metronidazole for vaginal infection.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="semi-liquid">
+      <h2 class="section-title"><span class="section-number">7</span>Semi-solid and Liquid Dosage Forms</h2>
+
+      <details class="topic-card searchable" open data-topic="semisolid-forms">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Topical semi-solid forms</span>
+          <span class="page-ref">Page 4</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="semisolid-forms">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="table-wrap">
+            <table class="compact">
+              <thead><tr><th>Form</th><th>Lecture description</th><th>Distinguishing clue</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Lotion</strong></td><td>Oil mixed with water, often with less alcohol than solutions. Thicker than solutions.</td><td>Thicker than solution, thinner than cream</td></tr>
+                <tr><td><strong>Cream</strong></td><td>Emulsion of oil and water in approximately equal portions.</td><td>Thicker than lotion</td></tr>
+                <tr><td><strong>Ointment</strong></td><td>Homogeneous, viscous, greasy semi-solid. Lecture ratio: oil 80%, water 20%. Used on skin or mucosa, moisturizing, occlusive, and able to keep a drug on the target longer.</td><td>Greasy and occlusive</td></tr>
+                <tr><td><strong>Gel</strong></td><td>Semi-solid emulsion in an alcohol base. The lecture states it melts at body temperature and tends to be drying.</td><td>Alcohol base, drying</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="priority-block priority-should" data-priority="should">Topical creams and ointments can be used for skin protection or care and for treatment, such as applying an antibacterial preparation to a lesion.</p>
+        </div>
+      </details>
+
+      <details class="topic-card searchable" open data-topic="liquid-forms">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Solutions, suspensions, emulsions, decoctions, infusions</span>
+          <span class="page-ref">Pages 4–5</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="liquid-forms">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Liquid form</th><th>What it contains or how it is prepared</th><th>Exam clue</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Solution</strong></td><td>A common liquid form. May be parenteral, syrup, alcoholic, aromatic water, gargle, nasal solution, decoction, or infusion. Formulation supports intended use, stability, and precision of dosing.</td><td>Dissolved medicinal or nonmedicinal ingredients</td></tr>
+                <tr><td><strong>Suspension</strong></td><td>Solid drug particles dispersed in water. May be oral or parenteral. Oral suspensions must be shaken. Many liquid antibiotics are reconstituted from powder.</td><td><strong>Solid in liquid, shake</strong></td></tr>
+                <tr><td><strong>Emulsion</strong></td><td>Minute droplets of a liquid agent or drug solution dispersed in another fluid, such as oil in water.</td><td><strong>Liquid droplets in liquid</strong></td></tr>
+                <tr><td><strong>Decoction</strong></td><td>Medicinal plants or herbs are boiled in water to extract the active ingredient.</td><td><strong>Boil</strong></td></tr>
+                <tr><td><strong>Infusion</strong></td><td>Hot or cold water is poured or used to extract active constituents.</td><td><strong>Hot or cold water, no boiling requirement stated</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout confuse-box"><div class="callout-title">Do not confuse</div><strong>Suspension</strong> is solid particles in water. <strong>Emulsion</strong> is liquid droplets in another fluid. <strong>Decoction</strong> boils the plant. <strong>Infusion</strong> uses hot or cold water.</div>
+          <div class="recall">
+            <h3><span class="badge mechanism">Recall check</span> Liquid forms</h3>
+            <details class="qa"><summary>Which form must be shaken because solid particles are dispersed in water?</summary><div class="answer">Suspension.</div></details>
+            <details class="qa"><summary>Which extraction method boils the plant?</summary><div class="answer">Decoction.</div></details>
+            <details class="qa"><summary>Which extraction method was the keyed answer for adding hot or cold water?</summary><div class="answer">Infusion.</div></details>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic-card searchable" data-topic="parenteral-preparations" data-priority="should">
+        <summary>
+          <span class="badge should">Should know</span>
+          <span class="topic-title">Parenteral preparations and depot formulations</span>
+          <span class="page-ref">Page 5</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="parenteral-preparations">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="priority-block priority-should">
+            <ul>
+              <li>Liquid preparations injected through IV, IM, or SQ routes.</li>
+              <li>Often supplied as sterile solutions or clear fluids. Some start as powders that need a diluent such as normal saline.</li>
+              <li>Sterile suspensions have solid crystalline particles and may be given IM, SQ, or intra-articularly, <strong>but not IV</strong>.</li>
+              <li>Sustained-release fat-soluble liquids may be given IM as a depot injection. The lecture example is methoxyprogesterone, Depo-Provera.</li>
+            </ul>
+          </div>
+          <div class="callout trap-box"><div class="callout-title">Exam trap</div>A sterile suspension may be injectable, but the lecture specifically says it is <strong>not for intravenous use</strong>.</div>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="route-tradeoffs">
+      <h2 class="section-title"><span class="section-number">8</span>Route Advantages and Disadvantages</h2>
+
+      <details class="topic-card searchable" open data-topic="route-tradeoffs-all">
+        <summary>
+          <span class="badge must">Must know</span>
+          <span class="topic-title">Master comparison of route trade-offs</span>
+          <span class="page-ref">Page 5</span>
+          <label class="done-wrap" onclick="event.stopPropagation()"><input class="done-check" type="checkbox" data-progress="route-tradeoffs-all">done</label>
+        </summary>
+        <div class="topic-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Route or preparation</th><th>Advantages</th><th>Disadvantages</th><th>High-yield clue</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Traditional oral</strong></td><td>Safest, most convenient, most economical.</td><td>Gastric irritation, destruction by acid or enzymes, precipitation or insolubility, nonabsorbable food complexes, variable absorption, too slow for emergencies, unpleasant taste.</td><td>Convenient but variable and first-pass prone</td></tr>
+                <tr><td><strong>Sublingual and buccal</strong></td><td>Delayed first-pass metabolism because venous drainage from the mouth reaches the superior vena cava. Easy self-administration. Bypasses the stomach, so acid lability and gut permeability need not be considered.</td><td>Unpleasant taste and local irritation.</td><td>Mouth route bypasses stomach</td></tr>
+                <tr><td><strong>Suppository</strong></td><td>Can be used in unconscious or vomiting patients. Lecture states 50–60% of the dose enters general circulation directly and bypasses the liver.</td><td>Rectal irritation, inconvenience, leakage and discomfort, slow and erratic absorption.</td><td>Useful when oral intake is difficult</td></tr>
+                <tr><td><strong>Parenteral</strong></td><td>Highest bioavailability, avoids first pass, rapid onset, useful in emergencies, best control of delivered dose.</td><td>Overdose and adverse reactions are difficult to reverse, requires sterility and asepsis, painful, expensive, generally not self-administered. Lecture exception: insulin.</td><td>Fast and precise, but invasive</td></tr>
+                <tr><td><strong>Pulmonary or inhalational</strong></td><td>Preferred for gases and volatile anesthetics. Rapid access due to large surface area. No first-pass hepatic loss.</td><td>Dose is difficult to regulate, administration may be cumbersome, pulmonary epithelium may be irritated.</td><td>Rapid surface, harder dose control</td></tr>
+                <tr><td><strong>Topical</strong></td><td>Used for local effects. Mucosal absorption can occur readily.</td><td>Absorption depends on surface area and lipid solubility. May sting or irritate.</td><td>Local effect, variable absorption</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="recall">
+            <h3><span class="badge mechanism">Recall check</span> Route trade-offs</h3>
+            <details class="qa"><summary>Why is oral administration not ideal for an emergency?</summary><div class="answer">Its absorption may be too slow and variable.</div></details>
+            <details class="qa"><summary>Which non-hospital exception to “cannot be self-administered” is named for parenteral drugs?</summary><div class="answer">Insulin.</div></details>
+            <details class="qa"><summary>What two factors make topical absorption vary?</summary><div class="answer">Surface area of application and lipid solubility.</div></details>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="section searchable" id="confusions">
+      <h2 class="section-title"><span class="section-number">≠</span>Commonly Confused Concepts</h2>
+      <div class="panel">
+        <div class="callout confuse-box">
+          <div class="callout-title">Do not confuse: Drug vs medicine</div>
+          <p><strong>Drug:</strong> substance producing a biological effect. <strong>Medicine:</strong> preparation intended for therapy. Fast distinction: <strong>effect-producing substance vs therapeutic product</strong>.</p>
+        </div>
+        <div class="callout confuse-box">
+          <div class="callout-title">Do not confuse: Active principle vs active ingredient vs excipient</div>
+          <p><strong>Active principle:</strong> active part of crude natural material. <strong>Active ingredient:</strong> active part of the finished product. <strong>Excipient:</strong> inactive supporting component.</p>
+        </div>
+        <div class="callout confuse-box">
+          <div class="callout-title">Do not confuse: Synthetic vs semi-synthetic</div>
+          <p><strong>Synthetic:</strong> starting material not found in nature. <strong>Semi-synthetic:</strong> natural starting material chemically modified.</p>
+        </div>
+        <div class="callout confuse-box">
+          <div class="callout-title">Do not confuse: Suspension vs emulsion</div>
+          <p><strong>Suspension:</strong> solid particles in water. <strong>Emulsion:</strong> minute liquid droplets in another fluid.</p>
+        </div>
+        <div class="callout confuse-box">
+          <div class="callout-title">Do not confuse: Decoction vs infusion</div>
+          <p><strong>Decoction:</strong> boiling of plants or herbs in water. <strong>Infusion:</strong> hot or cold water used to extract active constituents.</p>
+        </div>
+        <div class="callout confuse-box">
+          <div class="callout-title">Do not confuse: Buccal vs sublingual</div>
+          <p><strong>Buccal:</strong> between cheek and oral mucosa. <strong>Sublingual:</strong> under the tongue, with faster absorption than traditional oral forms.</p>
+        </div>
+        <div class="callout confuse-box">
+          <div class="callout-title">Do not confuse: Lotion vs cream vs ointment vs gel</div>
+          <p><strong>Lotion:</strong> thicker than solution. <strong>Cream:</strong> thicker than lotion, oil–water emulsion. <strong>Ointment:</strong> greasy, occlusive, high viscosity. <strong>Gel:</strong> alcohol base and drying in the lecture.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section searchable" id="traps">
+      <h2 class="section-title"><span class="section-number">!</span>Exam Traps</h2>
+      <div class="panel">
+        <div class="callout trap-box"><div class="callout-title">Trap 1</div><strong>An inactive excipient can still change performance.</strong> It may improve absorption, sustained release, stability, handling, or manufacture.</div>
+        <div class="callout trap-box"><div class="callout-title">Trap 2</div><strong>Organic nature alone does not explain selective receptor binding.</strong> Shape, charge, molecular weight, and chirality are the tested clues.</div>
+        <div class="callout trap-box"><div class="callout-title">Trap 3</div><strong>IV is 100% bioavailable, but “best” does not mean safest.</strong> Accidental overdose is difficult to reverse.</div>
+        <div class="callout trap-box"><div class="callout-title">Trap 4</div><strong>Oral is safe and convenient, not appropriate for every situation.</strong> It can be too slow for emergencies and has important first-pass metabolism.</div>
+        <div class="callout trap-box"><div class="callout-title">Trap 5</div><strong>Sterile suspension is not automatically suitable for IV use.</strong> The lecture allows IM, SQ, or intra-articular routes, but not IV.</div>
+        <div class="callout trap-box"><div class="callout-title">Trap 6</div><strong>Suppositories can bypass hepatic metabolism in the lecture’s review key</strong>, yet their absorption is also described as slow and erratic.</div>
+        <div class="callout trap-box"><div class="callout-title">Trap 7</div><strong>Inhalational is placed under topical routes</strong> because the preparation acts on respiratory mucosa.</div>
+        <div class="callout trap-box"><div class="callout-title">Trap 8</div><strong>The source’s keyed statement is “all medicines are drugs, but not all drugs are medicines.”</strong> Memorize this as the lecture’s exam answer.</div>
+      </div>
+    </section>
+
+    <section class="section" id="rapid">
+      <h2 class="section-title"><span class="section-number">30</span>Rapid-Fire Final Recall</h2>
+      <div class="panel rapid-grid searchable">
+        <details class="qa"><summary>1. Three uses of drugs?</summary><div class="answer">Prevention, diagnosis, cure.</div></details>
+        <details class="qa"><summary>2. Therapeutic preparation containing active and inactive components?</summary><div class="answer">Medicine.</div></details>
+        <details class="qa"><summary>3. Biologically active constituent in a crude preparation?</summary><div class="answer">Active principle.</div></details>
+        <details class="qa"><summary>4. Active substance in a finished product?</summary><div class="answer">Active ingredient.</div></details>
+        <details class="qa"><summary>5. Inactive supporting component?</summary><div class="answer">Excipient.</div></details>
+        <details class="qa"><summary>6. Excipient that holds granules together?</summary><div class="answer">Binder.</div></details>
+        <details class="qa"><summary>7. Excipient that promotes breakup?</summary><div class="answer">Disintegrant.</div></details>
+        <details class="qa"><summary>8. Main MW range emphasized?</summary><div class="answer">100–1000.</div></details>
+        <details class="qa"><summary>9. Very small drug example?</summary><div class="answer">Lithium ion, MW 7.</div></details>
+        <details class="qa"><summary>10. Very large protein drug example?</summary><div class="answer">Alteplase t-PA.</div></details>
+        <details class="qa"><summary>11. Three key features supporting selective binding?</summary><div class="answer">Shape, charge, and other unique molecular properties.</div></details>
+        <details class="qa"><summary>12. Mirror-image drug forms?</summary><div class="answer">Enantiomers.</div></details>
+        <details class="qa"><summary>13. Four natural source groups?</summary><div class="answer">Plants, animals, microorganisms, minerals.</div></details>
+        <details class="qa"><summary>14. Most prevalent natural source?</summary><div class="answer">Plants.</div></details>
+        <details class="qa"><summary>15. Morphine plant source?</summary><div class="answer"><em>Papaver somniferum</em>.</div></details>
+        <details class="qa"><summary>16. Digoxin plant source?</summary><div class="answer"><em>Digitalis purpurea</em>.</div></details>
+        <details class="qa"><summary>17. Penicillin microorganism?</summary><div class="answer"><em>Penicillium chrysogenum</em>.</div></details>
+        <details class="qa"><summary>18. Genetically engineered insulin example?</summary><div class="answer">Genetically modified <em>E. coli</em>.</div></details>
+        <details class="qa"><summary>19. Synthetic aspirin derives from what natural substance?</summary><div class="answer">Salicylic acid.</div></details>
+        <details class="qa"><summary>20. Semi-synthetic example?</summary><div class="answer">Ampicillin.</div></details>
+        <details class="qa"><summary>21. Radiopharmaceutical placed near a tumor?</summary><div class="answer">Iridium-192.</div></details>
+        <details class="qa"><summary>22. Route with 100% bioavailability?</summary><div class="answer">IV.</div></details>
+        <details class="qa"><summary>23. Route with most significant first-pass effect?</summary><div class="answer">Oral, PO.</div></details>
+        <details class="qa"><summary>24. Tablet placed between cheek and mucosa?</summary><div class="answer">Buccal tablet.</div></details>
+        <details class="qa"><summary>25. Tablet placed under tongue?</summary><div class="answer">Sublingual tablet.</div></details>
+        <details class="qa"><summary>26. Solid particles dispersed in water?</summary><div class="answer">Suspension.</div></details>
+        <details class="qa"><summary>27. Liquid droplets dispersed in another fluid?</summary><div class="answer">Emulsion.</div></details>
+        <details class="qa"><summary>28. Plant extraction by boiling?</summary><div class="answer">Decoction.</div></details>
+        <details class="qa"><summary>29. Plant extraction with hot or cold water?</summary><div class="answer">Infusion.</div></details>
+        <details class="qa"><summary>30. Most occlusive semi-solid form?</summary><div class="answer">Ointment.</div></details>
+        <details class="qa"><summary>31. Capsule particles coated for gradual GI release?</summary><div class="answer">Spansules.</div></details>
+        <details class="qa"><summary>32. Injectable suspension route specifically excluded?</summary><div class="answer">Intravenous.</div></details>
+        <details class="qa"><summary>33. Why can inhaled drugs act rapidly?</summary><div class="answer">Large surface area and rapid access to systemic circulation.</div></details>
+        <details class="qa"><summary>34. What controls topical absorption?</summary><div class="answer">Applied surface area and lipid solubility.</div></details>
+      </div>
+    </section>
+
+    <section class="section" id="cram-sheet">
+      <h2 class="section-title"><span class="section-number">5m</span>Last-Minute Cram Sheet</h2>
+      <div class="panel cram-sheet searchable">
+        <div class="cram-columns">
+          <div class="cram-block">
+            <h3>Core definitions</h3>
+            <ul>
+              <li><strong>Drug:</strong> substance producing biological effect.</li>
+              <li><strong>Medicine:</strong> preparation intended for therapeutic effect.</li>
+              <li><strong>Active principle:</strong> active constituent of crude preparation.</li>
+              <li><strong>Active ingredient:</strong> active substance in finished product.</li>
+              <li><strong>Excipient:</strong> inactive supporting substance.</li>
+            </ul>
+          </div>
+          <div class="cram-block">
+            <h3>Nature</h3>
+            <ul>
+              <li>Organic compounds vs inorganic elements.</li>
+              <li>Most drugs: MW 100–1000.</li>
+              <li>Selective binding: unique shape, charge, and related properties.</li>
+              <li>Chirality: one enantiomer may fit better and be more potent.</li>
+            </ul>
+          </div>
+          <div class="cram-block">
+            <h3>Sources</h3>
+            <ul>
+              <li>Natural: plants, animals, microorganisms, minerals.</li>
+              <li>Synthetic: starting materials not found in nature.</li>
+              <li>Semi-synthetic: natural starting material chemically modified.</li>
+              <li>Radiopharmaceutical: radioactive substance for diagnosis or treatment.</li>
+            </ul>
+          </div>
+          <div class="cram-block">
+            <h3>Selection</h3>
+            <p>PK + PD + age + sex + disease severity and duration + treatment response + comorbidities and excipient allergy.</p>
+          </div>
+          <div class="cram-block">
+            <h3>Routes</h3>
+            <ul>
+              <li><strong>IV:</strong> 100% bioavailability, rapid, precise, difficult to reverse.</li>
+              <li><strong>Oral:</strong> safest and convenient, first-pass effect, variable and slow.</li>
+              <li><strong>Rectal:</strong> useful in vomiting or unconscious patients, slow and erratic.</li>
+              <li><strong>Inhalational:</strong> rapid, no first pass, difficult dose regulation.</li>
+              <li><strong>Topical:</strong> local action, absorption depends on area and lipid solubility.</li>
+            </ul>
+          </div>
+          <div class="cram-block">
+            <h3>Dosage forms</h3>
+            <ul>
+              <li>Buccal = cheek. Sublingual = under tongue.</li>
+              <li>Suspension = solid in liquid, shake.</li>
+              <li>Emulsion = liquid droplets in liquid.</li>
+              <li>Decoction = boil. Infusion = hot or cold water extraction.</li>
+              <li>Ointment = greasy and occlusive. Gel = alcohol-based and drying in the lecture.</li>
+            </ul>
+          </div>
+          <div class="cram-block">
+            <h3>Classic traps</h3>
+            <ul>
+              <li>Inactive excipient does not mean unimportant.</li>
+              <li>Organic composition alone does not produce selective binding.</li>
+              <li>Injectable suspension is not for IV use.</li>
+              <li>The lecture answer key: all medicines are drugs, but not all drugs are medicines.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="no-results panel" id="noResults">No reviewer cards matched that search.</div>
+  </main>
+</div>
+
+<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+
+<script>
+(function () {
+  const topicDetails = Array.from(document.querySelectorAll('details.topic-card'));
+  const searchable = Array.from(document.querySelectorAll('.searchable'));
+  const search = document.getElementById('search');
+  const searchNote = document.getElementById('searchNote');
+  const noResults = document.getElementById('noResults');
+  const mustButton = document.getElementById('mustOnly');
+  const checks = Array.from(document.querySelectorAll('.done-check'));
+  const storageKey = 'natureSourcesDosageFormsProgressV1';
+
+  document.getElementById('expandAll').addEventListener('click', function () {
+    topicDetails.forEach(function (d) { d.open = true; });
+  });
+
+  document.getElementById('collapseAll').addEventListener('click', function () {
+    topicDetails.forEach(function (d) { d.open = false; });
+  });
+
+  mustButton.addEventListener('click', function () {
+    document.body.classList.toggle('must-only');
+    const active = document.body.classList.contains('must-only');
+    mustButton.classList.toggle('active', active);
+    mustButton.textContent = active ? 'Show all priorities' : 'Show only must-know';
+  });
+
+  document.getElementById('printReviewer').addEventListener('click', function () {
+    topicDetails.forEach(function (d) { d.open = true; });
+    window.print();
+  });
+
+  function loadProgress() {
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (e) { saved = {}; }
+    checks.forEach(function (check) { check.checked = Boolean(saved[check.dataset.progress]); });
+    updateProgress();
+  }
+
+  function saveProgress() {
+    const saved = {};
+    checks.forEach(function (check) { saved[check.dataset.progress] = check.checked; });
+    localStorage.setItem(storageKey, JSON.stringify(saved));
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const complete = checks.filter(function (check) { return check.checked; }).length;
+    const total = checks.length;
+    const pct = total ? Math.round((complete / total) * 100) : 0;
+    document.getElementById('progressText').textContent = pct + '%';
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+
+  checks.forEach(function (check) { check.addEventListener('change', saveProgress); });
+
+  document.getElementById('resetProgress').addEventListener('click', function () {
+    checks.forEach(function (check) { check.checked = false; });
+    localStorage.removeItem(storageKey);
+    updateProgress();
+  });
+
+  function normalize(text) {
+    return text.toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+
+  function filterSearch() {
+    const query = normalize(search.value);
+    let shown = 0;
+    searchable.forEach(function (node) {
+      const match = !query || normalize(node.textContent).includes(query);
+      node.classList.toggle('hidden-by-search', !match);
+      if (match) shown += 1;
+    });
+    noResults.style.display = shown === 0 ? 'block' : 'none';
+    searchNote.textContent = query ? shown + ' matching section' + (shown === 1 ? '' : 's') : 'Search filters major cards and tables.';
+  }
+
+  search.addEventListener('input', filterSearch);
+
+  const backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', function () {
+    backTop.classList.toggle('show', window.scrollY > 600);
+  }, { passive: true });
+  backTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+  loadProgress();
+})();
+</script>
+</body>
+</html>
